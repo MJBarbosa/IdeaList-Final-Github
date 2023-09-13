@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">IdeaList</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">register</string>
+    <string name="Register">Register</string>
+    <string name="email">Email</string>
+    <string name="click_to_login">Click to Login</string>
+    <string name="click_to_register">Click to Register</string>
+    <string name="Email">Email</string>
+    <string name="logout">Logout</string>
+</resources>

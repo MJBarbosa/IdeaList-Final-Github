@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "804509672754",
+    "project_id": "idealist-c43b5",
+    "storage_bucket": "idealist-c43b5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804509672754:android:dc90e1d5d926dd6ffaa32b",
+        "android_client_info": {
+          "package_name": "com.example.idealist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804509672754-dheamaq9p0fq9ch6p6qdjc08bdl6ejoq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLMYuLQyL3iO1z1QBSt6jIc3wazzU1Z5U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804509672754-dheamaq9p0fq9ch6p6qdjc08bdl6ejoq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
