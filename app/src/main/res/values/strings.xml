@@ -10,4 +10,7 @@
     <string name="click_to_register">Click to Register</string>
     <string name="Email">Email</string>
     <string name="logout">Logout</string>
+    <string name="signup">SignUp</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="login_as_customer">Login As Customer</string>
 </resources>
