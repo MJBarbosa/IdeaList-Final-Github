@@ -3,6 +3,7 @@ package com.example.idealist;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -28,6 +30,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Calendar;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -37,6 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressBar progressBarRegister;
     private RadioGroup radioGroupRegisterGender;
     private RadioButton radioButtonRegisterGenderSelected;
+    private DatePickerDialog picker;
     private static final String TAG= "RegisterActivity";
 
     @Override
@@ -60,6 +65,27 @@ public class RegisterActivity extends AppCompatActivity {
         radioGroupRegisterGender =findViewById(R.id.radioGroupRegGender);
         radioGroupRegisterGender.clearCheck();
 
+        //Setting up DatePicker on EditText
+        editTextRegisterDoB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+
+                //Date Picker Dialog
+                picker = new DatePickerDialog(RegisterActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        editTextRegisterDoB.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                    }
+                }, year, month, day);
+                picker.show();
+            }
+        });
+
+
         Button buttonRegister = findViewById(R.id.buttonRegister);
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +102,12 @@ public class RegisterActivity extends AppCompatActivity {
                 String textPwd = editTextRegisterPassword.getText().toString();
                 String textConfirmPwd = editTextRegisterConfirmPassword.getText().toString();
                 String textGender; //Can't obtain the value before verifying if any button was selected or not
+
+                //Valid mobile number using matcher and pattern (Regular Expression)
+                String mobileRegex = "0[0-9]{10}"; //First no. should be 0 and rest 10 no. can be any no.
+                Matcher mobileMatcher;
+                Pattern mobilePattern = Pattern.compile(mobileRegex);
+                mobileMatcher = mobilePattern.matcher(textMobile);
 
                 if (TextUtils.isEmpty(textFullName)){
                     Toast.makeText(RegisterActivity.this, "Please Enter Your Full Name", Toast.LENGTH_LONG).show();
@@ -104,6 +136,10 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if (textMobile.length() != 11) {
                     Toast.makeText(RegisterActivity.this, "Please Re-enter Your Mobile No.", Toast.LENGTH_LONG).show();
                     editTextRegisterMobile.setError("Mobile No. Should be 11 Digits");
+                    editTextRegisterMobile.requestFocus();
+                } else if (!mobileMatcher.find()) {
+                    Toast.makeText(RegisterActivity.this, "Please Re-enter Your Mobile No.", Toast.LENGTH_LONG).show();
+                    editTextRegisterMobile.setError("Mobile No. is not Valid");
                     editTextRegisterMobile.requestFocus();
                 } else if (TextUtils.isEmpty(textPwd)) {
                     Toast.makeText(RegisterActivity.this, "Please Enter Your Password", Toast.LENGTH_LONG).show();
