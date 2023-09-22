@@ -4,6 +4,8 @@ public class ReadWriteUserDetailsSO {
 
     public String fullName, dob, gender, mobile, storeName, storeLocation;
 
+    public ReadWriteUserDetailsSO(){};
+
     public ReadWriteUserDetailsSO(String textFullName, String textDoB, String textGender, String textMobile, String textStoreName, String textStoreLocation){
         this.fullName = textFullName;
         this.dob = textDoB;

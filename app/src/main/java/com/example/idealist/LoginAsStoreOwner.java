@@ -43,7 +43,7 @@ public class LoginAsStoreOwner extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_as_store_owner);
 
-        getSupportActionBar().setTitle("Login");
+        getSupportActionBar().setTitle("Login As Store Owner");
 
         editTextLoginEmailSO = findViewById(R.id.editTextLoginEmailSO);
         editTextLoginPasswordSO = findViewById(R.id.editTextLoginPasswordSO);
@@ -140,6 +140,9 @@ public class LoginAsStoreOwner extends AppCompatActivity {
                     if (firebaseUser.isEmailVerified()) {
                         Toast.makeText(LoginAsStoreOwner.this, "You Are Logged In Now", Toast.LENGTH_SHORT).show();
                         //Open User Profile After Successful Registration
+                        //Start the UserProfileActivity
+                        startActivity(new Intent(LoginAsStoreOwner.this, StoreOwnerProfileActivity.class));
+                        finish(); //Close Login
                     } else {
                         firebaseUser.sendEmailVerification();
                         authProfileSO.signOut(); //Sign Out user
