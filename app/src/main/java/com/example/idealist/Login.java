@@ -1,16 +1,22 @@
 package com.example.idealist;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +50,24 @@ public class Login extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBarLogin);
 
         authProfile = FirebaseAuth.getInstance();
+
+        //Show Hide Password using Eye Icon
+        ImageView imageViewShowHidePwd = findViewById(R.id.imageViewShowHidePwd);
+        imageViewShowHidePwd.setImageResource(R.drawable.ic_hide_pwd);
+        imageViewShowHidePwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editTextLoginPassword.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())){
+                    //If Password is Visible then Hide it
+                    editTextLoginPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    //Change Icon
+                    imageViewShowHidePwd.setImageResource(R.drawable.ic_hide_pwd);
+                } else {
+                    editTextLoginPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    imageViewShowHidePwd.setImageResource(R.drawable.ic_show_psw);
+                }
+            }
+        });
 
         textViewLoginSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,13 +130,24 @@ public class Login extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    Toast.makeText(Login.this, "You Are Logged In Now", Toast.LENGTH_SHORT).show();
-                    //Open User Profile After Successful Registration
-                    Intent intent = new Intent(Login.this, MainActivity.class);
+
+                    //Get instance of the current User
+                    FirebaseUser firebaseUser = authProfile.getCurrentUser();
+
+                    //Check if email is verified before user can access their profile
+                    if (firebaseUser.isEmailVerified()) {
+                        Toast.makeText(Login.this, "You Are Logged In Now", Toast.LENGTH_SHORT).show();
+                        //Open User Profile After Successful Registration
+                    } else {
+                        firebaseUser.sendEmailVerification();
+                        authProfile.signOut(); //Sign Out user
+                        showAlertDialog();
+                    }
+                    /*Intent intent = new Intent(Login.this, MainActivity.class);
                     //To Prevent User Form Returning Back to Register Activity on Pressing back Button After Registration
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                    finish(); //to Close Register Activity
+                    finish(); //to Close Register Activity*/
                 } else {
                     try {
                         throw task.getException();
@@ -130,5 +165,29 @@ public class Login extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void showAlertDialog() {
+        //Setup the Alert Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+        builder.setTitle("Email Not Verified");
+        builder.setMessage("Please Verify Your Email Now. You Can Not Login Without Email Verification.");
+
+        //Open Email Apps If User Clicks/Taps Continue Button
+        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //To Email App in Now Window and Not within our app
+                startActivity(intent);
+            }
+        });
+
+        //Create the AlertDialog
+        AlertDialog alertDialog = builder.create();
+
+        //show the AlertDialog
+        alertDialog.show();
     }
 }

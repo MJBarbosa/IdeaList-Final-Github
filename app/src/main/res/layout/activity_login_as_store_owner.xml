@@ -58,12 +58,19 @@
             android:padding="6dp"
             android:textSize="16dp"/>
 
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="32dp"
+            android:id="@+id/imageViewShowHidePwdSO"
+            android:layout_below="@+id/textViewLoginPasswordSO"/>
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextLoginPasswordSO"
             android:hint="Enter Password"
             android:inputType="textPassword"
+            android:layout_marginStart="30dp"
             android:padding="6dp"
             android:textSize="16dp"
             android:background="@drawable/border"
