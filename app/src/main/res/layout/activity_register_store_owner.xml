@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterStoreOwnerActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_margin="15dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewRegisterHead"
+            android:layout_marginTop="30dp"
+            android:text="Please Enter Your Details to Register on the App As Store Owner"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewRegFNameSO"
+            android:layout_below="@+id/textViewRegisterHead"
+            android:text="Full Name*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="16dp"
+            android:layout_marginTop="50dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextRegFNameSO"
+            android:hint="Enter Your Full Name"
+            android:inputType="textPersonName"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewRegFNameSO"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewRegEmailSO"
+            android:layout_below="@+id/editTextRegFNameSO"
+            android:text="Email*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="16dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextRegEmailSO"
+            android:hint="Enter Your Email"
+            android:inputType="textEmailAddress"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewRegEmailSO"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewRegDobSO"
+            android:layout_below="@+id/editTextRegEmailSO"
+            android:text="Date of Birth (dd/mm/yyyy)*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="16dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextRegDobSO"
+            android:hint="Select Your your Date of Birth (dd/mm/yyyy)"
+            android:inputType="date"
+            android:focusable="false"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewRegDobSO"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewRegGenderSO"
+            android:layout_below="@+id/editTextRegDobSO"
+            android:text="Gender*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="16dp"
+            android:layout_marginTop="10dp"/>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/textViewRegGenderSO"
+            android:id="@+id/radioGroupRegGenderSO">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioButtonFemaleSO"
+                android:text="Female"
+                android:textSize="16dp"
+                android:textColor="#555555"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioButtonMaleSO"
+                android:text="Male"
+                android:layout_marginLeft="20dp"
+                android:textSize="16dp"
+                android:textColor="#555555"/>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewRegMobileSO"
+            android:layout_below="@+id/radioGroupRegGenderSO"
+            android:text="Mobile*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="16dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextRegMobileSO"
+            android:hint="Enter Your Mobile No."
+            android:inputType="phone"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewRegMobileSO"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewRegPasswordSO"
+            android:layout_below="@+id/editTextRegMobileSO"
+            android:text="Password*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="16dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextRegPasswordSO"
+            android:hint="Enter Your Password"
+            android:inputType="textPassword"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewRegPasswordSO"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewRegConfirmPasswordSO"
+            android:layout_below="@+id/editTextRegPasswordSO"
+            android:text="Confirm Password*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="16dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextRegConfirmPasswordSO"
+            android:hint="Confirm Your Password"
+            android:inputType="textPassword"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewRegConfirmPasswordSO"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewRegStoreNameSO"
+            android:layout_below="@+id/editTextRegConfirmPasswordSO"
+            android:text="Store Name*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="16dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextRegStoreNameSO"
+            android:hint="Enter Store Name"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewRegStoreNameSO"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewRegStoreLocationSO"
+            android:layout_below="@+id/editTextRegStoreNameSO"
+            android:text="Store Location*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="16dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextRegStoreLocationSO"
+            android:hint="Enter Store Location"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewRegStoreLocationSO"
+            android:background="@drawable/border"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
+            android:layout_below="@+id/editTextRegStoreLocationSO"
+            android:layout_marginTop="50dp"
+            android:text="Register"
+            android:id="@+id/buttonRegisterSO"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBarRegSO"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="10dp"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+</ScrollView>

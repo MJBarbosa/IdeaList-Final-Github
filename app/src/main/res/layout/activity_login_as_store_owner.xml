@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login"
+    tools:context=".LoginAsStoreOwner"
     android:background="#CAC9CC">
 
     <RelativeLayout
@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewLoginHead"
+            android:id="@+id/textViewLoginHeadSO"
             android:layout_marginTop="30dp"
             android:text="Login"
             android:fontFamily="@font/poppinsbold"
@@ -28,10 +28,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewLoginEmail"
+            android:id="@+id/textViewLoginEmailSO"
             android:layout_marginTop="50dp"
             android:padding="6dp"
-            android:layout_below="@+id/textViewLoginHead"
+            android:layout_below="@+id/textViewLoginHeadSO"
             android:text="Email*"
             android:textColor="#555555"
             android:textSize="16dp"/>
@@ -39,100 +39,98 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editTextLoginEmail"
+            android:id="@+id/editTextLoginEmailSO"
             android:hint="Enter Email"
             android:inputType="textEmailAddress"
             android:padding="6dp"
             android:textSize="16dp"
             android:background="@drawable/border"
-            android:layout_below="@+id/textViewLoginEmail"/>
+            android:layout_below="@+id/textViewLoginEmailSO"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewLoginPassword"
+            android:id="@+id/textViewLoginPasswordSO"
             android:layout_marginTop="10dp"
-            android:layout_below="@+id/editTextLoginEmail"
+            android:layout_below="@+id/editTextLoginEmailSO"
             android:text="Password*"
             android:textColor="#555555"
             android:padding="6dp"
             android:textSize="16dp"/>
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="32dp"
-            android:id="@+id/imageViewShowHidePwd"
-            android:layout_below="@+id/textViewLoginPassword"/>
-
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editTextLoginPassword"
+            android:id="@+id/editTextLoginPasswordSO"
             android:hint="Enter Password"
-            android:layout_marginStart="30dp"
             android:inputType="textPassword"
             android:padding="6dp"
             android:textSize="16dp"
             android:background="@drawable/border"
-            android:layout_below="@+id/textViewLoginPassword"/>
-
+            android:layout_below="@+id/textViewLoginPasswordSO"/>
+        
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Login"
-            android:id="@+id/buttonLogin"
-            android:layout_below="@+id/editTextLoginPassword"
+            android:id="@+id/buttonLoginSO"
+            android:layout_below="@+id/editTextLoginPasswordSO"
             android:layout_marginTop="50dp"
             android:layout_marginRight="70dp"
             android:layout_marginLeft="70dp"/>
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/buttonLogin"
-            android:id="@+id/textInputLayoutLogin">
+<com.google.android.material.textfield.TextInputLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/buttonLoginSO"
+    android:id="@+id/textInputLayoutLoginSO">
 
-            <TextView
-                android:id="@+id/textViewLoginForPsw"
-                android:layout_width="132dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="16dp"
-                android:gravity="left"
-                android:text="Forgot Password"
-                android:textSize="16dp"
-                android:textStyle="bold" />
+    <TextView
+        android:id="@+id/textViewLoginForPswSO"
+        android:layout_width="132dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="16dp"
+        android:gravity="left"
+        android:text="Forgot Password"
+        android:textSize="16dp"
+        android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textViewLoginSignUp"
-                android:layout_width="307dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="30dp"
-                android:gravity="right"
-                android:text="Sign Up"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-        </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:id="@+id/textViewLoginSignUpSO"
+        android:layout_width="307dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="30dp"
+        android:gravity="right"
+        android:text="Sign Up"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+</com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Login As Store Owner"
-            android:id="@+id/textViewLoginAsSO"
-            android:layout_below="@+id/textInputLayoutLogin"
+            android:text="Login As Customer"
+            android:id="@+id/textViewLoginAsCustomerSO"
+            android:layout_below="@+id/textInputLayoutLoginSO"
             android:gravity="center"
             android:layout_marginTop="16dp"
             android:textSize="16dp"
             android:textStyle="bold"/>
-
+        
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="?android:attr/progressBarStyleLarge"
-            android:id="@+id/progressBarLogin"
+            android:id="@+id/progressBarLoginSO"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:elevation="10dp"
             android:visibility="gone"/>
+
+
+
+
     </RelativeLayout>
+
 </ScrollView>

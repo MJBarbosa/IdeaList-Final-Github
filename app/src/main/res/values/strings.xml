@@ -13,4 +13,6 @@
     <string name="signup">SignUp</string>
     <string name="forgot_password">Forgot Password</string>
     <string name="login_as_customer">Login As Customer</string>
+    <string name="login_as_store_owner">Login As Store Owner</string>
+    <string name="sign_up">Sign Up</string>
 </resources>

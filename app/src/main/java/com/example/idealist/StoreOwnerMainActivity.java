@@ -4,11 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class LoginAsCustomer extends AppCompatActivity {
+public class StoreOwnerMainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_as_customer);
+        setContentView(R.layout.activity_store_owner_main);
     }
 }
