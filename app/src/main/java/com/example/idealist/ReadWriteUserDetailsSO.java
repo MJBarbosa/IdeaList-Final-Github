@@ -2,12 +2,11 @@ package com.example.idealist;
 
 public class ReadWriteUserDetailsSO {
 
-    public String fullName, dob, gender, mobile, storeName, storeLocation;
+    public String dob, gender, mobile, storeName, storeLocation;
 
     public ReadWriteUserDetailsSO(){};
 
-    public ReadWriteUserDetailsSO(String textFullName, String textDoB, String textGender, String textMobile, String textStoreName, String textStoreLocation){
-        this.fullName = textFullName;
+    public ReadWriteUserDetailsSO(String textDoB, String textGender, String textMobile, String textStoreName, String textStoreLocation){
         this.dob = textDoB;
         this.gender = textGender;
         this.mobile = textMobile;

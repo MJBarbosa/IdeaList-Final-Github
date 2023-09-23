@@ -78,9 +78,11 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        //Reset Password
         textViewLoginForPsw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(Login.this, "You Can Reset Your Password Now!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), ForgotPassword.class);
                 startActivity(intent);
                 finish();
@@ -138,6 +140,9 @@ public class Login extends AppCompatActivity {
                     if (firebaseUser.isEmailVerified()) {
                         Toast.makeText(Login.this, "You Are Logged In Now", Toast.LENGTH_SHORT).show();
                         //Open User Profile After Successful Registration
+                        //Start the UserProfileActivity
+                        startActivity(new Intent(Login.this, UsersProfileActivity.class));
+                        finish(); //Close Login
                     } else {
                         firebaseUser.sendEmailVerification();
                         authProfile.signOut(); //Sign Out user
@@ -189,5 +194,20 @@ public class Login extends AppCompatActivity {
 
         //show the AlertDialog
         alertDialog.show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (authProfile.getCurrentUser() != null) {
+            Toast.makeText(Login.this, "Already Logged In!", Toast.LENGTH_SHORT).show();
+
+            //Start the UserProfileActivity
+            startActivity(new Intent(Login.this, MainActivity.class));
+            finish(); //Close Login
+        }
+        else {
+            Toast.makeText(Login.this, "You can Login Now!", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -191,8 +192,11 @@ public class RegisterStoreOwnerActivity extends AppCompatActivity {
 
                     FirebaseUser firebaseUser = auth.getCurrentUser();
 
+                    UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(textFullName).build();
+                    firebaseUser.updateProfile(profileChangeRequest);
+
                     //Enter User Data Into the Firebase Realtime Database.
-                    ReadWriteUserDetailsSO writeUserDetails = new ReadWriteUserDetailsSO(textFullName, textDoB, textGender, textMobile, textStoreName, textStoreLocation);
+                    ReadWriteUserDetailsSO writeUserDetails = new ReadWriteUserDetailsSO(textDoB, textGender, textMobile, textStoreName, textStoreLocation);
 
                     //Extracting user reference from Database for "Register Users"
                     DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Registered Store Owner Users");

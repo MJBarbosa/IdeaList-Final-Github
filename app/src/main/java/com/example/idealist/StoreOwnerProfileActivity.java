@@ -3,7 +3,10 @@ package com.example.idealist;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -91,5 +94,52 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
                 progressBarSO.setVisibility(View.GONE);
             }
         });
+    }
+
+    //Creating ActionBar Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //Inflate menu items
+        getMenuInflater().inflate(R.menu.common_menu_so, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    //When any menu item is selected
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menuRefreshSO) {
+            //Refresh Activity
+            startActivity(getIntent());
+            finish();
+            overridePendingTransition(0,0);
+        } /*else if (id == R.id.menuUpdateProfileSO) {
+            Intent intent = new Intent(StoreOwnerProfileActivity.this, UpdateSOProfileActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.menuUpdateEmailSO) {
+            Intent intent = new Intent(StoreOwnerProfileActivity.this, UpdateSOEmailActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.menuSettingsSO) {
+            Toast.makeText(UsersProfileActivity.this, "menuSettingsSO", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.menuChangePasswordSO) {
+            Intent intent = new Intent(StoreOwnerProfileActivity.this, ChangeSOPasswordActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.menuDeleteProfileSO) {
+            Intent intent = new Intent(StoreOwnerProfileActivity.this, DeleteSOProfileActivity.class);
+            startActivity(intent);
+        } */else if (id == R.id.menuLogoutSO) {
+            authProfileSO.signOut();
+            Toast.makeText(StoreOwnerProfileActivity.this, "Logged Out", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(StoreOwnerProfileActivity.this, LoginAsStoreOwner.class);
+
+            //Clear stack to prevent user coming back to UserProfileActivity on pressing back button after Logging out
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        } else {
+            Toast.makeText(StoreOwnerProfileActivity.this, "Something Went Wrong!", Toast.LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
