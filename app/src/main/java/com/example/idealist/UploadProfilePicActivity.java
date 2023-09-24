@@ -174,10 +174,11 @@ public class UploadProfilePicActivity extends AppCompatActivity {
             Intent intent = new Intent(UploadProfilePicActivity.this, UpdateProfileActivity.class);
             startActivity(intent);
             finish();
-        } /*else if (id == R.id.menuUpdateEmail) {
-            Intent intent = new Intent(UsersProfileActivity.this, UpdateEmailActivity.class);
+        } else if (id == R.id.menuUpdateEmail) {
+            Intent intent = new Intent(UploadProfilePicActivity.this, UpdateEmailActivity.class);
             startActivity(intent);
-        } else if (id == R.id.menuSettings) {
+            finish();
+        } /*else if (id == R.id.menuSettings) {
             Toast.makeText(UsersProfileActivity.this, "menuSettings", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.menuChangePassword) {
             Intent intent = new Intent(UsersProfileActivity.this, ChangePasswordActivity.class);

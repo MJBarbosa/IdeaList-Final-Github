@@ -138,10 +138,11 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, UpdateSOProfileActivity.class);
             startActivity(intent);
             finish();
-        } /*else if (id == R.id.menuUpdateEmailSO) {
+        } else if (id == R.id.menuUpdateEmailSO) {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, UpdateSOEmailActivity.class);
             startActivity(intent);
-        } else if (id == R.id.menuSettingsSO) {
+            finish();
+        } /*else if (id == R.id.menuSettingsSO) {
             Toast.makeText(UsersProfileActivity.this, "menuSettingsSO", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.menuChangePasswordSO) {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, ChangeSOPasswordActivity.class);

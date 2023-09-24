@@ -77,15 +77,15 @@ public class UpdateProfileActivity extends AppCompatActivity {
             }
         });
 
-        /*Button buttonUpdateEmail = findViewById(R.id.buttonUpdateProfileEmail);
+        Button buttonUpdateEmail = findViewById(R.id.buttonUpdateProfileEmail);
         buttonUpdateEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UpdateProfileActivity.this, UploadProfilePicActivity.class);
+                Intent intent = new Intent(UpdateProfileActivity.this, UpdateEmailActivity.class);
                 startActivity(intent);
                 finish();
             }
-        });*/
+        });
 
         //Setting up DatePicker on EditText
         editTextUpdateDoB.setOnClickListener(new View.OnClickListener() {
@@ -283,10 +283,11 @@ public class UpdateProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(UpdateProfileActivity.this, UpdateProfileActivity.class);
             startActivity(intent);
             finish();
-        } /*else if (id == R.id.menuUpdateEmail) {
-            Intent intent = new Intent(UsersProfileActivity.this, UpdateEmailActivity.class);
+        } else if (id == R.id.menuUpdateEmail) {
+            Intent intent = new Intent(UpdateProfileActivity.this, UpdateEmailActivity.class);
             startActivity(intent);
-        } else if (id == R.id.menuSettings) {
+            finish();
+        } /*else if (id == R.id.menuSettings) {
             Toast.makeText(UsersProfileActivity.this, "menuSettings", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.menuChangePassword) {
             Intent intent = new Intent(UsersProfileActivity.this, ChangePasswordActivity.class);
