@@ -134,10 +134,11 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
             startActivity(getIntent());
             finish();
             overridePendingTransition(0,0);
-        } /*else if (id == R.id.menuUpdateProfileSO) {
+        } else if (id == R.id.menuUpdateProfileSO) {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, UpdateSOProfileActivity.class);
             startActivity(intent);
-        } else if (id == R.id.menuUpdateEmailSO) {
+            finish();
+        } /*else if (id == R.id.menuUpdateEmailSO) {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, UpdateSOEmailActivity.class);
             startActivity(intent);
         } else if (id == R.id.menuSettingsSO) {

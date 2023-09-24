@@ -165,10 +165,11 @@ public class UsersProfileActivity extends AppCompatActivity {
             startActivity(getIntent());
             finish();
             overridePendingTransition(0,0);
-        } /*else if (id == R.id.menuUpdateProfile) {
+        } else if (id == R.id.menuUpdateProfile) {
             Intent intent = new Intent(UsersProfileActivity.this, UpdateProfileActivity.class);
             startActivity(intent);
-        } else if (id == R.id.menuUpdateEmail) {
+            finish();
+        } /*else if (id == R.id.menuUpdateEmail) {
             Intent intent = new Intent(UsersProfileActivity.this, UpdateEmailActivity.class);
             startActivity(intent);
         } else if (id == R.id.menuSettings) {

@@ -147,7 +147,7 @@ public class UploadSOProfilePicActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Inflate menu items
-        getMenuInflater().inflate(R.menu.common_menu, menu);
+        getMenuInflater().inflate(R.menu.common_menu_so, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -161,10 +161,11 @@ public class UploadSOProfilePicActivity extends AppCompatActivity {
             startActivity(getIntent());
             finish();
             overridePendingTransition(0,0);
-        } /*else if (id == R.id.menuUpdateProfileSO) {
-            Intent intent = new Intent(StoreOwnerProfileActivity.this, UpdateSOProfileActivity.class);
+        } else if (id == R.id.menuUpdateProfileSO) {
+            Intent intent = new Intent(UploadSOProfilePicActivity.this, UpdateSOProfileActivity.class);
             startActivity(intent);
-        } else if (id == R.id.menuUpdateEmail) {
+            finish();
+        } /*else if (id == R.id.menuUpdateEmail) {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, UpdateSOEmailActivity.class);
             startActivity(intent);
         } else if (id == R.id.menuSettings) {

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Refresh"
+        android:icon="@drawable/ic_refresh"
+        android:alphabeticShortcut="r"
+        android:orderInCategory="1"
+        android:id="@+id/menuRefreshHome"
+        app:showAsAction="ifRoom"/>
+
+    <item android:title="Manage Profile"
+        android:id="@+id/menuManageProfile"/>
+
+    <item android:title="Logout"
+        android:id="@+id/menuLogoutHome"/>
+
+</menu>

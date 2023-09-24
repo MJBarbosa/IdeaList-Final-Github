@@ -143,7 +143,7 @@ public class LoginAsStoreOwner extends AppCompatActivity {
                         Toast.makeText(LoginAsStoreOwner.this, "You Are Logged In Now", Toast.LENGTH_SHORT).show();
                         //Open User Profile After Successful Registration
                         //Start the UserProfileActivity
-                        startActivity(new Intent(LoginAsStoreOwner.this, StoreOwnerProfileActivity.class));
+                        startActivity(new Intent(LoginAsStoreOwner.this, MainSOActivity.class));
                         finish(); //Close Login
                     } else {
                         firebaseUser.sendEmailVerification();

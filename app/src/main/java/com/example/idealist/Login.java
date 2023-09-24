@@ -141,7 +141,7 @@ public class Login extends AppCompatActivity {
                         Toast.makeText(Login.this, "You Are Logged In Now", Toast.LENGTH_SHORT).show();
                         //Open User Profile After Successful Registration
                         //Start the UserProfileActivity
-                        startActivity(new Intent(Login.this, UsersProfileActivity.class));
+                        startActivity(new Intent(Login.this, MainActivity.class));
                         finish(); //Close Login
                     } else {
                         firebaseUser.sendEmailVerification();
