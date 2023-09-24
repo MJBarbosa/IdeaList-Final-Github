@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class UsersProfileActivity extends AppCompatActivity {
 
@@ -46,6 +48,16 @@ public class UsersProfileActivity extends AppCompatActivity {
         textViewGender = findViewById(R.id.textViewShowGender);
         textViewMobile = findViewById(R.id.textViewShowMobile);
         progressBar = findViewById(R.id.progressBarShow);
+
+        //Set OnClickListener on ImageView to Open UploadProfilePicActivity
+        imageView = findViewById(R.id.imageViewProfileDp);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UsersProfileActivity.this, UploadProfilePicActivity.class);
+                startActivity(intent);
+            }
+        });
 
         authProfile = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = authProfile.getCurrentUser();
@@ -115,6 +127,14 @@ public class UsersProfileActivity extends AppCompatActivity {
                     textViewDoB.setText(doB);
                     textViewGender.setText(gender);
                     textViewMobile.setText(mobile);
+
+                    //Set User DP (After User Had Uploaded)
+                    Uri uri = firebaseUser.getPhotoUrl();
+
+                    //ImageViewer setImageURI() should not be Used with regular URIs. So we are using Picasso
+                    Picasso.with(UsersProfileActivity.this).load(uri).into(imageView);
+                } else {
+                    Toast.makeText(UsersProfileActivity.this, "Something Went Wrong!", Toast.LENGTH_LONG).show();
                 }
                 progressBar.setVisibility(View.GONE);
             }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class StoreOwnerProfileActivity extends AppCompatActivity {
 
@@ -45,6 +47,16 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
         textViewStoreNameSO = findViewById(R.id.textViewShowStoreNameSO);
         textViewStoreLocSO = findViewById(R.id.textViewShowStoreLocSO);
         progressBarSO = findViewById(R.id.progressBarShowSO);
+
+        //Set OnClickListener on ImageView to Open UploadProfilePicActivity
+        imageView = findViewById(R.id.imageViewProfileDpSO);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StoreOwnerProfileActivity.this, UploadSOProfilePicActivity.class);
+                startActivity(intent);
+            }
+        });
 
         authProfileSO = FirebaseAuth.getInstance();
         FirebaseUser firebaseUserSO = authProfileSO.getCurrentUser();
@@ -84,6 +96,14 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
                     textViewMobileSO.setText(mobile);
                     textViewStoreNameSO.setText(storeName);
                     textViewStoreLocSO.setText(storeLoc);
+
+                    //Set User DP (After User Had Uploaded)
+                    Uri uri = firebaseUserSO.getPhotoUrl();
+
+                    //ImageViewer setImageURI() should not be Used with regular URIs. So we are using Picasso
+                    Picasso.with(StoreOwnerProfileActivity.this).load(uri).into(imageView);
+                } else {
+                    Toast.makeText(StoreOwnerProfileActivity.this, "Something Went Wrong!", Toast.LENGTH_LONG).show();
                 }
                 progressBarSO.setVisibility(View.GONE);
             }
