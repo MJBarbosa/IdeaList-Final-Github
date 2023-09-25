@@ -25,83 +25,83 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class DeleteProfileActivity extends AppCompatActivity {
+public class DeleteSOProfileActivity extends AppCompatActivity {
 
-    private FirebaseAuth authProfile;
-    private FirebaseUser firebaseUser;
-    private EditText editTextUserPwd;
-    private TextView textViewAuthenticated;
-    private ProgressBar progressBar;
-    private String userPwd;
-    private Button buttonReAuthenticate, buttonDeleteUser;
+    private FirebaseAuth authProfileSO;
+    private FirebaseUser firebaseUserSO;
+    private EditText editTextUserPwdSO;
+    private TextView textViewAuthenticatedSO;
+    private ProgressBar progressBarSO;
+    private String userPwdSO;
+    private Button buttonReAuthenticateSO, buttonDeleteUserSO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_delete_profile);
+        setContentView(R.layout.activity_delete_soprofile);
 
         getSupportActionBar().setTitle("Delete Your Profile");
 
-        progressBar = findViewById(R.id.progressBarDeleteUser);
-        editTextUserPwd = findViewById(R.id.editTextDeleteUserPwd);
-        textViewAuthenticated = findViewById(R.id.textViewDeleteUserPwdAuthenticated);
-        buttonReAuthenticate = findViewById(R.id.buttonDeleteUserPwdAuthenticate);
-        buttonDeleteUser = findViewById(R.id.buttonDeleteUser);
+        progressBarSO = findViewById(R.id.progressBarDeleteUserSO);
+        editTextUserPwdSO = findViewById(R.id.editTextDeleteUserPwdSO);
+        textViewAuthenticatedSO = findViewById(R.id.textViewDeleteUserPwdAuthenticatedSO);
+        buttonReAuthenticateSO = findViewById(R.id.buttonDeleteUserPwdAuthenticateSO);
+        buttonDeleteUserSO = findViewById(R.id.buttonDeleteUserSO);
 
         //Disable Delete User Button Until User is Authenticated
-        buttonDeleteUser.setEnabled(false);
+        buttonDeleteUserSO.setEnabled(false);
 
-        authProfile = FirebaseAuth.getInstance();
-        firebaseUser = authProfile.getCurrentUser();
+        authProfileSO = FirebaseAuth.getInstance();
+        firebaseUserSO = authProfileSO.getCurrentUser();
 
-        if (firebaseUser.equals("")) {
-            Toast.makeText(DeleteProfileActivity.this, "Something Went Wrong!" + "User Details Are Not Available At The Moment.", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(DeleteProfileActivity.this, UsersProfileActivity.class);
+        if (firebaseUserSO.equals("")) {
+            Toast.makeText(DeleteSOProfileActivity.this, "Something Went Wrong!" + "User Details Are Not Available At The Moment.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(DeleteSOProfileActivity.this, StoreOwnerProfileActivity.class);
             startActivity(intent);
             finish();
         } else {
-            reAuthenticateUser(firebaseUser);
+            reAuthenticateUser(firebaseUserSO);
         }
     }
 
     //ReAuthenticate User Before Changing Password
-    private void reAuthenticateUser(FirebaseUser firebaseUser) {
-        buttonReAuthenticate.setOnClickListener(new View.OnClickListener() {
+    private void reAuthenticateUser(FirebaseUser firebaseUserSO) {
+        buttonReAuthenticateSO.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userPwd = editTextUserPwd.getText().toString();
+                userPwdSO = editTextUserPwdSO.getText().toString();
 
-                if (TextUtils.isEmpty(userPwd)) {
-                    Toast.makeText(DeleteProfileActivity.this, "Password is Needed", Toast.LENGTH_SHORT).show();
-                    editTextUserPwd.setError("Please Enter Your Current Password to Authenticate");
-                    editTextUserPwd.requestFocus();
+                if (TextUtils.isEmpty(userPwdSO)) {
+                    Toast.makeText(DeleteSOProfileActivity.this, "Password is Needed", Toast.LENGTH_SHORT).show();
+                    editTextUserPwdSO.setError("Please Enter Your Current Password to Authenticate");
+                    editTextUserPwdSO.requestFocus();
                 } else {
-                    progressBar.setVisibility(View.VISIBLE);
+                    progressBarSO.setVisibility(View.VISIBLE);
 
                     //ReAuthenticate User Now
-                    AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), userPwd);
+                    AuthCredential credential = EmailAuthProvider.getCredential(firebaseUserSO.getEmail(), userPwdSO);
 
-                    firebaseUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    firebaseUserSO.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                progressBar.setVisibility(View.GONE);
+                                progressBarSO.setVisibility(View.GONE);
 
                                 //Disable editText for Password.
-                                editTextUserPwd.setEnabled(false);
+                                editTextUserPwdSO.setEnabled(false);
 
                                 //Enable Change Password Button. Disable Authenticate Button
-                                buttonDeleteUser.setEnabled(true);
-                                buttonReAuthenticate.setEnabled(false);
+                                buttonDeleteUserSO.setEnabled(true);
+                                buttonReAuthenticateSO.setEnabled(false);
 
                                 //Set TextView to Show User is authenticated/verified
-                                textViewAuthenticated.setText("You are authenticated/verified." + "You can Delete Your Profile and Related Data Now!");
-                                Toast.makeText(DeleteProfileActivity.this, "Password has Been Verified." + "Change Password Now", Toast.LENGTH_SHORT).show();
+                                textViewAuthenticatedSO.setText("You are authenticated/verified." + "You can Delete Your Profile and Related Data Now!");
+                                Toast.makeText(DeleteSOProfileActivity.this, "Password has Been Verified." + "Change Password Now", Toast.LENGTH_SHORT).show();
 
                                 //Update Color of Change Password Button
-                                buttonDeleteUser.setBackgroundTintList(ContextCompat.getColorStateList(DeleteProfileActivity.this, R.color.dark_green));
+                                buttonDeleteUserSO.setBackgroundTintList(ContextCompat.getColorStateList(DeleteSOProfileActivity.this, R.color.dark_green));
 
-                                buttonDeleteUser.setOnClickListener(new View.OnClickListener() {
+                                buttonDeleteUserSO.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         showAlertDialog();
@@ -111,10 +111,10 @@ public class DeleteProfileActivity extends AppCompatActivity {
                                 try {
                                     throw task.getException();
                                 } catch (Exception e) {
-                                    Toast.makeText(DeleteProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(DeleteSOProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
-                            progressBar.setVisibility(View.GONE);
+                            progressBarSO.setVisibility(View.GONE);
 
                         }
                     });
@@ -125,7 +125,7 @@ public class DeleteProfileActivity extends AppCompatActivity {
 
     private void showAlertDialog() {
         //Setup the Alert Builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(DeleteProfileActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(DeleteSOProfileActivity.this);
         builder.setTitle("Delete User and Related Data?");
         builder.setMessage("Do You Really Want To Delete Your Profile and Related Data? This Action is Irreversible!");
 
@@ -133,7 +133,7 @@ public class DeleteProfileActivity extends AppCompatActivity {
         builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                deleteUser(firebaseUser);
+                deleteUser(firebaseUserSO);
             }
         });
 
@@ -141,7 +141,7 @@ public class DeleteProfileActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(DeleteProfileActivity.this, UsersProfileActivity.class);
+                Intent intent = new Intent(DeleteSOProfileActivity.this, StoreOwnerProfileActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -162,24 +162,24 @@ public class DeleteProfileActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void deleteUser(FirebaseUser firebaseUser) {
-        firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+    private void deleteUser(FirebaseUser firebaseUserSO) {
+        firebaseUserSO.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    authProfile.signOut();
-                    Toast.makeText(DeleteProfileActivity.this, "User Has Been Deleted!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(DeleteProfileActivity.this, MainActivity.class);
+                    authProfileSO.signOut();
+                    Toast.makeText(DeleteSOProfileActivity.this, "User Has Been Deleted!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(DeleteSOProfileActivity.this, MainSOActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
                     try {
                         throw task.getException();
                     } catch (Exception e) {
-                        Toast.makeText(DeleteProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DeleteSOProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
-                progressBar.setVisibility(View.GONE);
+                progressBarSO.setVisibility(View.GONE);
             }
         });
     }
@@ -188,7 +188,7 @@ public class DeleteProfileActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Inflate menu items
-        getMenuInflater().inflate(R.menu.common_menu, menu);
+        getMenuInflater().inflate(R.menu.common_menu_so, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -197,44 +197,44 @@ public class DeleteProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.menuRefresh) {
+        if (id == R.id.menuRefreshSO) {
             //Refresh Activity
             startActivity(getIntent());
             finish();
             overridePendingTransition(0,0);
-        } else if (id == R.id.menuHome) {
-            Intent intent = new Intent(DeleteProfileActivity.this, MainActivity.class);
+        } else if (id == R.id.menuHomeSO) {
+            Intent intent = new Intent(DeleteSOProfileActivity.this, MainSOActivity.class);
             startActivity(intent);
             finish();
-        } else if (id == R.id.menuUpdateProfile) {
-            Intent intent = new Intent(DeleteProfileActivity.this, UpdateProfileActivity.class);
+        } else if (id == R.id.menuUpdateProfileSO) {
+            Intent intent = new Intent(DeleteSOProfileActivity.this, UpdateSOProfileActivity.class);
             startActivity(intent);
             finish();
         } else if (id == R.id.menuUpdateEmail) {
-            Intent intent = new Intent(DeleteProfileActivity.this, UpdateEmailActivity.class);
+            Intent intent = new Intent(DeleteSOProfileActivity.this, UpdateSOEmailActivity.class);
             startActivity(intent);
             finish();
         } else if (id == R.id.menuSettings) {
-            Toast.makeText(DeleteProfileActivity.this, "menuSettings", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DeleteSOProfileActivity.this, "menuSettings", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.menuChangePassword) {
-            Intent intent = new Intent(DeleteProfileActivity.this, ChangePasswordActivity.class);
+            Intent intent = new Intent(DeleteSOProfileActivity.this, ChangeSOPasswordActivity.class);
             startActivity(intent);
             finish();
         } else if (id == R.id.menuDeleteProfile) {
-            Intent intent = new Intent(DeleteProfileActivity.this, DeleteProfileActivity.class);
+            Intent intent = new Intent(DeleteSOProfileActivity.this, DeleteSOProfileActivity.class);
             startActivity(intent);
             finish();
-        } else if (id == R.id.menuLogout) {
-            authProfile.signOut();
-            Toast.makeText(DeleteProfileActivity.this, "Logged Out", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(DeleteProfileActivity.this, Login.class);
+        } else if (id == R.id.menuLogoutSO) {
+            authProfileSO.signOut();
+            Toast.makeText(DeleteSOProfileActivity.this, "Logged Out", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(DeleteSOProfileActivity.this, LoginAsStoreOwner.class);
 
             //Clear stack to prevent user coming back to UserProfileActivity on pressing back button after Logging out
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         } else {
-            Toast.makeText(DeleteProfileActivity.this, "Something Went Wrong!", Toast.LENGTH_LONG).show();
+            Toast.makeText(DeleteSOProfileActivity.this, "Something Went Wrong!", Toast.LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }

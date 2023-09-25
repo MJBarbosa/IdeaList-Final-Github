@@ -134,8 +134,8 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
             startActivity(getIntent());
             finish();
             overridePendingTransition(0,0);
-        } else if (id == R.id.menuHomeSO) {
-            Intent intent = new Intent(StoreOwnerProfileActivity.this, StoreOwnerProfileActivity.class);
+        }  else if (id == R.id.menuHomeSO) {
+            Intent intent = new Intent(StoreOwnerProfileActivity.this, MainSOActivity.class);
             startActivity(intent);
             finish();
         } else if (id == R.id.menuUpdateProfileSO) {
@@ -152,10 +152,11 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, ChangeSOPasswordActivity.class);
             startActivity(intent);
             finish();
-        } /*else if (id == R.id.menuDeleteProfileSO) {
+        } else if (id == R.id.menuDeleteProfileSO) {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, DeleteSOProfileActivity.class);
             startActivity(intent);
-        } */else if (id == R.id.menuLogoutSO) {
+            finish();
+        } else if (id == R.id.menuLogoutSO) {
             authProfileSO.signOut();
             Toast.makeText(StoreOwnerProfileActivity.this, "Logged Out", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(StoreOwnerProfileActivity.this, LoginAsStoreOwner.class);
