@@ -194,10 +194,11 @@ public class UpdateEmailActivity extends AppCompatActivity {
             finish();
         } /*else if (id == R.id.menuSettings) {
             Toast.makeText(UsersProfileActivity.this, "menuSettings", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.menuChangePassword) {
+        } */else if (id == R.id.menuChangePassword) {
             Intent intent = new Intent(UpdateEmailActivity.this, ChangePasswordActivity.class);
             startActivity(intent);
-        } else if (id == R.id.menuDeleteProfile) {
+            finish();
+        } /*else if (id == R.id.menuDeleteProfile) {
             Intent intent = new Intent(UpdateEmailActivity.this, DeleteProfileActivity.class);
             startActivity(intent);
         } */else if (id == R.id.menuLogout) {
