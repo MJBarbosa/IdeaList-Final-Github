@@ -190,6 +190,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
             startActivity(getIntent());
             finish();
             overridePendingTransition(0,0);
+        } else if (id == R.id.menuHome) {
+            Intent intent = new Intent(ChangePasswordActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.menuUpdateProfile) {
             Intent intent = new Intent(ChangePasswordActivity.this, UpdateProfileActivity.class);
             startActivity(intent);
@@ -198,16 +202,17 @@ public class ChangePasswordActivity extends AppCompatActivity {
             Intent intent = new Intent(ChangePasswordActivity.this, UpdateEmailActivity.class);
             startActivity(intent);
             finish();
-        } /*else if (id == R.id.menuSettings) {
-            Toast.makeText(UsersProfileActivity.this, "menuSettings", Toast.LENGTH_SHORT).show();
-        } */else if (id == R.id.menuChangePassword) {
+        } else if (id == R.id.menuSettings) {
+            Toast.makeText(ChangePasswordActivity.this, "menuSettings", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.menuChangePassword) {
             Intent intent = new Intent(ChangePasswordActivity.this, ChangePasswordActivity.class);
             startActivity(intent);
             finish();
-        } /*else if (id == R.id.menuDeleteProfile) {
-            Intent intent = new Intent(UpdateEmailActivity.this, DeleteProfileActivity.class);
+        } else if (id == R.id.menuDeleteProfile) {
+            Intent intent = new Intent(ChangePasswordActivity.this, DeleteProfileActivity.class);
             startActivity(intent);
-        } */else if (id == R.id.menuLogout) {
+            finish();
+        } else if (id == R.id.menuLogout) {
             authProfile.signOut();
             Toast.makeText(ChangePasswordActivity.this, "Logged Out", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(ChangePasswordActivity.this, Login.class);

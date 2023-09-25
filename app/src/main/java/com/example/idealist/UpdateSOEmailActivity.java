@@ -183,6 +183,10 @@ public class UpdateSOEmailActivity extends AppCompatActivity {
             startActivity(getIntent());
             finish();
             overridePendingTransition(0,0);
+        } else if (id == R.id.menuHomeSO) {
+            Intent intent = new Intent(UpdateSOEmailActivity.this, StoreOwnerProfileActivity.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.menuUpdateProfileSO) {
             Intent intent = new Intent(UpdateSOEmailActivity.this, UpdateSOProfileActivity.class);
             startActivity(intent);
@@ -191,12 +195,13 @@ public class UpdateSOEmailActivity extends AppCompatActivity {
             Intent intent = new Intent(UpdateSOEmailActivity.this, UpdateSOEmailActivity.class);
             startActivity(intent);
             finish();
-        } /*else if (id == R.id.menuSettings) {
-            Toast.makeText(StoreOwnerProfileActivity.this, "menuSettings", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.menuSettings) {
+            Toast.makeText(UpdateSOEmailActivity.this, "menuSettings", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.menuChangePassword) {
-            Intent intent = new Intent(StoreOwnerProfileActivity.this, ChangeSOPasswordActivity.class);
+            Intent intent = new Intent(UpdateSOEmailActivity.this, ChangeSOPasswordActivity.class);
             startActivity(intent);
-        } else if (id == R.id.menuDeleteProfile) {
+            finish();
+        } /*else if (id == R.id.menuDeleteProfile) {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, DeleteSOProfileActivity.class);
             startActivity(intent);
         } */else if (id == R.id.menuLogoutSO) {

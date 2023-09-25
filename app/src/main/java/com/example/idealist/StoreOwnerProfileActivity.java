@@ -134,6 +134,10 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
             startActivity(getIntent());
             finish();
             overridePendingTransition(0,0);
+        } else if (id == R.id.menuHomeSO) {
+            Intent intent = new Intent(StoreOwnerProfileActivity.this, StoreOwnerProfileActivity.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.menuUpdateProfileSO) {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, UpdateSOProfileActivity.class);
             startActivity(intent);
@@ -142,12 +146,13 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, UpdateSOEmailActivity.class);
             startActivity(intent);
             finish();
-        } /*else if (id == R.id.menuSettingsSO) {
-            Toast.makeText(UsersProfileActivity.this, "menuSettingsSO", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.menuSettingsSO) {
+            Toast.makeText(StoreOwnerProfileActivity.this, "menuSettingsSO", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.menuChangePasswordSO) {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, ChangeSOPasswordActivity.class);
             startActivity(intent);
-        } else if (id == R.id.menuDeleteProfileSO) {
+            finish();
+        } /*else if (id == R.id.menuDeleteProfileSO) {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, DeleteSOProfileActivity.class);
             startActivity(intent);
         } */else if (id == R.id.menuLogoutSO) {

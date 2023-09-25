@@ -161,6 +161,10 @@ public class UploadSOProfilePicActivity extends AppCompatActivity {
             startActivity(getIntent());
             finish();
             overridePendingTransition(0,0);
+        } else if (id == R.id.menuHomeSO) {
+            Intent intent = new Intent(UploadSOProfilePicActivity.this, StoreOwnerProfileActivity.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.menuUpdateProfileSO) {
             Intent intent = new Intent(UploadSOProfilePicActivity.this, UpdateSOProfileActivity.class);
             startActivity(intent);
@@ -169,12 +173,13 @@ public class UploadSOProfilePicActivity extends AppCompatActivity {
             Intent intent = new Intent(UploadSOProfilePicActivity.this, UpdateSOEmailActivity.class);
             startActivity(intent);
             finish();
-        } /*else if (id == R.id.menuSettings) {
-            Toast.makeText(StoreOwnerProfileActivity.this, "menuSettings", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.menuSettings) {
+            Toast.makeText(UploadSOProfilePicActivity.this, "menuSettings", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.menuChangePassword) {
-            Intent intent = new Intent(StoreOwnerProfileActivity.this, ChangeSOPasswordActivity.class);
+            Intent intent = new Intent(UploadSOProfilePicActivity.this, ChangeSOPasswordActivity.class);
             startActivity(intent);
-        } else if (id == R.id.menuDeleteProfile) {
+            finish();
+        } /*else if (id == R.id.menuDeleteProfile) {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, DeleteSOProfileActivity.class);
             startActivity(intent);
         } */else if (id == R.id.menuLogoutSO) {
