@@ -42,7 +42,7 @@ public class MainSOActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Inflate menu items
-        getMenuInflater().inflate(R.menu.common_menu_home, menu);
+        getMenuInflater().inflate(R.menu.common_menu_home_so, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -51,15 +51,15 @@ public class MainSOActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.menuRefreshHome) {
+        if (id == R.id.menuRefreshHomeSO) {
             //Refresh Activity
             startActivity(getIntent());
             finish();
             overridePendingTransition(0,0);
-        } else if (id == R.id.menuManageProfile) {
+        } else if (id == R.id.menuManageProfileSO) {
             Intent intent = new Intent(MainSOActivity.this, StoreOwnerProfileActivity.class);
             startActivity(intent);
-        } else if (id == R.id.menuLogoutHome) {
+        } else if (id == R.id.menuLogoutHomeSO) {
             authProfileSO.signOut();
             Toast.makeText(MainSOActivity.this, "Logged Out", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(MainSOActivity.this, LoginAsStoreOwner.class);

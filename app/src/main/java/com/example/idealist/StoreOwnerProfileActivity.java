@@ -2,6 +2,8 @@ package com.example.idealist;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -30,6 +32,7 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
     private String fullName, email, doB, gender, mobile, storeName, storeLoc;
     private ImageView imageView;
     private FirebaseAuth authProfileSO;
+    private SwipeRefreshLayout swipeContainerSO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,8 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_store_owner_profile);
 
         getSupportActionBar().setTitle("User Profile");
+
+        swipeToRefreshSO();
 
         textViewWelcomeSO = findViewById(R.id.textViewShowWelcomeSO);
         textViewFullNameSO = findViewById(R.id.textViewShowFullNameSO);
@@ -68,6 +73,25 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
             showStoreOwnerProfile(firebaseUserSO);
         }
 
+    }
+
+    private void swipeToRefreshSO() {//Look up for the swipe Container
+        swipeContainerSO = findViewById(R.id.swipeContainerUploadSO);
+
+        //Setup Refresh Listener which triggers new data loading
+        swipeContainerSO.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Code to refresh goes here. Make sure to call swipeContainer.setRefreshing(false) once the refresh
+                startActivity(getIntent());
+                finish();
+                overridePendingTransition(0,0);
+                swipeContainerSO.setRefreshing(false);
+            }
+        });
+
+        //Configure refresh colors
+        swipeContainerSO.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
     }
 
     private void showStoreOwnerProfile(FirebaseUser firebaseUserSO) {
@@ -129,7 +153,9 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.menuRefreshSO) {
+        if (id == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(StoreOwnerProfileActivity.this);
+        }else if (id == R.id.menuRefreshSO) {
             //Refresh Activity
             startActivity(getIntent());
             finish();

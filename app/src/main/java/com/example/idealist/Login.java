@@ -99,8 +99,8 @@ public class Login extends AppCompatActivity {
         });
 
         //Login As Customer
-        Button buttonLoginSO = findViewById(R.id.buttonLogin);
-        buttonLoginSO.setOnClickListener(new View.OnClickListener() {
+        Button buttonLogin = findViewById(R.id.buttonLogin);
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String textEmail = editTextLoginEmail.getText().toString();

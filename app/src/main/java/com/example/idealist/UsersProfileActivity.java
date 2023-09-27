@@ -1,8 +1,11 @@
 package com.example.idealist;
 
+import androidx.annotation.NavigationRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,6 +35,7 @@ public class UsersProfileActivity extends AppCompatActivity {
     private String firstName, lastName, address, email, doB, gender, mobile;
     private ImageView imageView;
     private FirebaseAuth authProfile;
+    private SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,10 @@ public class UsersProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_users_profile);
 
         getSupportActionBar().setTitle("User Profile");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        swipeToRefresh();
+
         textViewWelcome = findViewById(R.id.textViewShowWelcome);
         textViewFirstName = findViewById(R.id.textViewShowFirstName);
         textViewLastName = findViewById(R.id.textViewShowLastName);
@@ -69,6 +77,26 @@ public class UsersProfileActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
             showUsersProfile(firebaseUser);
         }
+    }
+
+    private void swipeToRefresh() {
+        //Look up for the swipe Container
+        swipeContainer = findViewById(R.id.swipeContainerUpload);
+
+        //Setup Refresh Listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Code to refresh goes here. Make sure to call swipeContainer.setRefreshing(false) once the refresh
+                startActivity(getIntent());
+                finish();
+                overridePendingTransition(0,0);
+                swipeContainer.setRefreshing(false);
+            }
+        });
+
+        //Configure refresh colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
     }
 
     private void checkIfEmailVerified(FirebaseUser firebaseUser) {
@@ -160,7 +188,9 @@ public class UsersProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.menuRefresh) {
+        if (id == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(UsersProfileActivity.this);
+        }else if (id == R.id.menuRefresh) {
             //Refresh Activity
             startActivity(getIntent());
             finish();

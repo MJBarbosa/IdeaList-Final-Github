@@ -107,7 +107,7 @@ public class UploadProfilePicActivity extends AppCompatActivity {
     private void UploadPic() {
         if (uriImage != null) {
             //Save the Image with uid of the Currently logged user
-            StorageReference fileReference = storageReference.child(authProfile.getCurrentUser().getUid() + "," + getFileExtension(uriImage));
+            StorageReference fileReference = storageReference.child(authProfile.getCurrentUser().getUid() + "/displaypic." + getFileExtension(uriImage));
 
             //Upload image to Storage
             fileReference.putFile(uriImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,11 +20,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class DeleteSOProfileActivity extends AppCompatActivity {
 
@@ -34,6 +41,7 @@ public class DeleteSOProfileActivity extends AppCompatActivity {
     private ProgressBar progressBarSO;
     private String userPwdSO;
     private Button buttonReAuthenticateSO, buttonDeleteUserSO;
+    private static final String TAG = "DeleteSOProfileActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +141,7 @@ public class DeleteSOProfileActivity extends AppCompatActivity {
         builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                deleteUser(firebaseUserSO);
+                deleteUserDataSO(firebaseUserSO);
             }
         });
 
@@ -162,7 +170,7 @@ public class DeleteSOProfileActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void deleteUser(FirebaseUser firebaseUserSO) {
+    private void deleteUser() {
         firebaseUserSO.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -180,6 +188,43 @@ public class DeleteSOProfileActivity extends AppCompatActivity {
                     }
                 }
                 progressBarSO.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    //Delete all the Data of the User
+    private void deleteUserDataSO(FirebaseUser firebaseUserSO) {
+
+        if (firebaseUserSO.getPhotoUrl() != null) {
+            //Delete Display Pic. Also check if the user has uploaded any pic before deleting
+            FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+            StorageReference storageReference = firebaseStorage.getReferenceFromUrl(firebaseUserSO.getPhotoUrl().toString());
+            storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Log.d(TAG, "OnSuccess: Photo Deleted");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, e.getMessage());
+                    Toast.makeText(DeleteSOProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        //Delete Data From Realtime Database
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Registered Store Owner Users");
+        databaseReference.child(firebaseUserSO.getUid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "OnSuccess: User Data Deleted");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, e.getMessage());
+                Toast.makeText(DeleteSOProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
