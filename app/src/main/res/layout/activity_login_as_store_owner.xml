@@ -14,10 +14,18 @@
         android:layout_margin="15dp"
         android:background="@color/white">
 
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/imageViewLoginLogo"
+            android:layout_marginLeft="90dp"
+            android:background="@drawable/White_bg_logo"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textViewLoginHeadSO"
+            android:layout_below="@id/imageViewLoginLogo"
             android:layout_marginTop="30dp"
             android:text="Login"
             android:fontFamily="@font/poppinsbold"
