@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Inventory"
+        android:id="@+id/menu_inventory"
+        android:icon="@drawable/ic_inventory"/>
+
+    <item android:title="P.O.S"
+        android:id="@+id/menu_pos"
+        android:icon="@drawable/ic_point_of_sale"/>
+
+    <item android:title="Home"
+        android:id="@+id/menu_home_so"
+        android:icon="@drawable/ic_home"/>
+
+    <item android:title="Sales Report"
+        android:id="@+id/menu_sales_report"
+        android:icon="@drawable/ic_sales_report"/>
+
+    <item android:title="QR Generator"
+        android:id="@+id/menu_qr_gene"
+        android:icon="@drawable/ic_qr_generator"/>
+</menu>

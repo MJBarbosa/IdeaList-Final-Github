@@ -11,5 +11,8 @@
     <color name="red">#FF0000</color>
     <color name="lime">#00FF00</color>
     <color name="light_gray">#D3D3D3</color>
-    <color name="colorAccent">#27A9E4</color>>
+    <color name="colorAccent">#27A9E4</color>
+    <color name="orange_main">#C5832B</color>
+    <color name="blue_main">#416788</color>
+    <color name="white_main">#EDF2F4</color>
 </resources>

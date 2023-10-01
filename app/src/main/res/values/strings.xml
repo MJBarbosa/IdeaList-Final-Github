@@ -15,4 +15,6 @@
     <string name="login_as_customer">Login As Customer</string>
     <string name="login_as_store_owner">Login As Store Owner</string>
     <string name="sign_up">Sign Up</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
 </resources>

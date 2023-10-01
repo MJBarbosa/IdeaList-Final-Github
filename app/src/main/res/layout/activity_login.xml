@@ -14,15 +14,25 @@
         android:layout_margin="15dp"
         android:background="@color/white">
 
+        <ImageView
+            android:id="@+id/imageViewLoginLogoSO"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="75dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/ic_white_bg_logo" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textViewLoginHead"
-            android:layout_marginTop="30dp"
+            android:layout_below="@id/imageViewLoginLogoSO"
             android:text="Login"
             android:fontFamily="@font/poppinsbold"
             android:gravity="center"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/orange_main"
             android:textSize="30dp"/>
 
         <TextView
@@ -84,7 +94,8 @@
             android:layout_below="@+id/editTextLoginPassword"
             android:layout_marginTop="50dp"
             android:layout_marginRight="70dp"
-            android:layout_marginLeft="70dp"/>
+            android:layout_marginLeft="70dp"
+            android:backgroundTint="@color/blue_main"/>
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,11 +104,11 @@
 
             <TextView
                 android:id="@+id/textViewLoginForPsw"
-                android:layout_width="132dp"
+                android:layout_width="242dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="16dp"
-                android:gravity="left"
+                android:gravity="center"
                 android:text="Forgot Password"
                 android:textSize="16dp"
                 android:textStyle="bold" />
@@ -108,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="30dp"
-                android:gravity="right"
+                android:gravity="center"
                 android:text="Sign Up"
                 android:textSize="16dp"
                 android:textStyle="bold" />

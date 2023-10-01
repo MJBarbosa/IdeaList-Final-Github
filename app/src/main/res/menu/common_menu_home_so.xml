@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:title="Refresh"
-        android:icon="@drawable/ic_refresh"
-        android:alphabeticShortcut="r"
-        android:orderInCategory="1"
-        android:id="@+id/menuRefreshHomeSO"
-        app:showAsAction="ifRoom"/>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainSOActivity">
 
     <item android:title="Manage Profile"
-        android:id="@+id/menuManageProfileSO"/>
+        android:id="@+id/menuManageProfileSO"
+        android:icon="@drawable/ic_profile"/>
 
     <item android:title="Logout"
-        android:id="@+id/menuLogoutHomeSO"/>
+        android:id="@+id/menuLogoutHomeSO"
+        android:icon="@drawable/ic_logout"/>
 
 </menu>

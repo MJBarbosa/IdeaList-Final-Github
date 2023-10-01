@@ -15,106 +15,138 @@
         android:theme="@style/Theme.Material3.Light"
         tools:targetApi="31">
         <activity
-            android:name=".DeleteSOProfileActivity"
+            android:name=".QrGeneratorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SalesReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PointOfSaleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageInventoryActivity"
             android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StoreOwnerProfileActivity"/>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainSOActivity" />
+        </activity>
+        <activity
+            android:name=".DeleteSOProfileActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".StoreOwnerProfileActivity" />
         </activity>
         <activity
             android:name=".DeleteProfileActivity"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UsersProfileActivity"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UsersProfileActivity" />
         </activity>
         <activity
             android:name=".ChangeSOPasswordActivity"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StoreOwnerProfileActivity"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".StoreOwnerProfileActivity" />
         </activity>
         <activity
             android:name=".ChangePasswordActivity"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UsersProfileActivity"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UsersProfileActivity" />
         </activity>
         <activity
             android:name=".UpdateSOEmailActivity"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StoreOwnerProfileActivity"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".StoreOwnerProfileActivity" />
         </activity>
         <activity
             android:name=".UpdateEmailActivity"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UsersProfileActivity"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UsersProfileActivity" />
         </activity>
         <activity
             android:name=".UpdateSOProfileActivity"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StoreOwnerProfileActivity"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".StoreOwnerProfileActivity" />
         </activity>
         <activity
             android:name=".MainSOActivity"
             android:exported="false" />
         <activity
             android:name=".UpdateProfileActivity"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UsersProfileActivity"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UsersProfileActivity" />
         </activity>
         <activity
             android:name=".UploadSOProfilePicActivity"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StoreOwnerProfileActivity"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".StoreOwnerProfileActivity" />
         </activity>
         <activity
             android:name=".UploadProfilePicActivity"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UsersProfileActivity"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UsersProfileActivity" />
         </activity>
         <activity
             android:name=".UsersProfileActivity"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UsersProfileActivity"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UsersProfileActivity" />
         </activity>
         <activity
             android:name=".StoreOwnerProfileActivity"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainSOActivity"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainSOActivity" />
         </activity>
         <activity
             android:name=".ForgotPasswordStoreOwner"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoginAsStoreOwner"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginAsStoreOwner" />
         </activity>
         <activity
             android:name=".RegisterStoreOwnerActivity"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoginAsStoreOwner"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginAsStoreOwner" />
         </activity>
         <activity
             android:name=".LoginAsStoreOwner"
             android:exported="false" />
         <activity
             android:name=".RegisterActivity"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Login"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Login" />
         </activity>
         <activity
             android:name=".ForgotPassword"
-            android:exported="false" >
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Login"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Login" />
         </activity>
         <activity
             android:name=".Login"
