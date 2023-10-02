@@ -212,7 +212,7 @@ public class RegisterStoreOwnerActivity extends AppCompatActivity {
                                 Toast.makeText(RegisterStoreOwnerActivity.this, "User Registered Successfully. Please Verify Your Email", Toast.LENGTH_LONG).show();
 
                                 //Open User Profile After Successful Registration
-                                Intent intent = new Intent(RegisterStoreOwnerActivity.this, MainActivity.class);
+                                Intent intent = new Intent(RegisterStoreOwnerActivity.this, MainSOActivity.class);
                                 //To Prevent User Form Returning Back to Register Activity on Pressing back Button After Registration
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);

@@ -9,8 +9,14 @@ public class ReadWriteProductDetailsSO {
     private String productDescription;
     private String quantity;
     private String price;
+    private String userUid;
 
-    public ReadWriteProductDetailsSO(String textProductId, String textProductName, String textAddSuppName, String selectedAddCategory, String textAddProductDesc, String textAddQuantity, String textAddPrice) {
+    public ReadWriteProductDetailsSO() {
+        // Default constructor is required by Firebase
+    }
+
+    public ReadWriteProductDetailsSO(String userUid, String textProductId, String textProductName, String textAddSuppName, String selectedAddCategory, String textAddProductDesc, String textAddQuantity, String textAddPrice) {
+        this.userUid = userUid;
         this.productId = textProductId;
         this.productName = textProductName;
         this.supplierName = textAddSuppName;
@@ -18,6 +24,15 @@ public class ReadWriteProductDetailsSO {
         this.productDescription = textAddProductDesc;
         this.quantity = textAddQuantity;
         this.price = textAddPrice;
+    }
+
+    // Getter and setter for userUid
+    public String getUserUid() {
+        return userUid;
+    }
+
+    public void setUserUid(String userUid) {
+        this.userUid = userUid;
     }
 
     // Getters and setters for the fields (required for Firebase)

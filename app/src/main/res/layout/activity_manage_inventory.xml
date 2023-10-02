@@ -4,192 +4,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ManageInventoryActivity">
+    tools:context=".ManageInventoryActivity"
+    android:background="@drawable/ic_white_bg_logo">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp"
         android:layout_margin="15dp"
-        android:background="@color/white">
+        android:background="@color/light_gray"
+        >
 
-        <TextView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewAddInventoryHead"
-            android:layout_marginTop="30dp"
-            android:text="Please Enter Item Details to Add Item on the App Inventory"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+            app:cardCornerRadius="16dp"
+            android:id="@+id/cardViewAddProduct">
 
-        <TextView
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:background="@drawable/ic_add_product"
+            android:scaleType="fitCenter"
+            android:contentDescription="Add Product Button"
+            android:id="@+id/imageButtonAddProduct"/>
+    </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewAddProductId"
-            android:layout_below="@+id/textViewAddInventoryHead"
-            android:text="Product ID*"
-            android:textColor="#555555"
-            android:padding="6dp"
-            android:textSize="16dp"
-            android:layout_marginTop="50dp"/>
+            app:cardCornerRadius="16dp"
+            android:layout_below="@id/cardViewAddProduct"
+            android:layout_marginTop="15dp"
+            android:id="@+id/cardViewUpdateProduct">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editTextAddProductId"
-            android:hint="Enter Product ID"
-            android:inputType="text|number"
-            android:textSize="16sp"
-            android:padding="6dp"
-            android:layout_below="@+id/textViewAddProductId"
-            android:background="@drawable/border"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewAddProductName"
-            android:layout_below="@+id/editTextAddProductId"
-            android:text="Product Name*"
-            android:textColor="#555555"
-            android:padding="6dp"
-            android:textSize="16dp"
-            android:layout_marginTop="10dp"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editTextAddProductName"
-            android:hint="Enter Product Name"
-            android:inputType="text"
-            android:textSize="16sp"
-            android:padding="6dp"
-            android:layout_below="@+id/textViewAddProductName"
-            android:background="@drawable/border"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewAddSuppName"
-            android:layout_below="@+id/editTextAddProductName"
-            android:text="Supplier Name*"
-            android:textColor="#555555"
-            android:padding="6dp"
-            android:textSize="16dp"
-            android:layout_marginTop="10dp"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editTextAddSuppName"
-            android:hint="Enter Supplier Name"
-            android:inputType="textPersonName"
-            android:textSize="16sp"
-            android:padding="6dp"
-            android:layout_below="@+id/textViewAddSuppName"
-            android:background="@drawable/border"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewAddCategory"
-            android:layout_below="@+id/editTextAddSuppName"
-            android:text="Category*"
-            android:textColor="#555555"
-            android:padding="6dp"
-            android:textSize="16dp"
-            android:layout_marginTop="10dp"/>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayoutSpinnerAddCategory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewAddCategory">
-
-            <Spinner
-                android:id="@+id/spinnerAddCategory"
+            <ImageButton
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Select a Category" />
+                android:layout_height="220dp"
+                android:background="@drawable/ic_update_product"
+                android:scaleType="fitCenter"
+                android:contentDescription="Update Product Button"
+                android:id="@+id/imageButtonUpdateProduct"/>
+        </androidx.cardview.widget.CardView>
 
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewAddProductDesc"
-            android:layout_below="@+id/textInputLayoutSpinnerAddCategory"
-            android:text="Description*"
-            android:textColor="#555555"
-            android:padding="6dp"
-            android:textSize="16dp"
-            android:layout_marginTop="10dp"/>
+            app:cardCornerRadius="16dp"
+            android:layout_below="@id/cardViewUpdateProduct"
+            android:layout_marginTop="15dp"
+            android:id="@+id/cardViewDeleteProduct">
 
-        <EditText
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:background="@drawable/ic_delete_product"
+                android:scaleType="fitCenter"
+                android:contentDescription="Delete Product Button"
+                android:id="@+id/imageButtonDeleteProduct"/>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editTextAddProductDesc"
-            android:hint="Enter Product Description"
-            android:inputType="text"
-            android:textSize="16sp"
-            android:padding="6dp"
-            android:layout_below="@+id/textViewAddProductDesc"
-            android:background="@drawable/border"/>
+            app:cardCornerRadius="16dp"
+            android:layout_below="@id/cardViewDeleteProduct"
+            android:layout_marginTop="15dp"
+            android:id="@+id/cardViewViewProduct">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewAddQuantity"
-            android:layout_below="@+id/editTextAddProductDesc"
-            android:text="Quantity*"
-            android:textColor="#555555"
-            android:padding="6dp"
-            android:textSize="16dp"
-            android:layout_marginTop="10dp"/>
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:background="@drawable/ic_view_product"
+                android:scaleType="fitCenter"
+                android:contentDescription="View Product Button"
+                android:id="@+id/imageButtonViewProduct"/>
+        </androidx.cardview.widget.CardView>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editTextAddQuantity"
-            android:hint="Enter Quantity"
-            android:inputType="number"
-            android:textSize="16sp"
-            android:padding="6dp"
-            android:layout_below="@+id/textViewAddQuantity"
-            android:background="@drawable/border"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewAddPrice"
-            android:layout_below="@+id/editTextAddQuantity"
-            android:text="Price*"
-            android:textColor="#555555"
-            android:padding="6dp"
-            android:textSize="16dp"
-            android:layout_marginTop="10dp"/>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editTextAddPrice"
-            android:hint="Enter Price"
-            android:inputType="numberDecimal"
-            android:textSize="16sp"
-            android:padding="6dp"
-            android:layout_below="@+id/textViewAddPrice"
-            android:background="@drawable/border"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:layout_marginRight="70dp"
-            android:layout_below="@+id/editTextAddPrice"
-            android:layout_marginTop="50dp"
-            android:text="Add"
-            android:id="@+id/buttonAddProduct"/>
-
-        <ProgressBar
+    <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/progressBarAddProduct"
