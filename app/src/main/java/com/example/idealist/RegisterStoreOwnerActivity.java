@@ -192,6 +192,9 @@ public class RegisterStoreOwnerActivity extends AppCompatActivity {
 
                     FirebaseUser firebaseUser = auth.getCurrentUser();
 
+                    // Set user role as "storeOwner"
+                    setUserRole(firebaseUser.getUid(), "storeOwner");
+
                     UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(textFullName).build();
                     firebaseUser.updateProfile(profileChangeRequest);
 
@@ -245,5 +248,10 @@ public class RegisterStoreOwnerActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setUserRole(String uid, String role) {
+        DatabaseReference userRolesRef = FirebaseDatabase.getInstance().getReference("UserRoles");
+        userRolesRef.child(uid).setValue(role);
     }
 }

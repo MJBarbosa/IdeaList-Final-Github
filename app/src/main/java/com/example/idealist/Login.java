@@ -1,18 +1,13 @@
 package com.example.idealist;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,18 +18,20 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
     private EditText editTextLoginEmail, editTextLoginPassword;
-    private TextView textViewLoginSignUp, textViewLoginForPsw, textViewLoginAsStoreOwner;
     private ProgressBar progressBar;
-    private FirebaseAuth authProfile;
+    private FirebaseAuth auth;
+    private DatabaseReference userRolesRef; // Reference to the UserRoles node
     private static final String TAG = "Login";
 
     @Override
@@ -44,12 +41,13 @@ public class Login extends AppCompatActivity {
 
         editTextLoginEmail = findViewById(R.id.editTextLoginEmail);
         editTextLoginPassword = findViewById(R.id.editTextLoginPassword);
-        textViewLoginSignUp = findViewById(R.id.textViewLoginSignUp);
-        textViewLoginForPsw = findViewById(R.id.textViewLoginForPsw);
-        textViewLoginAsStoreOwner = findViewById(R.id.textViewLoginAsSO);
         progressBar = findViewById(R.id.progressBarLogin);
+        Button buttonLogin = findViewById(R.id.buttonLogin);
+        TextView textViewLoginSignUp = findViewById(R.id.textViewLoginSignUp);
+        TextView textViewLoginAsSO = findViewById(R.id.textViewLoginAsSO);
 
-        authProfile = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
+        userRolesRef = FirebaseDatabase.getInstance().getReference("UserRoles"); // Initialize the reference
 
         //Show Hide Password using Eye Icon
         ImageView imageViewShowHidePwd = findViewById(R.id.imageViewShowHidePwd);
@@ -69,6 +67,18 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = editTextLoginEmail.getText().toString().trim();
+                String password = editTextLoginPassword.getText().toString().trim();
+
+                if (validateInput(email, password)) {
+                    loginUser(email, password);
+                }
+            }
+        });
+
         textViewLoginSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,18 +88,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        //Reset Password
-        textViewLoginForPsw.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(Login.this, "You Can Reset Your Password Now!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), ForgotPassword.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        textViewLoginAsStoreOwner.setOnClickListener(new View.OnClickListener() {
+        textViewLoginAsSO.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), LoginAsStoreOwner.class);
@@ -97,117 +96,89 @@ public class Login extends AppCompatActivity {
                 finish();
             }
         });
+    }
 
-        //Login As Customer
-        Button buttonLogin = findViewById(R.id.buttonLogin);
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String textEmail = editTextLoginEmail.getText().toString();
-                String textPassword = editTextLoginPassword.getText().toString();
-
-                if (TextUtils.isEmpty(textEmail)) {
-                    Toast.makeText(Login.this, "Please Enter Your Email", Toast.LENGTH_SHORT).show();
-                    editTextLoginEmail.setError("Email is Required");
-                    editTextLoginEmail.requestFocus();
-                } else if (!Patterns.EMAIL_ADDRESS.matcher(textEmail).matches()) {
-                    Toast.makeText(Login.this, "Please Re-Enter Your Email", Toast.LENGTH_SHORT).show();
-                    editTextLoginEmail.setError("Valid Email is Required");
-                    editTextLoginEmail.requestFocus();
-                } else if (TextUtils.isEmpty(textPassword)) {
-                    Toast.makeText(Login.this, "Please Enter Your Password", Toast.LENGTH_SHORT).show();
-                    editTextLoginPassword.setError("Password is Required");
-                    editTextLoginPassword.requestFocus();
-                } else {
-                    progressBar.setVisibility(View.VISIBLE);
-                    loginUser(textEmail, textPassword);
-                }
-            }
-        });
-
+    private boolean validateInput(String textEmail, String textPassword) {
+        if (TextUtils.isEmpty(textEmail)) {
+            showToast("Please enter your email.");
+            editTextLoginEmail.requestFocus();
+            return false;
+        } else if (TextUtils.isEmpty(textPassword)) {
+            showToast("Please enter your password.");
+            editTextLoginPassword.requestFocus();
+            return false;
+        } else {
+            progressBar.setVisibility(View.VISIBLE);
+            return true;
+        }
     }
 
     private void loginUser(String email, String password) {
-        authProfile.signInWithEmailAndPassword(email, password).addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
+        progressBar.setVisibility(View.VISIBLE);
+
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressBar.setVisibility(View.GONE);
+
+                        if (task.isSuccessful()) {
+                            FirebaseUser firebaseUser = auth.getCurrentUser();
+                            if (firebaseUser != null) {
+                                // Fetch the user's role from the database
+                                fetchUserRole(firebaseUser.getUid());
+                            }
+                        } else {
+                            showToast("Login failed. Please check your credentials.");
+                        }
+                    }
+                });
+    }
+
+    private void fetchUserRole(String uid) {
+        userRolesRef.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-
-                    //Get instance of the current User
-                    FirebaseUser firebaseUser = authProfile.getCurrentUser();
-
-                    //Check if email is verified before user can access their profile
-                    if (firebaseUser.isEmailVerified()) {
-                        Toast.makeText(Login.this, "You Are Logged In Now", Toast.LENGTH_SHORT).show();
-                        //Open User Profile After Successful Registration
-                        //Start the UserProfileActivity
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String role = dataSnapshot.getValue(String.class);
+                if (role != null) {
+                    if ("customer".equals(role)) {
+                        // User is a Customer, navigate to CustomerMainActivity
                         startActivity(new Intent(Login.this, MainActivity.class));
-                        finish(); //Close Login
+                        finish(); // Close Login Activity
+                    } else if ("storeOwner".equals(role)) {
+                        // User is a Store Owner, show a message that they cannot login
+                        showToast("Cannot login as a Store Owner.");
                     } else {
-                        firebaseUser.sendEmailVerification();
-                        authProfile.signOut(); //Sign Out user
-                        showAlertDialog();
+                        showToast("Login failed. Invalid user role.");
+                        finish(); // Close Login Activity
                     }
-                    /*Intent intent = new Intent(Login.this, MainActivity.class);
-                    //To Prevent User Form Returning Back to Register Activity on Pressing back Button After Registration
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish(); //to Close Register Activity*/
                 } else {
-                    try {
-                        throw task.getException();
-                    } catch (FirebaseAuthInvalidUserException e) {
-                        editTextLoginEmail.setError("User Does Not Exists or is No Longer Valid. Please Register Again.");
-                        editTextLoginEmail.requestFocus();
-                    } catch (FirebaseAuthInvalidCredentialsException e) {
-                        editTextLoginEmail.setError("User Does Not Exists or is No Longer Valid. Please Register Again.");
-                        editTextLoginEmail.requestFocus();
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                        Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                    showToast("Login failed. User role not found.");
                 }
-                progressBar.setVisibility(View.GONE);
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                showToast("Error fetching user role: " + databaseError.getMessage());
             }
         });
     }
 
-    private void showAlertDialog() {
-        //Setup the Alert Builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
-        builder.setTitle("Email Not Verified");
-        builder.setMessage("Please Verify Your Email Now. You Can Not Login Without Email Verification.");
-
-        //Open Email Apps If User Clicks/Taps Continue Button
-        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_APP_EMAIL);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //To Email App in Now Window and Not within our app
-                startActivity(intent);
-            }
-        });
-
-        //Create the AlertDialog
-        AlertDialog alertDialog = builder.create();
-
-        //show the AlertDialog
-        alertDialog.show();
+    private void showToast(String message) {
+        Toast.makeText(Login.this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (authProfile.getCurrentUser() != null) {
-            Toast.makeText(Login.this, "Already Logged In!", Toast.LENGTH_SHORT).show();
-
-            //Start the UserProfileActivity
-            startActivity(new Intent(Login.this, MainActivity.class));
-            finish(); //Close Login
-        }
-        else {
-            Toast.makeText(Login.this, "You can Login Now!", Toast.LENGTH_SHORT).show();
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            showToast("Already logged in!");
+            // Check the user's role and navigate accordingly
+            fetchUserRole(currentUser.getUid());
+        } else {
+            showToast("You can log in now.");
         }
     }
 }

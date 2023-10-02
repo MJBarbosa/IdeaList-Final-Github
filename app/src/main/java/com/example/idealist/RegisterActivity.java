@@ -194,6 +194,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                     FirebaseUser firebaseUser = auth.getCurrentUser();
 
+                    // Set user role as "customer"
+                    setUserRole(firebaseUser.getUid(), "customer");
+
                     //Display
                     UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(textFirstName).build();
                     firebaseUser.updateProfile(profileChangeRequest);
@@ -248,5 +251,10 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setUserRole(String uid, String role) {
+        DatabaseReference userRolesRef = FirebaseDatabase.getInstance().getReference("UserRoles");
+        userRolesRef.child(uid).setValue(role);
     }
 }
