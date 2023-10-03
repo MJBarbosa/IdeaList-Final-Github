@@ -45,10 +45,10 @@
             android:textSize="16dp"
             android:layout_marginTop="20dp"/>
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editTextUpdateProductId"
+            android:id="@+id/textViewProductIdValue"
             android:hint="Update Product ID"
             android:inputType="text|number"
             android:textSize="16sp"
@@ -60,17 +60,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textViewUpdateProductName"
-            android:layout_below="@+id/editTextUpdateProductId"
+            android:layout_below="@+id/textViewProductIdValue"
             android:text="Product Name*"
             android:textColor="#555555"
             android:padding="6dp"
             android:textSize="16dp"
             android:layout_marginTop="10dp"/>
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editTextUpdateProductName"
+            android:id="@+id/textViewProductNameValue"
             android:hint="Update Product Name"
             android:inputType="text"
             android:textSize="16sp"
@@ -82,7 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textViewUpdateSuppName"
-            android:layout_below="@+id/editTextUpdateProductName"
+            android:layout_below="@+id/textViewProductNameValue"
             android:text="Supplier Name*"
             android:textColor="#555555"
             android:padding="6dp"

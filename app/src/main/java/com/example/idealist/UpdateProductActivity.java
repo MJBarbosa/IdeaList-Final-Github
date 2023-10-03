@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,13 +26,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UpdateProductActivity extends AppCompatActivity {
 
-    private EditText editTextUpdateProductId, editTextUpdateProductName, editTextUpdateSuppName, editTextUpdateProductDesc,
+    private EditText editTextUpdateSuppName, editTextUpdateProductDesc,
             editTextUpdateQuantity, editTextUpdatePrice;
+    private TextView editTextUpdateProductId, editTextUpdateProductName;
     private AutoCompleteTextView autoCompleteTextViewSearch;
     private ArrayAdapter<String> searchAdapter, adapter;
     private List<Product> productList;
@@ -48,8 +52,8 @@ public class UpdateProductActivity extends AppCompatActivity {
 
         // Initialize UI elements
         progressBarUpdateProduct = findViewById(R.id.progressBarUpdateProduct);
-        editTextUpdateProductId = findViewById(R.id.editTextUpdateProductId);
-        editTextUpdateProductName = findViewById(R.id.editTextUpdateProductName);
+        editTextUpdateProductId = findViewById(R.id.textViewProductIdValue);
+        editTextUpdateProductName = findViewById(R.id.textViewProductNameValue);
         editTextUpdateSuppName = findViewById(R.id.editTextUpdateSuppName);
         editTextUpdateProductDesc = findViewById(R.id.editTextUpdateProductDesc);
         editTextUpdateQuantity = findViewById(R.id.editTextUpdateQuantity);
@@ -139,6 +143,7 @@ public class UpdateProductActivity extends AppCompatActivity {
                         product.setProductDescription((String) productData.get("productDescription"));
                         product.setPrice((String) productData.get("price"));
                         product.setQuantity((String) productData.get("quantity"));
+                        product.setUserUid(getCurrentUserUid()); // Set the userUid
                         // Populate other fields similarly
 
                         // Add the product to the list
@@ -153,7 +158,6 @@ public class UpdateProductActivity extends AppCompatActivity {
                         Log.e(TAG, "Unexpected data type: " + productSnapshot.getValue().getClass().getSimpleName());
                     }
                 }
-
 
                 // Clear the searchAdapter before adding new items
                 searchAdapter.clear();
@@ -190,21 +194,27 @@ public class UpdateProductActivity extends AppCompatActivity {
                 Product selectedProduct = findProductByName(selectedProductName);
 
                 if (selectedProduct != null) {
-                    // Populate the EditText fields with the selected product's data
-                    editTextUpdateProductId.setText(selectedProduct.getProductId());
-                    editTextUpdateProductName.setText(selectedProduct.getProductName());
+                    // Populate the editText fields with the selected product's data
                     editTextUpdateSuppName.setText(selectedProduct.getSupplierName());
                     editTextUpdateProductDesc.setText(selectedProduct.getProductDescription());
                     editTextUpdateQuantity.setText(selectedProduct.getQuantity());
                     editTextUpdatePrice.setText(selectedProduct.getPrice());
-                    // Set the selected category in the spinner
                     spinnerUpdateCategory.setSelection(adapter.getPosition(selectedProduct.getCategory()));
+
+                    // Update the TextViews for productId and productName
+                    TextView textViewProductIdValue = findViewById(R.id.textViewProductIdValue);
+                    TextView textViewProductNameValue = findViewById(R.id.textViewProductNameValue);
+
+                    textViewProductIdValue.setText(selectedProduct.getProductId());
+                    textViewProductNameValue.setText(selectedProduct.getProductName());
                 } else {
                     Log.e(TAG, "Selected product is null.");
                 }
             }
         });
+
     }
+
 
     private String getCurrentUserUid() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -225,9 +235,9 @@ public class UpdateProductActivity extends AppCompatActivity {
         return null;
     }
 
+
     private void updateProduct() {
         // Retrieve and validate the entered data
-        String productId = editTextUpdateProductId.getText().toString();
         String productName = editTextUpdateProductName.getText().toString();
         String supplierName = editTextUpdateSuppName.getText().toString();
         String productDesc = editTextUpdateProductDesc.getText().toString();
@@ -235,103 +245,82 @@ public class UpdateProductActivity extends AppCompatActivity {
         String price = editTextUpdatePrice.getText().toString();
         String selectedCategory = spinnerUpdateCategory.getSelectedItem().toString();
 
-        TextInputLayout textInputLayoutUpdateCategory = findViewById(R.id.textInputLayoutSpinnerUpdateCategory);
-        textInputLayoutUpdateCategory.setError(null);
-
-        if (TextUtils.isEmpty(productId)) {
-            Toast.makeText(this, "Please enter Product ID", Toast.LENGTH_LONG).show();
-            editTextUpdateProductId.setError("Product ID is required");
-            editTextUpdateProductId.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(productName)) {
-            Toast.makeText(this, "Please enter Product Name", Toast.LENGTH_LONG).show();
-            editTextUpdateProductName.setError("Product Name is required");
-            editTextUpdateProductName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(supplierName)) {
-            Toast.makeText(this, "Please enter Supplier Name", Toast.LENGTH_LONG).show();
-            editTextUpdateSuppName.setError("Supplier Name is required");
-            editTextUpdateSuppName.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(selectedCategory)) {
-            textInputLayoutUpdateCategory.setError("Category is required");
-            return;
-        }
-
-        if (TextUtils.isEmpty(productDesc)) {
-            Toast.makeText(this, "Please enter Product Description", Toast.LENGTH_LONG).show();
-            editTextUpdateProductDesc.setError("Description is required");
-            editTextUpdateProductDesc.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(quantity)) {
-            Toast.makeText(this, "Please enter Quantity", Toast.LENGTH_LONG).show();
-            editTextUpdateQuantity.setError("Quantity is required");
-            editTextUpdateQuantity.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(price)) {
-            Toast.makeText(this, "Please enter Price", Toast.LENGTH_LONG).show();
-            editTextUpdatePrice.setError("Price is required");
-            editTextUpdatePrice.requestFocus();
+        if (TextUtils.isEmpty(productName) || TextUtils.isEmpty(supplierName) || TextUtils.isEmpty(selectedCategory) ||
+                TextUtils.isEmpty(productDesc) || TextUtils.isEmpty(quantity) || TextUtils.isEmpty(price)) {
+            // Display an error message if any of the fields are empty
+            Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_LONG).show();
             return;
         }
 
         // All fields are valid, proceed with updating the product
-        textInputLayoutUpdateCategory.setError(null);
         progressBarUpdateProduct.setVisibility(View.VISIBLE);
 
-        // Find the selected product in the productList
+        // Find the selected product in the productList (assuming it's stored there)
         Product selectedProduct = findProductByName(productName);
 
         if (selectedProduct != null) {
-            // Retrieve the original userUid and PID
-            String originalUserUid = selectedProduct.getUserUid();
-            String originalPid = selectedProduct.getProductId();
+            String userUid = selectedProduct.getUserUid();
+            String productId = selectedProduct.getProductId();
 
-            if (originalUserUid != null && originalPid != null && originalUserUid.equals(getCurrentUserUid()) && originalPid.equals(productId)) {
-                // Update the product's information
-                selectedProduct.setProductName(productName);
-                selectedProduct.setSupplierName(supplierName);
-                selectedProduct.setCategory(selectedCategory);
-                selectedProduct.setProductDescription(productDesc);
-                selectedProduct.setQuantity(quantity);
-                selectedProduct.setPrice(price);
+            if (userUid != null && productId != null) {
+                // Query the database to fetch the productId for the selected product
+                DatabaseReference productsReference = FirebaseDatabase.getInstance().getReference("ProductInventory").child(userUid);
 
-                // Update the product in the database using the original userUid and PID
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("ProductInventory/" + originalUserUid + "/" + originalPid);
-                databaseReference.setValue(selectedProduct)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                progressBarUpdateProduct.setVisibility(View.GONE);
-                                if (task.isSuccessful()) {
-                                    // Product updated successfully
-                                    Toast.makeText(UpdateProductActivity.this, "Product Updated Successfully", Toast.LENGTH_LONG).show();
-                                } else {
-                                    // Handle the error here
-                                    Toast.makeText(UpdateProductActivity.this, "Failed to update product. Please try again.", Toast.LENGTH_LONG).show();
-                                    Log.e(TAG, "Error updating product: " + task.getException());
-                                }
-                            }
-                        });
+                productsReference.orderByChild("productId").equalTo(productId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // Get the reference to the selected product
+                            DataSnapshot productSnapshot = dataSnapshot.getChildren().iterator().next();
+                            DatabaseReference updateReference = productSnapshot.getRef();
+
+                            // Update the product's information
+                            selectedProduct.setSupplierName(supplierName);
+                            selectedProduct.setCategory(selectedCategory);
+                            selectedProduct.setProductDescription(productDesc);
+                            selectedProduct.setQuantity(quantity);
+                            selectedProduct.setPrice(price);
+
+                            // Update the product in the database
+                            updateReference.setValue(selectedProduct)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            progressBarUpdateProduct.setVisibility(View.GONE);
+                                            if (task.isSuccessful()) {
+                                                // Product updated successfully
+                                                Toast.makeText(UpdateProductActivity.this, "Product Updated Successfully", Toast.LENGTH_LONG).show();
+                                            } else {
+                                                // Handle the error here
+                                                Toast.makeText(UpdateProductActivity.this, "Failed to update product. Please try again.", Toast.LENGTH_LONG).show();
+                                                Log.e(TAG, "Error updating product: " + task.getException());
+                                            }
+                                        }
+                                    });
+                        } else {
+                            // Handle the case where the selected product is not found in the database
+                            Toast.makeText(UpdateProductActivity.this, "Selected product not found in the database.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle database error
+                        Toast.makeText(UpdateProductActivity.this, "Error querying the database.", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Error querying the database: " + databaseError.getMessage());
+                    }
+                });
             } else {
-                // Inform the user that they cannot change Product ID or User ID
-                Toast.makeText(this, "You cannot change Product ID or User ID.", Toast.LENGTH_LONG).show();
-                progressBarUpdateProduct.setVisibility(View.GONE);
+                // Handle the case where userUid or productId is null
+                Toast.makeText(UpdateProductActivity.this, "Invalid product data. userUid or productId is null.", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "userUid or productId is null.");
             }
         } else {
             Toast.makeText(UpdateProductActivity.this, "Selected product not found.", Toast.LENGTH_LONG).show();
         }
     }
+
+
 
 
     // Define a Product class to manage product data
