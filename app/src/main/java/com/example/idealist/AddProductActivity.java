@@ -1,48 +1,27 @@
 package com.example.idealist;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.idealist.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.UUID;
 
 public class AddProductActivity extends AppCompatActivity {
 
@@ -50,7 +29,7 @@ public class AddProductActivity extends AppCompatActivity {
             editTextAddQuantity, editTextAddPrice;
     private ProgressBar progressBarAddProduct;
     private Spinner spinnerAddCategory;
-    private static final String TAG= "AddProductActivity";
+    private static final String TAG = "AddProductActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +40,6 @@ public class AddProductActivity extends AppCompatActivity {
 
         Toast.makeText(AddProductActivity.this, "You can Add Product now", Toast.LENGTH_LONG).show();
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true); // Enable offline persistence
-
         progressBarAddProduct = findViewById(R.id.progressBarAddProduct);
         editTextAddProductId = findViewById(R.id.editTextAddProductId);
         editTextAddProductName = findViewById(R.id.editTextAddProductName);
@@ -71,36 +48,30 @@ public class AddProductActivity extends AppCompatActivity {
         editTextAddQuantity = findViewById(R.id.editTextAddQuantity);
         editTextAddPrice = findViewById(R.id.editTextAddPrice);
 
-        // Initialize the product ID counter from SharedPreferences
-        int productIDCounter = SharedPreferencesHelper.getProductIDCounter(AddProductActivity.this);
-
-        // Set the auto-incremented product ID in the editText
-        editTextAddProductId.setText(String.valueOf(productIDCounter));
-
         spinnerAddCategory = findViewById(R.id.spinnerAddCategory);
 
         // Define the list of categories
         String[] categories = {"T-Shirt", "Cap", "Vape", "Hoodie"};
 
-// Create an ArrayAdapter to populate the Spinner with the categories
+        // Create an ArrayAdapter to populate the Spinner with the categories
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
 
-// Set the dropdown layout style for the Spinner
+        // Set the dropdown layout style for the Spinner
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-// Set the ArrayAdapter on the Spinner
+        // Set the ArrayAdapter on the Spinner
         spinnerAddCategory.setAdapter(adapter);
 
-
         Button buttonAddProduct = findViewById(R.id.buttonAddProduct);
+
+        // Check the user's role before allowing product addition
+        checkUserRoleForProductAddition();
+
         buttonAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 // Obtain the entered data
                 String textProductId = editTextAddProductId.getText().toString();
-                // Increment the product ID counter in SharedPreferences
-                SharedPreferencesHelper.incrementProductIDCounter(AddProductActivity.this);
                 String textProductName = editTextAddProductName.getText().toString();
                 String textAddSuppName = editTextAddSuppName.getText().toString();
                 String textAddProductDesc = editTextAddProductDesc.getText().toString();
@@ -113,7 +84,7 @@ public class AddProductActivity extends AppCompatActivity {
                 // To clear any existing error:
                 textInputLayoutSpinnerAddCategory.setError(null);
 
-                if (TextUtils.isEmpty(textProductId)){
+                if (TextUtils.isEmpty(textProductId)) {
                     Toast.makeText(AddProductActivity.this, "Please Enter Product ID", Toast.LENGTH_LONG).show();
                     editTextAddProductId.setError("Product ID is Required");
                     editTextAddProductId.requestFocus();
@@ -146,25 +117,21 @@ public class AddProductActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
-    public static class SharedPreferencesHelper {
-        private static final String PREFS_NAME = "MyAppPrefs";
-        private static final String PRODUCT_ID_COUNTER_KEY = "product_id_counter";
-
-        public static int getProductIDCounter(Context context) {
-            SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-            return prefs.getInt(PRODUCT_ID_COUNTER_KEY, 0);
+    private void checkUserRoleForProductAddition() {
+        String userRole = getUserRoleFromSharedPreferences(); // Replace this with your logic to get the user's role
+        if (!"storeOwner".equals(userRole)) {
+            // User is not a Store Owner, show an error message but keep the button enabled
+            Toast.makeText(AddProductActivity.this, "Only Store Owners can add products.", Toast.LENGTH_LONG).show();
         }
+    }
 
-        public static void incrementProductIDCounter(Context context) {
-            SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-            int currentCounter = prefs.getInt(PRODUCT_ID_COUNTER_KEY, 0);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt(PRODUCT_ID_COUNTER_KEY, currentCounter + 1);
-            editor.apply();
-        }
+
+    // Replace this with your logic to get the user's role from SharedPreferences
+    private String getUserRoleFromSharedPreferences() {
+        SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        return prefs.getString("userRole", "");
     }
 
     private void addProduct(String textProductId, String textProductName, String textAddSuppName, String selectedAddCategory, String textAddProductDesc, String textAddQuantity, String textAddPrice) {
@@ -206,11 +173,10 @@ public class AddProductActivity extends AppCompatActivity {
         // and append a random number to it. Here's a sample implementation:
 
         long timestamp = System.currentTimeMillis();
-        int randomSuffix = (int) (Math.random() * 1000); // Generate a random number between 0 and 999
+        UUID uuid = UUID.randomUUID(); // Generate a random UUID
 
-        return "PID_" + timestamp + "_" + randomSuffix;
+        return "PID_" + timestamp + "_" + uuid.toString();
     }
-
 
     private void clearFields() {
         // Clear all the input fields after successfully adding the product
@@ -222,5 +188,5 @@ public class AddProductActivity extends AppCompatActivity {
         editTextAddPrice.getText().clear();
         spinnerAddCategory.setSelection(0); // Reset the spinner to the first category
     }
-
 }
+

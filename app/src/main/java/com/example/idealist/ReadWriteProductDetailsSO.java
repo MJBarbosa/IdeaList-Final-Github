@@ -15,15 +15,15 @@ public class ReadWriteProductDetailsSO {
         // Default constructor is required by Firebase
     }
 
-    public ReadWriteProductDetailsSO(String userUid, String textProductId, String textProductName, String textAddSuppName, String selectedAddCategory, String textAddProductDesc, String textAddQuantity, String textAddPrice) {
+    public ReadWriteProductDetailsSO(String userUid, String productId, String productName, String supplierName, String category, String productDescription, String quantity, String price) {
         this.userUid = userUid;
-        this.productId = textProductId;
-        this.productName = textProductName;
-        this.supplierName = textAddSuppName;
-        this.category = selectedAddCategory;
-        this.productDescription = textAddProductDesc;
-        this.quantity = textAddQuantity;
-        this.price = textAddPrice;
+        this.productId = productId;
+        this.productName = productName;
+        this.supplierName = supplierName;
+        this.category = category;
+        this.productDescription = productDescription;
+        this.quantity = quantity;
+        this.price = price;
     }
 
     // Getter and setter for userUid
