@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.print.PrintHelper;
 
 import android.app.AlertDialog;
@@ -34,6 +35,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.collection.BuildConfig;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -134,6 +136,11 @@ public class QrGeneratorActivity extends AppCompatActivity {
         });
     }
 
+    private String getAppPackageName() {
+        return getApplicationContext().getPackageName();
+    }
+
+
     private void generateQRCode(String data) {
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
@@ -180,13 +187,23 @@ public class QrGeneratorActivity extends AppCompatActivity {
             downloadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    // Create a content URI using FileProvider
+                    Uri contentUri = FileProvider.getUriForFile(
+                            QrGeneratorActivity.this,
+                            getAppPackageName() + ".fileprovider",
+                            file
+                    );
+
                     // Open a share intent to allow the user to download the QR code
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("image/*");
-                    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                    intent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // Grant read permission
                     startActivity(Intent.createChooser(intent, "Download QR Code"));
                 }
             });
+
+
 
             // Handle print button click
             printButton.setOnClickListener(new View.OnClickListener() {
