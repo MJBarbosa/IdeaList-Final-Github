@@ -64,7 +64,7 @@ public class RegisterStoreOwnerActivity extends AppCompatActivity {
         editTextRegisterStoreLocationSO = findViewById(R.id.editTextRegStoreLocationSO);
 
         //RadioButton for Gender
-        radioGroupRegisterGenderSO =findViewById(R.id.radioGroupRegGenderSO);
+        radioGroupRegisterGenderSO = findViewById(R.id.radioGroupRegGenderSO);
         radioGroupRegisterGenderSO.clearCheck();
 
         //Setting up DatePicker on EditText
@@ -199,7 +199,7 @@ public class RegisterStoreOwnerActivity extends AppCompatActivity {
                     firebaseUser.updateProfile(profileChangeRequest);
 
                     //Enter User Data Into the Firebase Realtime Database.
-                    ReadWriteUserDetailsSO writeUserDetails = new ReadWriteUserDetailsSO(textDoB, textGender, textMobile, textStoreName, textStoreLocation);
+                    ReadWriteUserDetailsSO writeUserDetails = new ReadWriteUserDetailsSO(textFullName, textDoB, textGender, textMobile, textStoreName, textStoreLocation);
 
                     //Extracting user reference from Database for "Register Users"
                     DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Registered Store Owner Users");

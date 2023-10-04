@@ -1,9 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ViewProductActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="8dp"
+            android:completionThreshold="1"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/border" />
+
+        <!-- Add other UI elements for displaying product information here -->
+        <Button
+            android:id="@+id/buttonSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/autoCompleteTextViewSearch"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="Search" />
+
+        <ListView
+            android:id="@+id/listViewProducts"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@+id/buttonSearch"
+            android:layout_marginTop="16dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBarViewProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="10dp"
+            android:visibility="gone" />
+
+        <!-- TextViews for displaying product details -->
+        <TextView
+            android:id="@+id/textViewProductName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/listViewProducts"
+            android:layout_marginTop="16dp"
+            android:text="Product Name: "
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewProductDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewProductName"
+            android:layout_marginTop="8dp"
+            android:text="Product Description: "
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textViewQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewProductDescription"
+            android:layout_marginTop="8dp"
+            android:text="Quantity: "
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textViewPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewQuantity"
+            android:layout_marginTop="8dp"
+            android:text="Price: "
+            android:textSize="16sp" />
+
+        <!-- Add more TextViews for other product details (e.g., Price, Quantity, SupplierName, etc.) -->
+
+    </RelativeLayout>
+
+</ScrollView>

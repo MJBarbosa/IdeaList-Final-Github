@@ -172,7 +172,7 @@ public class UpdateSOProfileActivity extends AppCompatActivity {
             textSAddressSO = editTextUpdateSAddressSO.getText().toString();
 
             //Enter User Data into the Firebase Realtime Database. Set up dependencies
-            ReadWriteUserDetailsSO writeUserDetailsSO = new ReadWriteUserDetailsSO(textDoBSO, textGenderSO, textMobileSO, textSNameSO, textSAddressSO);
+            ReadWriteUserDetailsSO writeUserDetailsSO = new ReadWriteUserDetailsSO(textFullNameSO,textDoBSO, textGenderSO, textMobileSO, textSNameSO, textSAddressSO);
 
             //Extract User Reference from Database for "Registered Users"
             DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Registered Store Owner Users");
@@ -225,6 +225,7 @@ public class UpdateSOProfileActivity extends AppCompatActivity {
                 ReadWriteUserDetailsSO readUserDetailsSO = snapshot.getValue(ReadWriteUserDetailsSO.class);
                 if (readUserDetailsSO != null) {
                     textFullNameSO = firebaseUserSO.getDisplayName();
+                    textFullNameSO = readUserDetailsSO.fullName;
                     textDoBSO = readUserDetailsSO.dob;
                     textGenderSO = readUserDetailsSO.gender;
                     textMobileSO = readUserDetailsSO.mobile;

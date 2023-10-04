@@ -75,31 +75,27 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
 
     }
 
-    private void swipeToRefreshSO() {//Look up for the swipe Container
+    private void swipeToRefreshSO() {
         swipeContainerSO = findViewById(R.id.swipeContainerUploadSO);
 
-        //Setup Refresh Listener which triggers new data loading
         swipeContainerSO.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //Code to refresh goes here. Make sure to call swipeContainer.setRefreshing(false) once the refresh
-                startActivity(getIntent());
-                finish();
-                overridePendingTransition(0,0);
+                // Code to refresh goes here.
+                // You don't need to restart the activity, just fetch the data.
+                showStoreOwnerProfile(authProfileSO.getCurrentUser());
                 swipeContainerSO.setRefreshing(false);
             }
         });
 
-        //Configure refresh colors
         swipeContainerSO.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
     }
 
     private void showStoreOwnerProfile(FirebaseUser firebaseUserSO) {
         String userID = firebaseUserSO.getUid();
 
-        //Extracting User Reference from Database for "Registered Store Owner Users"
-        DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Registered Store Owner Users");
-        referenceProfile.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Registered Store Owner Users").child(userID);
+        referenceProfile.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ReadWriteUserDetailsSO readUserDetailsSO = snapshot.getValue(ReadWriteUserDetailsSO.class);
@@ -121,10 +117,8 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
                     textViewStoreNameSO.setText(storeName);
                     textViewStoreLocSO.setText(storeLoc);
 
-                    //Set User DP (After User Had Uploaded)
+                    // Set User DP (After User Had Uploaded)
                     Uri uri = firebaseUserSO.getPhotoUrl();
-
-                    //ImageViewer setImageURI() should not be Used with regular URIs. So we are using Picasso
                     Picasso.with(StoreOwnerProfileActivity.this).load(uri).into(imageView);
                 } else {
                     Toast.makeText(StoreOwnerProfileActivity.this, "Something Went Wrong!", Toast.LENGTH_LONG).show();
@@ -140,27 +134,21 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
         });
     }
 
-    //Creating ActionBar Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //Inflate menu items
         getMenuInflater().inflate(R.menu.common_menu_so, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    //When any menu item is selected
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
             NavUtils.navigateUpFromSameTask(StoreOwnerProfileActivity.this);
-        }else if (id == R.id.menuRefreshSO) {
-            //Refresh Activity
-            startActivity(getIntent());
-            finish();
-            overridePendingTransition(0,0);
-        }  else if (id == R.id.menuHomeSO) {
+        } else if (id == R.id.menuRefreshSO) {
+            showStoreOwnerProfile(authProfileSO.getCurrentUser());
+        } else if (id == R.id.menuHomeSO) {
             Intent intent = new Intent(StoreOwnerProfileActivity.this, MainSOActivity.class);
             startActivity(intent);
             finish();
@@ -186,8 +174,6 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
             authProfileSO.signOut();
             Toast.makeText(StoreOwnerProfileActivity.this, "Logged Out", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(StoreOwnerProfileActivity.this, LoginAsStoreOwner.class);
-
-            //Clear stack to prevent user coming back to UserProfileActivity on pressing back button after Logging out
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();

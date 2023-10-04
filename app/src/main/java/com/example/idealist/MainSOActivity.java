@@ -97,6 +97,18 @@ public class MainSOActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainSOActivity.this, ManageInventoryActivity.class);
                 startActivity(intent);
                 finish();
+            } else if (itemId == R.id.menu_pos) {
+                // Handle the Profile menu item click here
+                Intent intent = new Intent(MainSOActivity.this, PointOfSaleActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            } else if (itemId == R.id.menu_qr_gene) {
+                // Handle the QR menu item click here
+                Intent intent = new Intent(MainSOActivity.this, QrGeneratorActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
             }
             return false;
         });

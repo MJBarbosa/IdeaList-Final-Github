@@ -80,6 +80,9 @@ public class UpdateProductActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Handle the update product logic here
                 updateProduct();
+
+                // Clear the fields after the update
+                clearFields();
             }
         });
 
@@ -320,6 +323,18 @@ public class UpdateProductActivity extends AppCompatActivity {
         }
     }
 
+    private void clearFields() {
+        editTextUpdateSuppName.setText("");
+        editTextUpdateProductDesc.setText("");
+        editTextUpdateQuantity.setText("");
+        editTextUpdatePrice.setText("");
+        autoCompleteTextViewSearch.setText(""); // Clear the search field
+        spinnerUpdateCategory.setSelection(0); // Set the spinner to the first item (or default selection)
+
+        // Clear the productId and productName TextViews
+        editTextUpdateProductId.setText("");
+        editTextUpdateProductName.setText("");
+    }
 
 
 
