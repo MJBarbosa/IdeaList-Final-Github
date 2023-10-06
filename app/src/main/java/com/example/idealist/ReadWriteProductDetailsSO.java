@@ -10,6 +10,7 @@ public class ReadWriteProductDetailsSO {
     private String quantity;
     private String price;
     private String userUid;
+    private String imageUrl;
 
     public ReadWriteProductDetailsSO() {
         // Default constructor is required by Firebase
@@ -33,6 +34,14 @@ public class ReadWriteProductDetailsSO {
 
     public void setUserUid(String userUid) {
         this.userUid = userUid;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     // Getters and setters for the fields (required for Firebase)

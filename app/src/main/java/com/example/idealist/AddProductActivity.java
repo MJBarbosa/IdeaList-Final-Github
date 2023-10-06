@@ -1,26 +1,35 @@
 package com.example.idealist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.idealist.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import java.util.UUID;
 
 public class AddProductActivity extends AppCompatActivity {
@@ -30,6 +39,8 @@ public class AddProductActivity extends AppCompatActivity {
     private ProgressBar progressBarAddProduct;
     private Spinner spinnerAddCategory;
     private static final String TAG = "AddProductActivity";
+    private static final int IMAGE_PICK_REQUEST = 1;
+    private Uri selectedImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +77,19 @@ public class AddProductActivity extends AppCompatActivity {
 
         // Check the user's role before allowing product addition
         checkUserRoleForProductAddition();
+
+        // Add this inside your onCreate method
+        ImageButton buttonSelectImage = findViewById(R.id.imageButtonAddProductImage);
+
+        buttonSelectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Open the device's file picker to select an image
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, IMAGE_PICK_REQUEST);
+            }
+        });
 
         buttonAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +143,18 @@ public class AddProductActivity extends AppCompatActivity {
         });
     }
 
+    // Add this method to handle the image selection result
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == IMAGE_PICK_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            selectedImageUri = data.getData();
+            ImageView imageViewProductImage = findViewById(R.id.imageButtonAddProductImage);
+            imageViewProductImage.setImageURI(selectedImageUri);
+        }
+    }
+
     private void checkUserRoleForProductAddition() {
         String userRole = getUserRoleFromSharedPreferences(); // Replace this with your logic to get the user's role
         if (!"storeOwner".equals(userRole)) {
@@ -126,7 +162,6 @@ public class AddProductActivity extends AppCompatActivity {
             Toast.makeText(AddProductActivity.this, "Only Store Owners can add products.", Toast.LENGTH_LONG).show();
         }
     }
-
 
     // Replace this with your logic to get the user's role from SharedPreferences
     private String getUserRoleFromSharedPreferences() {
@@ -149,6 +184,84 @@ public class AddProductActivity extends AppCompatActivity {
 
         // Store the product in the database under the user's UID as the main ID
         databaseReference.child(userUid).child(randomProductId).setValue(product)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // Check if an image is selected
+                            if (selectedImageUri != null) {
+                                // Upload the image to Firebase Storage
+                                uploadImageToStorage(selectedImageUri, textProductId, textProductName, textAddSuppName, selectedAddCategory, textAddProductDesc, textAddQuantity, textAddPrice);
+                            }
+                            // Product added successfully
+                            Toast.makeText(AddProductActivity.this, "Product Added Successfully", Toast.LENGTH_LONG).show();
+                            clearFields();
+                            progressBarAddProduct.setVisibility(View.GONE);
+                        } else {
+                            // Handle the error here
+                            Toast.makeText(AddProductActivity.this, "Failed to add product. Please try again.", Toast.LENGTH_LONG).show();
+                            Log.e(TAG, "Error adding product: " + task.getException());
+                            progressBarAddProduct.setVisibility(View.GONE);
+                        }
+                    }
+                });
+    }
+
+    private void uploadImageToStorage(Uri imageUri, final String textProductId, final String textProductName, final String textAddSuppName, final String selectedAddCategory, final String textAddProductDesc, final String textAddQuantity, final String textAddPrice) {
+        // Create a storage reference
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("ProductImages"); // Updated path to "ProductImages"
+
+        String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Ensure that productId is not null before creating the child reference
+        if (textProductId != null) {
+            // Create a reference to the image with the product ID as the name
+            final StorageReference imageRef = storageRef.child(userUid).child(textProductId); // Include userUid in the path
+
+            // Upload the image
+            UploadTask uploadTask = imageRef.putFile(imageUri);
+
+            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        // Image uploaded successfully
+                        imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // Get the download URL of the uploaded image
+                                String imageUrl = uri.toString();
+
+                                // Clear the selectedImageUri
+                                selectedImageUri = null;
+
+                                // Now you can handle the image URL as needed, for example, you can display it or use it in other ways
+                                Toast.makeText(AddProductActivity.this, "Image Uploaded Successfully", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } else {
+                        // Handle the error
+                        Toast.makeText(AddProductActivity.this, "Failed to upload image. Please try again.", Toast.LENGTH_LONG).show();
+                        Log.e(TAG, "Error uploading image: " + task.getException());
+                    }
+                }
+            });
+        } else {
+            // Handle the case where productId is null
+            Toast.makeText(AddProductActivity.this, "Failed to generate product ID. Please try again.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+
+    private void addProductToDatabase(String productId, ReadWriteProductDetailsSO product) {
+        // Create a reference to your Firebase database
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("ProductInventory");
+
+        String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Store the product in the database under the user's UID as the main ID
+        databaseReference.child(userUid).child(productId).setValue(product)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -187,6 +300,28 @@ public class AddProductActivity extends AppCompatActivity {
         editTextAddQuantity.getText().clear();
         editTextAddPrice.getText().clear();
         spinnerAddCategory.setSelection(0); // Reset the spinner to the first category
-    }
-}
 
+        // Clear the selected image in the ImageButton
+        ImageView imageViewProductImage = findViewById(R.id.imageButtonAddProductImage);
+        imageViewProductImage.setImageResource(0); // Set to an empty image resource or transparent image as needed
+        selectedImageUri = null; // Clear the selectedImageUri
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+
+        if (itemId == android.R.id.home) {
+            Intent intent = new Intent(AddProductActivity.this, ManageInventoryActivity.class);
+            startActivity(intent);
+            finish();// Close the current activity and return to the previous one
+            return true;
+        }
+
+        // Handle other menu items if needed
+        // ...
+
+        return super.onOptionsItemSelected(item);
+    }
+
+}

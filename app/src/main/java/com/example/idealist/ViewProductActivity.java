@@ -2,9 +2,12 @@ package com.example.idealist;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,6 +43,7 @@ public class ViewProductActivity extends AppCompatActivity {
     private ListView listViewProducts;
     private ArrayAdapter<String> searchAdapter;
     private ArrayAdapter<String> adapter;
+    private FirebaseAuth authProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ public class ViewProductActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_product);
 
         getSupportActionBar().setTitle("View Products");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Initialize UI elements
         progressBarViewProduct = findViewById(R.id.progressBarViewProduct);
@@ -240,6 +245,58 @@ public class ViewProductActivity extends AppCompatActivity {
         }
         return null;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            // Handle the back button press
+            Intent intent = new Intent(ViewProductActivity.this, ManageInventoryActivity.class);
+            startActivity(intent);
+            finish();// Close the current activity and return to the previous one
+            return true;
+        }
+
+        authProfile = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = authProfile.getCurrentUser();
+        if (firebaseUser != null) {
+            DatabaseReference databaseRef = FirebaseDatabase.getInstance()
+                    .getReference("Registered Users")
+                    .child(firebaseUser.getUid());
+
+            databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String role = dataSnapshot.child("UserRoles").getValue(String.class);
+                        if (role != null) {
+                            if (role.equals("storeOwner")) {
+                                // Handle actions for Admin role
+                                Intent adminIntent = new Intent(ViewProductActivity.this, ManageInventoryActivity.class);
+                                adminIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(adminIntent);
+                            } else {
+                                // Handle actions for other roles or roles not defined
+                                Toast.makeText(ViewProductActivity.this, "Unauthorized action for this role", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle database error
+                }
+            });
+        } else {
+            Toast.makeText(ViewProductActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
 
     // Define a Product class to manage product data (if needed)
     private static class Product {

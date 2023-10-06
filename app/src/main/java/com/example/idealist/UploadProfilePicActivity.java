@@ -62,9 +62,7 @@ public class UploadProfilePicActivity extends AppCompatActivity {
 
         Uri uri = firebaseUser.getPhotoUrl();
 
-        //Set User's current DP in ImageView (if upload already). We will Picasso since ImageViewer setImage
-        //Regular URIs.
-        Picasso.with(UploadProfilePicActivity.this).load(uri).into(imageViewUploadPic);
+        Picasso.get().load(uri).into(imageViewUploadPic);
 
         //Choose Image to Upload
         buttonUploadPicChoose.setOnClickListener(new View.OnClickListener() {

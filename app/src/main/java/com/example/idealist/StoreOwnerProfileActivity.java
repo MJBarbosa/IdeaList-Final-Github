@@ -119,7 +119,7 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
 
                     // Set User DP (After User Had Uploaded)
                     Uri uri = firebaseUserSO.getPhotoUrl();
-                    Picasso.with(StoreOwnerProfileActivity.this).load(uri).into(imageView);
+                    Picasso.get().load(uri).into(imageView);
                 } else {
                     Toast.makeText(StoreOwnerProfileActivity.this, "Something Went Wrong!", Toast.LENGTH_LONG).show();
                 }

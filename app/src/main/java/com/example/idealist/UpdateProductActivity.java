@@ -1,14 +1,21 @@
 package com.example.idealist;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -16,8 +23,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.squareup.picasso.Picasso;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,11 +35,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.Nullable;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Target;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class UpdateProductActivity extends AppCompatActivity {
 
@@ -42,6 +59,10 @@ public class UpdateProductActivity extends AppCompatActivity {
     private ProgressBar progressBarUpdateProduct;
     private Spinner spinnerUpdateCategory;
     private static final String TAG = "UpdateProductActivity";
+    private static final int IMAGE_PICK_REQUEST = 1;
+    private Uri selectedImageUri;
+    private Product selectedProduct;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +90,25 @@ public class UpdateProductActivity extends AppCompatActivity {
 
         // Initialize the productList and set up the search functionality
         productList = new ArrayList<>();
+
         // Initialize the searchAdapter
         searchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
         autoCompleteTextViewSearch.setAdapter(searchAdapter);
         setupSearch();
+
+
+        ImageView buttonSelectImage = findViewById(R.id.imageViewUpdateProductImage);
+
+        buttonSelectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Open the device's file picker to select an image
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, IMAGE_PICK_REQUEST);
+            }
+        });
+
 
         Button buttonUpdateProduct = findViewById(R.id.buttonUpdateProduct);
         buttonUpdateProduct.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +157,19 @@ public class UpdateProductActivity extends AppCompatActivity {
             }
         });
     }
+
+    // Add this method to handle the image selection result
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == IMAGE_PICK_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            selectedImageUri = data.getData();
+            ImageView imageViewProductImage = findViewById(R.id.imageViewUpdateProductImage);
+            imageViewProductImage.setImageURI(selectedImageUri);
+        }
+    }
+
 
     private void setupSearch() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("ProductInventory").child(getCurrentUserUid());
@@ -210,6 +259,11 @@ public class UpdateProductActivity extends AppCompatActivity {
 
                     textViewProductIdValue.setText(selectedProduct.getProductId());
                     textViewProductNameValue.setText(selectedProduct.getProductName());
+
+                    // Display the product image
+                    ImageView imageViewProductImage = findViewById(R.id.imageViewUpdateProductImage);
+                    displayProductImage(selectedProduct.getUserUid(), selectedProduct.getProductId(), imageViewProductImage);
+
                 } else {
                     Log.e(TAG, "Selected product is null.");
                 }
@@ -269,6 +323,11 @@ public class UpdateProductActivity extends AppCompatActivity {
                 // Query the database to fetch the productId for the selected product
                 DatabaseReference productsReference = FirebaseDatabase.getInstance().getReference("ProductInventory").child(userUid);
 
+                if (selectedImageUri != null) {
+                    // Update the product's image in Firebase Storage
+                    updateImageInStorage(selectedImageUri, selectedProduct.getProductId());
+                }
+
                 productsReference.orderByChild("productId").equalTo(productId).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -323,6 +382,105 @@ public class UpdateProductActivity extends AppCompatActivity {
         }
     }
 
+    private void updateImageInStorage(Uri imageUri, final String productId) {
+        // Check if an image is selected
+        if (imageUri == null) {
+            // Handle the case where no image is selected
+            Toast.makeText(UpdateProductActivity.this, "Please select an image for the product.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Create a storage reference
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("ProductImages"); // Updated path to "ProductImages"
+
+        String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Ensure that productId is not null before creating the child reference
+        if (productId != null) {
+            // Create a reference to the image with the product ID as the name
+            final StorageReference imageRef = storageRef.child(userUid).child(productId); // Include userUid in the path
+
+            // Upload the image
+            UploadTask uploadTask = imageRef.putFile(imageUri);
+
+            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        // Image uploaded successfully
+                        imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                // Get the download URL of the uploaded image
+                                String imageUrl = uri.toString();
+
+                                // Clear the selectedImageUri
+                                selectedImageUri = null;
+
+                                Toast.makeText(UpdateProductActivity.this, "Image Uploaded Successfully", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } else {
+                        // Handle the error
+                        Toast.makeText(UpdateProductActivity.this, "Failed to upload image. Please try again.", Toast.LENGTH_LONG).show();
+                        Log.e(TAG, "Error uploading image: " + task.getException());
+                    }
+                }
+            });
+        } else {
+            // Handle the case where productId is null
+            Toast.makeText(UpdateProductActivity.this, "Failed to generate product ID. Please try again.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    private void displayProductImage(String userUid, String productId, ImageView imageView) {
+        // Reference to the product image in Firebase Storage
+        StorageReference storageReference = FirebaseStorage.getInstance()
+                .getReference("ProductImages")
+                .child(userUid)
+                .child(productId); // Assuming images are in JPG format
+
+        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Load the image using Picasso
+                Picasso.get()
+                        .load(uri)
+                        .placeholder(R.drawable.default_product_image)
+                        .error(R.drawable.default_product_image)
+                        .into(imageView);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Handle the failure to download and display the image
+                imageView.setImageResource(R.drawable.default_product_image);
+                Log.e(TAG, "Error loading product image: " + e.getMessage());
+            }
+        });
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+
+        if (itemId == android.R.id.home) {
+            Intent intent = new Intent(UpdateProductActivity.this, ManageInventoryActivity.class);
+            startActivity(intent);
+            finish();// Close the current activity and return to the previous one
+            return true;
+        }
+
+        // Handle other menu items if needed
+        // ...
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
     private void clearFields() {
         editTextUpdateSuppName.setText("");
         editTextUpdateProductDesc.setText("");
@@ -334,7 +492,15 @@ public class UpdateProductActivity extends AppCompatActivity {
         // Clear the productId and productName TextViews
         editTextUpdateProductId.setText("");
         editTextUpdateProductName.setText("");
+
+        // Reset the image to the default image
+        ImageView imageViewProductImage = findViewById(R.id.imageViewUpdateProductImage);
+        imageViewProductImage.setImageResource(R.drawable.default_product_image);
+
+        // Clear the selectedImageUri
+        selectedImageUri = null;
     }
+
 
 
 
@@ -348,6 +514,7 @@ public class UpdateProductActivity extends AppCompatActivity {
         private String productDescription;
         private String quantity;
         private String price;
+        private String imageUrl;
 
         // Constructors, getters, setters, and other methods go here
         public Product() {
@@ -363,6 +530,13 @@ public class UpdateProductActivity extends AppCompatActivity {
             this.userUid = userUid;
         }
 
+        public String getImageUrl() {
+            return imageUrl;
+        }
+
+        public void setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+        }
         // Add getters and setters for each field
         public String getProductId() {
             return productId;

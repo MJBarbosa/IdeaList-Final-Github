@@ -22,16 +22,28 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
 
+        <ImageButton
+            android:id="@+id/imageButtonAddProductImage"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:layout_below="@+id/textViewAddInventoryHead"
+            android:layout_marginTop="20dp"
+            android:scaleType="centerCrop"
+            android:text="Select Image"
+            android:background="@drawable/default_product_image"
+            android:contentDescription="Product Image" />
+
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textViewAddProductId"
-            android:layout_below="@+id/textViewAddInventoryHead"
+            android:layout_below="@+id/imageButtonAddProductImage"
             android:text="Product ID*"
             android:textColor="#555555"
             android:padding="6dp"
             android:textSize="16dp"
-            android:layout_marginTop="50dp"/>
+            android:layout_marginTop="20dp"/>
 
         <EditText
             android:layout_width="match_parent"

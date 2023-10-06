@@ -5,9 +5,11 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -297,6 +299,24 @@ public class DeleteProductActivity extends AppCompatActivity {
             Toast.makeText(DeleteProductActivity.this, "Selected product not found.", Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+
+        if (itemId == android.R.id.home) {
+            Intent intent = new Intent(DeleteProductActivity.this, ManageInventoryActivity.class);
+            startActivity(intent);
+            finish();// Close the current activity and return to the previous one
+            return true;
+        }
+
+        // Handle other menu items if needed
+        // ...
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void clearFields() {
         textViewDeleteSuppName.setText("");

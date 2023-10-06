@@ -159,8 +159,7 @@ public class UsersProfileActivity extends AppCompatActivity {
                     //Set User DP (After User Had Uploaded)
                     Uri uri = firebaseUser.getPhotoUrl();
 
-                    //ImageViewer setImageURI() should not be Used with regular URIs. So we are using Picasso
-                    Picasso.with(UsersProfileActivity.this).load(uri).into(imageView);
+                    Picasso.get().load(uri).into(imageView);
                 } else {
                     Toast.makeText(UsersProfileActivity.this, "Something Went Wrong!", Toast.LENGTH_LONG).show();
                 }
