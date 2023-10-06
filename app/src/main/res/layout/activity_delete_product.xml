@@ -34,16 +34,27 @@
             android:layout_below="@id/textViewDeleteInventoryHead"
             android:completionThreshold="1" />
 
+        <ImageView
+            android:id="@+id/imageViewDeleteProductImage"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:layout_below="@+id/autoCompleteTextViewDeleteSearch"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:text="Select Image"
+            android:background="@drawable/default_product_image"
+            android:contentDescription="Product Image" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textViewDeleteProductId"
-            android:layout_below="@+id/autoCompleteTextViewDeleteSearch"
+            android:layout_below="@+id/imageViewDeleteProductImage"
             android:text="Product ID"
             android:textColor="#555555"
             android:padding="6dp"
             android:textSize="16dp"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="10dp"/>
 
         <TextView
             android:layout_width="match_parent"

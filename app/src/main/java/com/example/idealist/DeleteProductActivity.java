@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,11 +17,14 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +33,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.Nullable;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +49,7 @@ public class DeleteProductActivity extends AppCompatActivity {
     private List<Product> productList;
     private TextView textViewDeleteSuppName, textViewDeleteProductDesc, textViewDeleteQuantity, textViewDeletePrice, textViewDeleteProductId, textViewDeleteProductName, textViewDeleteCategory;
     private ArrayAdapter<String> searchAdapter, adapter;
+    private Uri selectedImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +182,10 @@ public class DeleteProductActivity extends AppCompatActivity {
 
                     textViewProductIdValue.setText(selectedProduct.getProductId());
                     textViewProductNameValue.setText(selectedProduct.getProductName());
+
+                    // Display the product image
+                    ImageView imageViewProductImage = findViewById(R.id.imageViewDeleteProductImage);
+                    displayProductImage(selectedProduct.getUserUid(), selectedProduct.getProductId(), imageViewProductImage);
                 } else {
                     Log.e(TAG, "Selected product is null.");
                 }
@@ -253,6 +266,9 @@ public class DeleteProductActivity extends AppCompatActivity {
                 // Query the database to fetch the productId for the selected product
                 DatabaseReference productsReference = FirebaseDatabase.getInstance().getReference("ProductInventory").child(userUid);
 
+                deleteImageInStorage(selectedProduct);
+
+
                 productsReference.orderByChild("productId").equalTo(productId).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -300,6 +316,70 @@ public class DeleteProductActivity extends AppCompatActivity {
         }
     }
 
+    private void deleteImageInStorage(Product product) {
+        if (product == null || product.getProductId() == null || product.getUserUid() == null) {
+            // Handle the case where product or its properties are null
+            Toast.makeText(DeleteProductActivity.this, "Invalid product data. Cannot delete image.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Create a reference to the image in Firebase Storage
+        StorageReference imageRef = FirebaseStorage.getInstance()
+                .getReference("ProductImages")
+                .child(product.getUserUid())
+                .child(product.getProductId());
+
+        // Delete the image
+        imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // Image deleted successfully
+                Toast.makeText(DeleteProductActivity.this, "Image Deleted Successfully", Toast.LENGTH_LONG).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Handle the failure to delete the image
+                Toast.makeText(DeleteProductActivity.this, "Failed to delete image. Please try again.", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "Error deleting image: " + e.getMessage());
+            }
+        });
+    }
+
+    private Uri displayedImageUri; // Add this variable
+
+    private void displayProductImage(String userUid, String productId, ImageView imageView) {
+        // Reference to the product image in Firebase Storage
+        StorageReference storageReference = FirebaseStorage.getInstance()
+                .getReference("ProductImages")
+                .child(userUid)
+                .child(productId); // Assuming images are in JPG format
+
+        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Load the image using Picasso
+                Picasso.get()
+                        .load(uri)
+                        .placeholder(R.drawable.default_product_image)
+                        .error(R.drawable.default_product_image)
+                        .into(imageView);
+
+                // Store the displayed image URI
+                displayedImageUri = uri;
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Handle the failure to download and display the image
+                imageView.setImageResource(R.drawable.default_product_image);
+                displayedImageUri = null; // Clear the URI
+                Log.e(TAG, "Error loading product image: " + e.getMessage());
+            }
+        });
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
@@ -329,6 +409,13 @@ public class DeleteProductActivity extends AppCompatActivity {
         // Clear the productId and productName TextViews
         textViewDeleteProductId.setText("");
         textViewDeleteProductName.setText("");
+
+        // Reset the image to the default image
+        ImageView imageViewProductImage = findViewById(R.id.imageViewDeleteProductImage);
+        imageViewProductImage.setImageResource(R.drawable.default_product_image);
+
+        // Clear the selectedImageUri
+        selectedImageUri = null;
     }
     // Define a Product class to manage product data (if needed)
     // Define a Product class to manage product data
