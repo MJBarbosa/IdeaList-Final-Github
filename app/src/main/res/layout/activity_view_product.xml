@@ -32,11 +32,22 @@
             android:layout_marginTop="16dp"
             android:text="Search" />
 
+        <ImageView
+            android:id="@+id/imageViewProductImage"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:layout_below="@+id/buttonSearch"
+            android:scaleType="centerCrop"
+            android:text="Select Image"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/default_product_image"
+            android:contentDescription="Product Image" />
+
         <ListView
             android:id="@+id/listViewProducts"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:layout_below="@+id/buttonSearch"
+            android:layout_below="@+id/imageViewProductImage"
             android:layout_marginTop="16dp"
             android:background="@drawable/border"/>
 
@@ -49,21 +60,12 @@
             android:elevation="10dp"
             android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/imageViewViewProductImage"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_below="@+id/listViewProducts"
-            android:scaleType="centerCrop"
-            android:text="Select Image"
-            android:background="@drawable/default_product_image"
-            android:contentDescription="Product Image" />
         <!-- TextViews for displaying product details -->
         <TextView
             android:id="@+id/textViewProductName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/imageViewViewProductImage"
+            android:layout_below="@+id/listViewProducts"
             android:text="Product Name: "
             android:textSize="16sp"
             android:textStyle="bold" />

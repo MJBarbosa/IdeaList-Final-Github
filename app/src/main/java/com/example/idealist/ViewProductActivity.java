@@ -23,10 +23,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -51,6 +49,8 @@ public class ViewProductActivity extends AppCompatActivity {
     private ArrayAdapter<String> searchAdapter;
     private ArrayAdapter<String> adapter;
     private FirebaseAuth authProfile;
+    private Product selectedProduct;
+    private ImageView imageViewProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +58,12 @@ public class ViewProductActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_product);
 
         getSupportActionBar().setTitle("View Products");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Initialize UI elements
         progressBarViewProduct = findViewById(R.id.progressBarViewProduct);
         autoCompleteTextViewSearch = findViewById(R.id.autoCompleteTextViewSearch);
         listViewProducts = findViewById(R.id.listViewProducts);
+        imageViewProduct = findViewById(R.id.imageViewProductImage);
 
         // Initialize the productList and set up the search functionality
         productList = new ArrayList<>();
@@ -106,6 +106,7 @@ public class ViewProductActivity extends AppCompatActivity {
                         product.setProductDescription((String) productData.get("productDescription"));
                         product.setPrice((String) productData.get("price"));
                         product.setQuantity((String) productData.get("quantity"));
+                        product.setUserUid(getCurrentUserUid());
                         // Populate other fields similarly
 
                         // Add the product to the list
@@ -153,24 +154,14 @@ public class ViewProductActivity extends AppCompatActivity {
                 String selectedProductName = parent.getItemAtPosition(position).toString();
 
                 // Find the corresponding product in the productList
-                Product selectedProduct = findProductByName(selectedProductName);
+                selectedProduct = findProductByName(selectedProductName);
 
                 if (selectedProduct != null) {
                     // Populate TextViews with the selected product's data
-                    TextView textViewProductName = findViewById(R.id.textViewProductName);
-                    TextView textViewProductDescription = findViewById(R.id.textViewProductDescription);
-                    TextView textViewQuantity = findViewById(R.id.textViewQuantity);
-                    TextView textViewPrice = findViewById(R.id.textViewPrice);
+                    updateTextViewsWithProductData(selectedProduct);
 
-                    textViewProductName.setText("Product Name: " + selectedProduct.getProductName());
-                    textViewProductDescription.setText("Product Description: " + selectedProduct.getProductDescription());
-                    textViewQuantity.setText("Quantity: " + selectedProduct.getQuantity());
-                    textViewPrice.setText("Price: " + selectedProduct.getPrice());
-
-                    // Update other TextViews with additional product details as needed
                     // Display the product image
-                    ImageView imageViewProductImage = findViewById(R.id.imageViewViewProductImage);
-                    displayProductImage(selectedProduct.getUserUid(), selectedProduct.getProductId(), imageViewProductImage);
+                    displayProductImage(selectedProduct.getUserUid(), selectedProduct.getProductId(), imageViewProduct);
                 } else {
                     Log.e(TAG, "Selected product is null.");
                 }
@@ -190,13 +181,69 @@ public class ViewProductActivity extends AppCompatActivity {
                 if (selectedProduct != null) {
                     // Populate TextViews with the selected product's data
                     updateTextViewsWithProductData(selectedProduct);
+
+                    // Display the product image
+                    displayProductImage(selectedProduct.getUserUid(), selectedProduct.getProductId(), imageViewProduct);
                 } else {
                     Log.e(TAG, "Selected product is null.");
                 }
             }
         });
-
     }
+
+    private void loadProductImage(String imageUrl, String userUid, String productId) {
+        if (!TextUtils.isEmpty(imageUrl)) {
+            // If imageUrl is provided, load and display the image using the displayProductImage function
+            displayProductImage(userUid, productId, imageViewProduct);
+        } else {
+            // If imageUrl is empty, you can display a placeholder image or handle it as needed
+            imageViewProduct.setImageResource(R.drawable.default_product_image);
+            Log.d(TAG, "Empty imageUrl, using placeholder image.");
+        }
+    }
+
+    private Uri displayedImageUri; // Add this variable
+
+    private void displayProductImage(String userUid, String productId, ImageView imageView) {
+        // Reference to the product image in Firebase Storage
+        StorageReference storageReference = FirebaseStorage.getInstance()
+                .getReference("ProductImages")
+                .child(userUid)
+                .child(productId); // Assuming images are in JPG format
+
+        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Load the image using Picasso
+                Picasso.get()
+                        .load(uri)
+                        .placeholder(R.drawable.default_product_image)
+                        .error(R.drawable.default_product_image)
+                        .into(imageView);
+
+                // Store the displayed image URI
+                displayedImageUri = uri;
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Handle the failure to download and display the image
+                imageView.setImageResource(R.drawable.default_product_image);
+                displayedImageUri = null; // Clear the URI
+                Log.e(TAG, "Error loading product image: " + e.getMessage());
+            }
+        });
+    }
+
+    private Product findProductByName(String productName) {
+        for (Product product : productList) {
+            if (product.getProductName().equalsIgnoreCase(productName)) {
+                return product;
+            }
+        }
+        return null; // Return null if the product is not found
+    }
+
 
     private void updateTextViewsWithProductData(Product selectedProduct) {
         TextView textViewProductName = findViewById(R.id.textViewProductName);
@@ -208,8 +255,6 @@ public class ViewProductActivity extends AppCompatActivity {
         textViewProductDescription.setText("Product Description: " + selectedProduct.getProductDescription());
         textViewQuantity.setText("Quantity: " + selectedProduct.getQuantity());
         textViewPrice.setText("Price: " + selectedProduct.getPrice());
-        ImageView imageViewProductImage = findViewById(R.id.imageViewViewProductImage);
-        displayProductImage(selectedProduct.getUserUid(), selectedProduct.getProductId(), imageViewProductImage);
     }
 
     private void searchProduct(String query) {
@@ -239,40 +284,6 @@ public class ViewProductActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    private void displayProductImage(String userUid, String productId, ImageView imageView) {
-        StorageReference storageReference = FirebaseStorage.getInstance()
-                .getReference("ProductImages")
-                .child(userUid)
-                .child(productId + ".jpg"); // Ensure the correct file extension (e.g., .jpg)
-
-        try {
-            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    // Load the image using Picasso
-                    Log.d(TAG, "Image URL: " + uri.toString()); // Log the image URL
-                    Picasso.get()
-                            .load(uri)
-                            .placeholder(R.drawable.default_product_image)
-                            .error(R.drawable.default_product_image)
-                            .into(imageView);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    // Handle the failure to download and display the image
-                    imageView.setImageResource(R.drawable.default_product_image);
-                    Log.e(TAG, "Error loading product image: " + e.getMessage());
-                }
-            });
-        } catch (Exception e) {
-            // Handle exceptions here
-            Log.e(TAG, "Exception while loading product image: " + e.getMessage());
-            imageView.setImageResource(R.drawable.default_product_image); // Set a default image
-        }
-    }
-
-
     private String getCurrentUserUid() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -282,14 +293,39 @@ public class ViewProductActivity extends AppCompatActivity {
         }
     }
 
-    // Find a product by its name
-    private Product findProductByName(String productName) {
-        for (Product product : productList) {
-            if (product.getProductName().equals(productName)) {
-                return product;
+    private void checkUserRoleForAccess() {
+        DatabaseReference userRolesRef = FirebaseDatabase.getInstance().getReference("UserRoles")
+                .child(getCurrentUserUid())
+                .child("role");
+
+        userRolesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String userRole = dataSnapshot.getValue(String.class);
+                    if ("storeOwner".equals(userRole)) {
+                        // User has the "storeOwner" role, allow access
+                    } else {
+                        // User does not have the "storeOwner" role, show an error message
+                        Toast.makeText(ViewProductActivity.this, "Only Store Owners can access this feature.", Toast.LENGTH_LONG).show();
+                        finish(); // Close the activity for non-store owners
+                    }
+                } else {
+                    // User role data does not exist for this user or is not set to "storeOwner"
+                    // Handle it as needed, for example, by displaying an error message or taking appropriate action.
+                    Toast.makeText(ViewProductActivity.this, "User role not set to 'storeOwner'.", Toast.LENGTH_LONG).show();
+                    finish(); // Close the activity if the user role is not set to "storeOwner"
+                }
             }
-        }
-        return null;
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle database error
+                Toast.makeText(ViewProductActivity.this, "Error checking user role.", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "Error checking user role: " + databaseError.getMessage());
+                finish(); // Close the activity on database error
+            }
+        });
     }
 
     @Override
@@ -341,9 +377,6 @@ public class ViewProductActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-
-
     // Define a Product class to manage product data (if needed)
     private static class Product {
         private String productId;
@@ -361,23 +394,8 @@ public class ViewProductActivity extends AppCompatActivity {
             this.productId = ""; // Initialize productId to an empty string
         }
 
-        public String getUserUid() {
-            return userUid;
-        }
-
-        public void setUserUid(String userUid) {
-            this.userUid = userUid;
-        }
-
-        public String getImageUrl() {
-            return imageUrl;
-        }
-
-        public void setImageUrl(String imageUrl) {
-            this.imageUrl = imageUrl;
-        }
-
         // Add getters and setters for each field
+
         public String getProductId() {
             return productId;
         }
@@ -432,6 +450,22 @@ public class ViewProductActivity extends AppCompatActivity {
 
         public void setPrice(String price) {
             this.price = price;
+        }
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
+
+        public void setImageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+        }
+
+        public String getUserUid() {
+            return userUid;
+        }
+
+        public void setUserUid(String userUid) {
+            this.userUid = userUid;
         }
     }
 }
