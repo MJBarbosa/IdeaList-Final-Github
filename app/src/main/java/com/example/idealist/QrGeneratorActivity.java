@@ -113,12 +113,14 @@ public class QrGeneratorActivity extends AppCompatActivity {
                 String productName = ((TextView) findViewById(R.id.textViewQRProductName)).getText().toString();
                 String productDescription = ((TextView) findViewById(R.id.textViewQRProductDescription)).getText().toString();
                 String price = ((TextView) findViewById(R.id.textViewQRPrice)).getText().toString();
+                String category = ((TextView) findViewById(R.id.textViewQRCategory)).getText().toString();
 
                 // Combine the product details into a single text
                 String productDetails = productId + "\n"
                         + productName + "\n"
                         + productDescription + "\n"
-                        + price;
+                        + price + "\n"
+                        + category;
 
                 // Generate the QR code
                 generateQRCode(productDetails);
@@ -314,11 +316,13 @@ public class QrGeneratorActivity extends AppCompatActivity {
                     TextView textViewQRProductName = findViewById(R.id.textViewQRProductName);
                     TextView textViewQRProductDescription = findViewById(R.id.textViewQRProductDescription);
                     TextView textViewQRPrice = findViewById(R.id.textViewQRPrice);
+                    TextView textViewQRCategory = findViewById(R.id.textViewQRCategory);
 
-                    textViewQRProductId.setText("Product ID: " + selectedProduct.getProductId());
-                    textViewQRProductName.setText("Product Name: " + selectedProduct.getProductName());
-                    textViewQRProductDescription.setText("Product Description: " + selectedProduct.getProductDescription());
-                    textViewQRPrice.setText("Price: " + selectedProduct.getPrice());
+                    textViewQRProductId.setText("Product ID:" + selectedProduct.getProductId());
+                    textViewQRProductName.setText("Product Name:" + selectedProduct.getProductName());
+                    textViewQRProductDescription.setText("Product Description:" + selectedProduct.getProductDescription());
+                    textViewQRPrice.setText("Price:" + selectedProduct.getPrice());
+                    textViewQRCategory.setText("Category:" + selectedProduct.getCategory());
 
                     // Update other TextViews with additional product details as needed
                 } else {
@@ -371,11 +375,13 @@ public class QrGeneratorActivity extends AppCompatActivity {
         TextView textViewProductName = findViewById(R.id.textViewQRProductName);
         TextView textViewProductDescription = findViewById(R.id.textViewQRProductDescription);
         TextView textViewPrice = findViewById(R.id.textViewQRPrice);
+        TextView textViewQRCategory = findViewById(R.id.textViewQRCategory);
 
-        textViewQRProductId.setText("Product ID: " + selectedProduct.getProductId());
-        textViewProductName.setText("Product Name: " + selectedProduct.getProductName());
-        textViewProductDescription.setText("Product Description: " + selectedProduct.getProductDescription());
-        textViewPrice.setText("Price: " + selectedProduct.getPrice());
+        textViewQRProductId.setText("Product ID:" + selectedProduct.getProductId());
+        textViewProductName.setText("Product Name:" + selectedProduct.getProductName());
+        textViewProductDescription.setText("Product Description:" + selectedProduct.getProductDescription());
+        textViewPrice.setText("Price:" + selectedProduct.getPrice());
+        textViewQRCategory.setText("Category:" + selectedProduct.getCategory());
     }
 
     private void searchProduct(String query) {

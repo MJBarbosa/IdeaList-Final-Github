@@ -106,12 +106,21 @@
                     android:text="Price: "
                     android:textSize="16sp" />
 
+                <TextView
+                    android:id="@+id/textViewQRCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewQRPrice"
+                    android:layout_marginTop="8dp"
+                    android:text="Category: "
+                    android:textSize="16sp" />
+
                 <!-- Button for generating QR -->
                 <Button
                     android:id="@+id/buttonGenerateQR"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/textViewQRPrice"
+                    android:layout_below="@+id/textViewQRCategory"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
                     android:text="Generate QR Code" />

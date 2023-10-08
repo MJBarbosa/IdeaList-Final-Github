@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,6 +28,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseApp;
 import com.squareup.picasso.Picasso;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -70,6 +72,7 @@ public class UpdateProductActivity extends AppCompatActivity {
         setContentView(R.layout.activity_update_product);
 
         getSupportActionBar().setTitle("Update Product");
+        FirebaseApp.initializeApp(this);
 
         // Initialize UI elements
         progressBarUpdateProduct = findViewById(R.id.progressBarUpdateProduct);
@@ -122,9 +125,119 @@ public class UpdateProductActivity extends AppCompatActivity {
             }
         });
 
+        // Check if the intent contains the userUid and scannedContent
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("userUid") && intent.hasExtra("scannedContent")) {
+            String userUid = intent.getStringExtra("userUid");
+            String scannedContent = intent.getStringExtra("scannedContent");
+
+            // Parse the scanned content to extract product information
+            Product product = parseScannedContent(scannedContent);
+
+            if (product != null) {
+                // Fetch the supplierName and quantity based on the productId
+                String productIdToFetch = product.getProductId(); // Use the productId from the parsed product
+                Product productToUpdate = new Product();
+
+                // Call the method to fetch the supplierName and quantity
+                fetchSupplierNameAndQuantity(productIdToFetch, productToUpdate);
+                // Auto-fill the fields with product information
+                editTextUpdateProductDesc.setText(product.getProductDescription());
+                editTextUpdatePrice.setText(product.getPrice());
+                spinnerUpdateCategory.setSelection(adapter.getPosition(product.getCategory()));
+                editTextUpdateProductId.setText(product.getProductId());
+                editTextUpdateProductName.setText(product.getProductName());
+
+                // Display the product image (if available)
+                ImageView imageViewProductImage = findViewById(R.id.imageViewUpdateProductImage);
+                displayProductImage(userUid, product.getProductId(), imageViewProductImage);
+            }
+        } else {
+            // Handle the case where userUid or scannedContent is not provided
+            Toast.makeText(this, "Invalid data received.", Toast.LENGTH_SHORT).show();
+        }
+
         // Check the user's role before allowing access to this activity
         checkUserRoleForAccess();
     }
+
+    private Product parseScannedContent(String scannedContent) {
+        // Implement your logic to parse the scanned content and create a Product object
+        // Extract Product ID, Name, Description, Price, and Category from the scanned content
+        // Create a Product object with the extracted data and return it
+        // Example parsing logic:
+        String productId = extractValueFromScannedContent(scannedContent, "Product ID:");
+        String productName = extractValueFromScannedContent(scannedContent, "Product Name:");
+        String productDesc = extractValueFromScannedContent(scannedContent, "Product Description:");
+        String price = extractValueFromScannedContent(scannedContent, "Price:");
+        String category = extractValueFromScannedContent(scannedContent, "Category:");
+
+        // Create a Product object and populate it
+        Product product = new Product();
+        product.setProductId(productId);
+        product.setProductName(productName);
+        product.setSupplierName(product.supplierName);
+        product.setProductDescription(productDesc);
+        product.setQuantity(product.quantity);
+        product.setPrice(price);
+        product.setCategory(category);
+
+        // Call the method with the desired productId and a Product object to update
+        String productIdToFetch = productId; // Replace with the productId you want to fetch
+        Product productToUpdate = new Product(); // Create an instance of Product to update
+        fetchSupplierNameAndQuantity(productIdToFetch, productToUpdate);
+
+
+        return product;
+    }
+
+    private void fetchSupplierNameAndQuantity(String productId, Product productToUpdate) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("ProductInventory")
+                .child(getCurrentUserUid()) // Replace with the user UID of the currently logged-in user
+                .child(productId);
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String supplierName = dataSnapshot.child("supplierName").getValue(String.class);
+                    String quantity = dataSnapshot.child("quantity").getValue(String.class);
+
+                    // Set the retrieved values in the productToUpdate object
+                    productToUpdate.setSupplierName(supplierName);
+                    productToUpdate.setQuantity(quantity);
+
+                    // Now you can update your UI or perform any other actions with the productToUpdate object.
+                } else {
+                    // Handle the case where the product does not exist in the database.
+                    Toast.makeText(UpdateProductActivity.this, "Product not found in the database.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors that may occur during the Firebase operation.
+                Toast.makeText(UpdateProductActivity.this, "Error fetching data from Firebase.", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Error fetching data from Firebase: " + databaseError.getMessage());
+            }
+        });
+    }
+
+
+
+    private String extractValueFromScannedContent(String scannedContent, String key) {
+        // Implement your logic to extract the value associated with a key in the scanned content
+        // Search for the key in the scanned content and return the associated value
+        // Example logic:
+        String[] lines = scannedContent.split("\n");
+        for (String line : lines) {
+            if (line.startsWith(key)) {
+                return line.substring(key.length()).trim();
+            }
+        }
+        return "";
+    }
+
 
     private void checkUserRoleForAccess() {
         DatabaseReference userRolesRef = FirebaseDatabase.getInstance().getReference("UserRoles")
@@ -461,6 +574,11 @@ public class UpdateProductActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.qr_code_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
 
     @Override
@@ -472,8 +590,12 @@ public class UpdateProductActivity extends AppCompatActivity {
             startActivity(intent);
             finish();// Close the current activity and return to the previous one
             return true;
+        } else if (itemId == R.id.menu_item_scan_qr_code) {
+            // Launch the QR code scanner activity
+            Intent intent = new Intent(this, QRCodeScannerActivity.class);
+            startActivity(intent);
+            return true;
         }
-
         // Handle other menu items if needed
         // ...
 
