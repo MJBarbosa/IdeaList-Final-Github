@@ -19,7 +19,7 @@
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="8dp"
             android:completionThreshold="1"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/border" />
 
         <!-- Add other UI elements for displaying product information here -->
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/autoCompleteTextViewSearch"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:text="Search" />
 
         <ImageView
@@ -62,19 +62,46 @@
 
         <!-- TextViews for displaying product details -->
         <TextView
-            android:id="@+id/textViewProductName"
+            android:id="@+id/textViewProductId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/listViewProducts"
-            android:text="Product Name: "
+            android:text="Product ID: "
             android:textSize="16sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewProductName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewProductId"
+            android:layout_marginTop="8dp"
+            android:text="Product Name: "
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textViewSuppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewProductName"
+            android:layout_marginTop="8dp"
+            android:text="Supplier Name: "
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textViewCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewSuppName"
+            android:layout_marginTop="8dp"
+            android:text="Category: "
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textViewProductDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textViewProductName"
+            android:layout_below="@+id/textViewCategory"
             android:layout_marginTop="8dp"
             android:text="Product Description: "
             android:textSize="16sp" />

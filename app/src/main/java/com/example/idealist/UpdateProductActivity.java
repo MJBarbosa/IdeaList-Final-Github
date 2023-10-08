@@ -1,12 +1,16 @@
 package com.example.idealist;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,12 +27,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.AsyncListUtil;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -64,6 +71,7 @@ public class UpdateProductActivity extends AppCompatActivity {
     private static final int IMAGE_PICK_REQUEST = 1;
     private Uri selectedImageUri;
     private Product selectedProduct;
+    private DatabaseReference productRef;
 
 
     @Override
@@ -98,6 +106,7 @@ public class UpdateProductActivity extends AppCompatActivity {
         searchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
         autoCompleteTextViewSearch.setAdapter(searchAdapter);
         setupSearch();
+        fetchDataFromIntentAndFirebase();
 
 
         ImageView buttonSelectImage = findViewById(R.id.imageViewUpdateProductImage);
@@ -124,47 +133,57 @@ public class UpdateProductActivity extends AppCompatActivity {
                 clearFields();
             }
         });
+        checkUserRoleForAccess(getCurrentUserUid());
+    }
 
+    private void fetchDataFromIntentAndFirebase() {
         // Check if the intent contains the userUid and scannedContent
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("userUid") && intent.hasExtra("scannedContent")) {
             String userUid = intent.getStringExtra("userUid");
             String scannedContent = intent.getStringExtra("scannedContent");
 
-            // Parse the scanned content to extract product information
-            Product product = parseScannedContent(scannedContent);
+            // Check if userUid and scannedContent are not null or empty
+            if (userUid != null && !userUid.isEmpty() && scannedContent != null && !scannedContent.isEmpty()) {
+                // Parse the scanned content to extract product information
+                Product product = parseScannedContent(scannedContent);
 
-            if (product != null) {
-                // Fetch the supplierName and quantity based on the productId
-                String productIdToFetch = product.getProductId(); // Use the productId from the parsed product
-                Product productToUpdate = new Product();
+                if (product != null) {
+                    // Initialize your UI elements outside the callback
+                    editTextUpdateSuppName = findViewById(R.id.editTextUpdateSuppName);
+                    editTextUpdateQuantity = findViewById(R.id.editTextUpdateQuantity);
+                    editTextUpdateProductId = findViewById(R.id.textViewProductIdValue);
+                    autoCompleteTextViewSearch = findViewById(R.id.autoCompleteTextViewUpdateSearch);
 
-                // Call the method to fetch the supplierName and quantity
-                fetchSupplierNameAndQuantity(productIdToFetch, productToUpdate);
-                // Auto-fill the fields with product information
-                editTextUpdateProductDesc.setText(product.getProductDescription());
-                editTextUpdatePrice.setText(product.getPrice());
-                spinnerUpdateCategory.setSelection(adapter.getPosition(product.getCategory()));
-                editTextUpdateProductId.setText(product.getProductId());
-                editTextUpdateProductName.setText(product.getProductName());
+                    // Set the product ID in the appropriate EditText
+                    editTextUpdateProductId.setText(product.getProductId());
 
-                // Display the product image (if available)
-                ImageView imageViewProductImage = findViewById(R.id.imageViewUpdateProductImage);
-                displayProductImage(userUid, product.getProductId(), imageViewProductImage);
+                    // Auto-fill the fields with product information
+                    editTextUpdateProductDesc.setText(product.getProductDescription());
+                    editTextUpdatePrice.setText(product.getPrice());
+                    spinnerUpdateCategory.setSelection(adapter.getPosition(product.getCategory()));
+                    editTextUpdateProductName.setText(product.getProductName());
+                    autoCompleteTextViewSearch.setText(product.getProductName());
+
+                    onQRCodeScanned(product.getProductName());
+
+                    // Display product image after fetching data
+                    ImageView imageViewProductImage = findViewById(R.id.imageViewUpdateProductImage);
+                    displayProductImage(userUid, product.getProductId(), imageViewProductImage);
+
+                    // Check user role for access
+                    checkUserRoleForAccess(userUid);
+                }
             }
-        } else {
-            // Handle the case where userUid or scannedContent is not provided
-            Toast.makeText(this, "Invalid data received.", Toast.LENGTH_SHORT).show();
         }
-
-        // Check the user's role before allowing access to this activity
-        checkUserRoleForAccess();
     }
+
 
     private Product parseScannedContent(String scannedContent) {
         // Implement your logic to parse the scanned content and create a Product object
-        // Extract Product ID, Name, Description, Price, and Category from the scanned content
-        // Create a Product object with the extracted data and return it
+        // Extract Product ID, Name, Description, Price, Category from the scanned content
+        // Create a Product object with the extracted data
+
         // Example parsing logic:
         String productId = extractValueFromScannedContent(scannedContent, "Product ID:");
         String productName = extractValueFromScannedContent(scannedContent, "Product Name:");
@@ -172,55 +191,15 @@ public class UpdateProductActivity extends AppCompatActivity {
         String price = extractValueFromScannedContent(scannedContent, "Price:");
         String category = extractValueFromScannedContent(scannedContent, "Category:");
 
-        // Create a Product object and populate it
+        // Create a Product object and populate it with the parsed data
         Product product = new Product();
         product.setProductId(productId);
         product.setProductName(productName);
-        product.setSupplierName(product.supplierName);
         product.setProductDescription(productDesc);
-        product.setQuantity(product.quantity);
         product.setPrice(price);
         product.setCategory(category);
 
-        // Call the method with the desired productId and a Product object to update
-        String productIdToFetch = productId; // Replace with the productId you want to fetch
-        Product productToUpdate = new Product(); // Create an instance of Product to update
-        fetchSupplierNameAndQuantity(productIdToFetch, productToUpdate);
-
-
         return product;
-    }
-
-    private void fetchSupplierNameAndQuantity(String productId, Product productToUpdate) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("ProductInventory")
-                .child(getCurrentUserUid()) // Replace with the user UID of the currently logged-in user
-                .child(productId);
-
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String supplierName = dataSnapshot.child("supplierName").getValue(String.class);
-                    String quantity = dataSnapshot.child("quantity").getValue(String.class);
-
-                    // Set the retrieved values in the productToUpdate object
-                    productToUpdate.setSupplierName(supplierName);
-                    productToUpdate.setQuantity(quantity);
-
-                    // Now you can update your UI or perform any other actions with the productToUpdate object.
-                } else {
-                    // Handle the case where the product does not exist in the database.
-                    Toast.makeText(UpdateProductActivity.this, "Product not found in the database.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle any errors that may occur during the Firebase operation.
-                Toast.makeText(UpdateProductActivity.this, "Error fetching data from Firebase.", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "Error fetching data from Firebase: " + databaseError.getMessage());
-            }
-        });
     }
 
 
@@ -239,7 +218,7 @@ public class UpdateProductActivity extends AppCompatActivity {
     }
 
 
-    private void checkUserRoleForAccess() {
+    private void checkUserRoleForAccess(String userUid) {
         DatabaseReference userRolesRef = FirebaseDatabase.getInstance().getReference("UserRoles")
                 .child(getCurrentUserUid())
                 .child("role");
@@ -270,6 +249,7 @@ public class UpdateProductActivity extends AppCompatActivity {
             }
         });
     }
+
 
     // Add this method to handle the image selection result
     @Override
@@ -355,35 +335,111 @@ public class UpdateProductActivity extends AppCompatActivity {
                 // Get the selected product name
                 String selectedProductName = parent.getItemAtPosition(position).toString();
 
-                // Find the corresponding product in the productList
-                Product selectedProduct = findProductByName(selectedProductName);
-
-                if (selectedProduct != null) {
-                    // Populate the editText fields with the selected product's data
-                    editTextUpdateSuppName.setText(selectedProduct.getSupplierName());
-                    editTextUpdateProductDesc.setText(selectedProduct.getProductDescription());
-                    editTextUpdateQuantity.setText(selectedProduct.getQuantity());
-                    editTextUpdatePrice.setText(selectedProduct.getPrice());
-                    spinnerUpdateCategory.setSelection(adapter.getPosition(selectedProduct.getCategory()));
-
-                    // Update the TextViews for productId and productName
-                    TextView textViewProductIdValue = findViewById(R.id.textViewProductIdValue);
-                    TextView textViewProductNameValue = findViewById(R.id.textViewProductNameValue);
-
-                    textViewProductIdValue.setText(selectedProduct.getProductId());
-                    textViewProductNameValue.setText(selectedProduct.getProductName());
-
-                    // Display the product image
-                    ImageView imageViewProductImage = findViewById(R.id.imageViewUpdateProductImage);
-                    displayProductImage(selectedProduct.getUserUid(), selectedProduct.getProductId(), imageViewProductImage);
-
-                } else {
-                    Log.e(TAG, "Selected product is null.");
-                }
+                // Call the method to populate UI elements with the selected product's data
+                populateUIWithProductData(selectedProductName);
             }
         });
 
+        // Handle text change in autoCompleteTextViewSearch
+        autoCompleteTextViewSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed for this functionality
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Not needed for this functionality
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Check if the text matches a product name and call the method to populate UI elements
+                String productName = s.toString();
+                if (!productName.isEmpty()) {
+                    populateUIWithProductData(productName);
+                }
+            }
+        });
     }
+
+    // Inside your activity
+    private AlertDialog alertDialog;
+
+    // Call this method when you want to show the search dialog (e.g., after scanning a QR code)
+    private void onQRCodeScanned(String scannedContent) {
+        showSearchDialog();
+        AutoCompleteTextView autoCompleteTextViewSearch = alertDialog.findViewById(R.id.autoCompleteTextViewSearch);
+
+        // Set the scanned content as the text in autoCompleteTextViewSearch
+        if (autoCompleteTextViewSearch != null) {
+            autoCompleteTextViewSearch.setText(scannedContent);
+        }
+    }
+
+
+    private void showSearchDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.alert_dialog_search, null);
+        builder.setView(dialogView);
+
+        AutoCompleteTextView autoCompleteTextViewSearch = dialogView.findViewById(R.id.autoCompleteTextViewSearch);
+        Button buttonPopulateDetails = dialogView.findViewById(R.id.buttonPopulateDetails);
+
+        // Create an ArrayAdapter for the autoCompleteTextViewSearch using your searchAdapter
+        ArrayAdapter<String> searchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
+        autoCompleteTextViewSearch.setAdapter(searchAdapter);
+
+        // Set up the autoCompleteTextViewSearch and buttonPopulateDetails as you did in setupSearch
+        // (add item click listener and text change listener to autoCompleteTextViewSearch)
+
+        // Set up the button click listener to populate details
+        buttonPopulateDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String selectedProductName = autoCompleteTextViewSearch.getText().toString();
+                populateUIWithProductData(selectedProductName);
+
+                // Dismiss the dialog after populating details
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
+    // Method to populate UI elements with product data based on the product name
+    private void populateUIWithProductData(String productName) {
+        // Find the corresponding product in the productList
+        Product selectedProduct = findProductByName(productName);
+
+        if (selectedProduct != null) {
+            // Populate the editText fields with the selected product's data
+            editTextUpdateSuppName.setText(selectedProduct.getSupplierName());
+            editTextUpdateProductDesc.setText(selectedProduct.getProductDescription());
+            editTextUpdateQuantity.setText(selectedProduct.getQuantity());
+            editTextUpdatePrice.setText(selectedProduct.getPrice());
+            spinnerUpdateCategory.setSelection(adapter.getPosition(selectedProduct.getCategory()));
+
+            // Update the TextViews for productId and productName
+            TextView textViewProductIdValue = findViewById(R.id.textViewProductIdValue);
+            TextView textViewProductNameValue = findViewById(R.id.textViewProductNameValue);
+
+            textViewProductIdValue.setText(selectedProduct.getProductId());
+            textViewProductNameValue.setText(selectedProduct.getProductName());
+
+            // Display the product image
+            ImageView imageViewProductImage = findViewById(R.id.imageViewUpdateProductImage);
+            displayProductImage(selectedProduct.getUserUid(), selectedProduct.getProductId(), imageViewProductImage);
+        } else {
+            Log.e(TAG, "Selected product is null.");
+        }
+    }
+
+
 
 
     private String getCurrentUserUid() {

@@ -2,11 +2,13 @@ package com.example.idealist;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +53,7 @@ public class ViewProductActivity extends AppCompatActivity {
     private FirebaseAuth authProfile;
     private Product selectedProduct;
     private ImageView imageViewProduct;
+    private TextView textViewProductId, textViewProductName, textViewProductDescription, textViewQuantity, textViewPrice, textViewSuppName, textViewCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +67,20 @@ public class ViewProductActivity extends AppCompatActivity {
         autoCompleteTextViewSearch = findViewById(R.id.autoCompleteTextViewSearch);
         listViewProducts = findViewById(R.id.listViewProducts);
         imageViewProduct = findViewById(R.id.imageViewProductImage);
+        textViewProductId = findViewById(R.id.textViewProductId);
+        textViewProductName = findViewById(R.id.textViewProductName);
+        textViewProductDescription = findViewById(R.id.textViewProductDescription);
+        textViewQuantity = findViewById(R.id.textViewQuantity);
+        textViewPrice = findViewById(R.id.textViewPrice);
+        textViewSuppName = findViewById(R.id.textViewSuppName);
+        textViewCategory = findViewById(R.id.textViewCategory);
 
         // Initialize the productList and set up the search functionality
         productList = new ArrayList<>();
         searchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
         autoCompleteTextViewSearch.setAdapter(searchAdapter);
         setupSearch();
+        fetchDataFromIntentAndFirebase();
 
         Button buttonSearch = findViewById(R.id.buttonSearch);
         buttonSearch.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +91,166 @@ public class ViewProductActivity extends AppCompatActivity {
                 searchProduct(searchQuery);
             }
         });
+
+        checkUserRoleForAccess(getCurrentUserUid());
+    }
+
+    private void fetchDataFromIntentAndFirebase() {
+        // Check if the intent contains the userUid and scannedContent
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("userUid") && intent.hasExtra("scannedContent")) {
+            String userUid = intent.getStringExtra("userUid");
+            String scannedContent = intent.getStringExtra("scannedContent");
+
+            // Check if userUid and scannedContent are not null or empty
+            if (userUid != null && !userUid.isEmpty() && scannedContent != null && !scannedContent.isEmpty()) {
+                // Parse the scanned content to extract product information
+                ViewProductActivity.Product product = parseScannedContent(scannedContent);
+                if (product != null) {
+                    // Initialize your UI elements outside the callback
+                    textViewSuppName = findViewById(R.id.textViewSuppName);
+                    textViewQuantity = findViewById(R.id.textViewQuantity);
+                    textViewProductId = findViewById(R.id.textViewProductId);
+                    autoCompleteTextViewSearch = findViewById(R.id.autoCompleteTextViewSearch);
+
+                    // Set the product ID in the appropriate EditText
+                    textViewProductId.setText(product.getProductId());
+
+                    // Auto-fill the fields with product information
+                    textViewProductDescription.setText(product.getProductDescription());
+                    textViewPrice.setText(product.getPrice());
+                    textViewCategory.setText(product.getCategory());
+                    textViewProductName.setText(product.getProductName());
+                    autoCompleteTextViewSearch.setText(product.getProductName());
+
+                    onQRCodeScanned(product.getProductName());
+
+                    // Display product image after fetching data
+                    ImageView imageViewProductImage = findViewById(R.id.imageViewProductImage);
+                    displayProductImage(userUid, product.getProductId(), imageViewProductImage);
+
+                    // Check user role for access
+                    checkUserRoleForAccess(userUid);
+                }
+            }
+        }
+    }
+
+    private ViewProductActivity.Product parseScannedContent(String scannedContent) {
+        // Implement your logic to parse the scanned content and create a Product object
+        // Extract Product ID, Name, Description, Price, Category from the scanned content
+        // Create a Product object with the extracted data
+
+        // Example parsing logic:
+        String productId = extractValueFromScannedContent(scannedContent, "Product ID:");
+        String productName = extractValueFromScannedContent(scannedContent, "Product Name:");
+        String productDesc = extractValueFromScannedContent(scannedContent, "Product Description:");
+        String price = extractValueFromScannedContent(scannedContent, "Price:");
+        String category = extractValueFromScannedContent(scannedContent, "Category:");
+
+        // Create a Product object and populate it with the parsed data
+        ViewProductActivity.Product product = new ViewProductActivity.Product();
+        product.setProductId(productId);
+        product.setProductName(productName);
+        product.setProductDescription(productDesc);
+        product.setPrice(price);
+        product.setCategory(category);
+
+        return product;
+    }
+
+    private String extractValueFromScannedContent(String scannedContent, String key) {
+        // Implement your logic to extract the value associated with a key in the scanned content
+        // Search for the key in the scanned content and return the associated value
+        // Example logic:
+        String[] lines = scannedContent.split("\n");
+        for (String line : lines) {
+            if (line.startsWith(key)) {
+                return line.substring(key.length()).trim();
+            }
+        }
+        return "";
+    }
+
+    private AlertDialog alertDialog;
+
+    // Call this method when you want to show the search dialog (e.g., after scanning a QR code)
+    private void onQRCodeScanned(String scannedContent) {
+        showSearchDialog();
+        AutoCompleteTextView autoCompleteTextViewSearch = alertDialog.findViewById(R.id.autoCompleteTextViewSearch);
+
+        // Set the scanned content as the text in autoCompleteTextViewSearch
+        if (autoCompleteTextViewSearch != null) {
+            autoCompleteTextViewSearch.setText(scannedContent);
+        }
+    }
+
+    private void showSearchDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.alert_dialog_search, null);
+        builder.setView(dialogView);
+
+        AutoCompleteTextView autoCompleteTextViewSearch = dialogView.findViewById(R.id.autoCompleteTextViewSearch);
+        Button buttonPopulateDetails = dialogView.findViewById(R.id.buttonPopulateDetails);
+
+        // Create an ArrayAdapter for the autoCompleteTextViewSearch using your searchAdapter
+        ArrayAdapter<String> searchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
+        autoCompleteTextViewSearch.setAdapter(searchAdapter);
+
+        // Set up the autoCompleteTextViewSearch and buttonPopulateDetails as you did in setupSearch
+        // (add item click listener and text change listener to autoCompleteTextViewSearch)
+
+        // Set up the button click listener to populate details
+        buttonPopulateDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String selectedProductName = autoCompleteTextViewSearch.getText().toString();
+                populateUIWithProductData(selectedProductName);
+
+                // Dismiss the dialog after populating details
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    // Method to populate UI elements with product data based on the product name
+    private void populateUIWithProductData(String productName) {
+        // Find the corresponding product in the productList
+        ViewProductActivity.Product selectedProduct = findProductByName(productName);
+
+        if (selectedProduct != null) {
+            // Set labels as empty strings
+            String labelProductId = "Product ID: ";
+            String labelProductName = "Product Name: ";
+            String labelSuppName = "Supplier Name: ";
+            String labelProductDescription = "Product Description: ";
+            String labelQuantity = "Quantity: ";
+            String labelPrice = "Price: ";
+            String labelCategory = "Category: ";
+            // Populate the editText fields with the selected product's data
+            textViewSuppName.setText(labelSuppName + selectedProduct.getSupplierName());
+            textViewProductDescription.setText(labelProductDescription + selectedProduct.getProductDescription());
+            textViewQuantity.setText(labelQuantity + selectedProduct.getQuantity());
+            textViewPrice.setText(labelPrice + selectedProduct.getPrice());
+            textViewCategory.setText(labelCategory + selectedProduct.getCategory());
+
+            // Update the TextViews for productId and productName
+            TextView textViewProductIdValue = findViewById(R.id.textViewProductId);
+            TextView textViewProductNameValue = findViewById(R.id.textViewProductName);
+
+            textViewProductIdValue.setText(labelProductId + selectedProduct.getProductId());
+            textViewProductNameValue.setText(labelProductName + selectedProduct.getProductName());
+
+            // Display the product image
+            ImageView imageViewProductImage = findViewById(R.id.imageViewProductImage);
+            displayProductImage(selectedProduct.getUserUid(), selectedProduct.getProductId(), imageViewProductImage);
+        } else {
+            Log.e(TAG, "Selected product is null.");
+        }
     }
 
     private void setupSearch() {
@@ -246,15 +417,21 @@ public class ViewProductActivity extends AppCompatActivity {
 
 
     private void updateTextViewsWithProductData(Product selectedProduct) {
+        TextView textViewProductId = findViewById(R.id.textViewProductId);
         TextView textViewProductName = findViewById(R.id.textViewProductName);
         TextView textViewProductDescription = findViewById(R.id.textViewProductDescription);
         TextView textViewQuantity = findViewById(R.id.textViewQuantity);
         TextView textViewPrice = findViewById(R.id.textViewPrice);
+        TextView textViewSuppName = findViewById(R.id.textViewSuppName);
+        TextView textViewCategory = findViewById(R.id.textViewCategory);
 
+        textViewProductId.setText("Product ID: " + selectedProduct.getProductId());
         textViewProductName.setText("Product Name: " + selectedProduct.getProductName());
         textViewProductDescription.setText("Product Description: " + selectedProduct.getProductDescription());
         textViewQuantity.setText("Quantity: " + selectedProduct.getQuantity());
         textViewPrice.setText("Price: " + selectedProduct.getPrice());
+        textViewSuppName.setText("Supplier Name: " + selectedProduct.getSupplierName());
+        textViewCategory.setText("Category: " + selectedProduct.getCategory());
     }
 
     private void searchProduct(String query) {
@@ -293,7 +470,7 @@ public class ViewProductActivity extends AppCompatActivity {
         }
     }
 
-    private void checkUserRoleForAccess() {
+    private void checkUserRoleForAccess(String userUid) {
         DatabaseReference userRolesRef = FirebaseDatabase.getInstance().getReference("UserRoles")
                 .child(getCurrentUserUid())
                 .child("role");
@@ -305,16 +482,14 @@ public class ViewProductActivity extends AppCompatActivity {
                     String userRole = dataSnapshot.getValue(String.class);
                     if ("storeOwner".equals(userRole)) {
                         // User has the "storeOwner" role, allow access
+                        setupSearch();
                     } else {
                         // User does not have the "storeOwner" role, show an error message
                         Toast.makeText(ViewProductActivity.this, "Only Store Owners can access this feature.", Toast.LENGTH_LONG).show();
-                        finish(); // Close the activity for non-store owners
                     }
                 } else {
-                    // User role data does not exist for this user or is not set to "storeOwner"
-                    // Handle it as needed, for example, by displaying an error message or taking appropriate action.
-                    Toast.makeText(ViewProductActivity.this, "User role not set to 'storeOwner'.", Toast.LENGTH_LONG).show();
-                    finish(); // Close the activity if the user role is not set to "storeOwner"
+                    // User role data does not exist, handle it as needed
+                    Toast.makeText(ViewProductActivity.this, "User role not found.", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -323,9 +498,14 @@ public class ViewProductActivity extends AppCompatActivity {
                 // Handle database error
                 Toast.makeText(ViewProductActivity.this, "Error checking user role.", Toast.LENGTH_LONG).show();
                 Log.e(TAG, "Error checking user role: " + databaseError.getMessage());
-                finish(); // Close the activity on database error
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.qr_code_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -337,6 +517,11 @@ public class ViewProductActivity extends AppCompatActivity {
             Intent intent = new Intent(ViewProductActivity.this, ManageInventoryActivity.class);
             startActivity(intent);
             finish();// Close the current activity and return to the previous one
+            return true;
+        } else if (id == R.id.menu_item_scan_qr_code) {
+            // Launch the QR code scanner activity
+            Intent intent = new Intent(this, QRCodeViewScannerActivity.class);
+            startActivity(intent);
             return true;
         }
 

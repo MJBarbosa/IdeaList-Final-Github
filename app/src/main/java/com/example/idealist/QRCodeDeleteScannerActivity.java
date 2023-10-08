@@ -10,8 +10,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-public class QRCodeScannerActivity extends AppCompatActivity {
-    private static final String TAG = "QRCodeScannerActivity";
+public class QRCodeDeleteScannerActivity extends AppCompatActivity {
+    private static final String TAG = "QRCodeDeleteScannerActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +44,10 @@ public class QRCodeScannerActivity extends AppCompatActivity {
                     Log.d(TAG, "scannedContent: " + scannedContent);
 
                     // Send the userUid and scanned content to the UpdateProductActivity
-                    Intent updateProductIntent = new Intent(this, UpdateProductActivity.class);
-                    updateProductIntent.putExtra("userUid", userUid); // Replace 'userUid' with the actual userUid value
-                    updateProductIntent.putExtra("scannedContent", scannedContent); // Replace 'scannedContent' with the actual scannedContent value
-                    startActivity(updateProductIntent);
+                    Intent deleteProductIntent = new Intent(this, DeleteProductActivity.class);
+                    deleteProductIntent.putExtra("userUid", userUid); // Replace 'userUid' with the actual userUid value
+                    deleteProductIntent.putExtra("scannedContent", scannedContent); // Replace 'scannedContent' with the actual scannedContent value
+                    startActivity(deleteProductIntent);
                     finish(); // Close the QRCodeScannerActivity to avoid returning to it
                 } else {
                     // User is not logged in

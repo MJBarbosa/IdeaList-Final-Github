@@ -41,6 +41,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ManageInventoryActivity" />
         </activity>
+        <activity android:name=".QRCodeViewScannerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ViewProductActivity" />
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".DeleteProductActivity"
             android:exported="false"
@@ -49,7 +58,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ManageInventoryActivity" />
         </activity>
-
+        <activity android:name=".QRCodeDeleteScannerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DeleteProductActivity" />
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".UpdateProductActivity"
             android:exported="false"

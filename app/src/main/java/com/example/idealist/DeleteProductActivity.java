@@ -5,11 +5,14 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -70,12 +73,15 @@ public class DeleteProductActivity extends AppCompatActivity {
 
         textViewDeleteCategory = findViewById(R.id.textViewDeleteCategoryValue);
 
+        ImageView buttonSelectImage = findViewById(R.id.imageViewDeleteProductImage);
+
         // Initialize the productList and set up the search functionality
         productList = new ArrayList<>();
         // Initialize the searchAdapter (if needed)
         searchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
         autoCompleteTextViewDeleteSearch.setAdapter(searchAdapter);
         setupSearch();
+        fetchDataFromIntentAndFirebase();
         // Implement the setupSearch() method for delete functionality
 
         Button buttonDeleteProduct = findViewById(R.id.buttonDeleteProduct);
@@ -90,7 +96,157 @@ public class DeleteProductActivity extends AppCompatActivity {
         });
 
         // Check the user's role before allowing access to this activity (if needed)
-        checkUserRoleForAccess();
+        checkUserRoleForAccess(getCurrentUserUid());
+    }
+
+    private void fetchDataFromIntentAndFirebase() {
+        // Check if the intent contains the userUid and scannedContent
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("userUid") && intent.hasExtra("scannedContent")) {
+            String userUid = intent.getStringExtra("userUid");
+            String scannedContent = intent.getStringExtra("scannedContent");
+
+            // Check if userUid and scannedContent are not null or empty
+            if (userUid != null && !userUid.isEmpty() && scannedContent != null && !scannedContent.isEmpty()) {
+                // Parse the scanned content to extract product information
+                DeleteProductActivity.Product product = parseScannedContent(scannedContent);
+                if (product != null) {
+                    // Initialize your UI elements outside the callback
+                    textViewDeleteSuppName = findViewById(R.id.textViewDeleteSuppNameValue);
+                    textViewDeleteQuantity = findViewById(R.id.textViewDeleteQuantityValue);
+                    textViewDeleteProductId = findViewById(R.id.textViewDeleteProductIdValue);
+                    autoCompleteTextViewDeleteSearch = findViewById(R.id.autoCompleteTextViewDeleteSearch);
+
+                    // Set the product ID in the appropriate EditText
+                    textViewDeleteProductId.setText(product.getProductId());
+
+                    // Auto-fill the fields with product information
+                    textViewDeleteProductDesc.setText(product.getProductDescription());
+                    textViewDeletePrice.setText(product.getPrice());
+                    textViewDeleteCategory.setText(product.getCategory());
+                    textViewDeleteProductName.setText(product.getProductName());
+                    autoCompleteTextViewDeleteSearch.setText(product.getProductName());
+
+                    onQRCodeScanned(product.getProductName());
+
+                    // Display product image after fetching data
+                    ImageView imageViewProductImage = findViewById(R.id.imageViewDeleteProductImage);
+                    displayProductImage(userUid, product.getProductId(), imageViewProductImage);
+
+                    // Check user role for access
+                    checkUserRoleForAccess(userUid);
+                }
+            }
+        }
+    }
+
+    private DeleteProductActivity.Product parseScannedContent(String scannedContent) {
+        // Implement your logic to parse the scanned content and create a Product object
+        // Extract Product ID, Name, Description, Price, Category from the scanned content
+        // Create a Product object with the extracted data
+
+        // Example parsing logic:
+        String productId = extractValueFromScannedContent(scannedContent, "Product ID:");
+        String productName = extractValueFromScannedContent(scannedContent, "Product Name:");
+        String productDesc = extractValueFromScannedContent(scannedContent, "Product Description:");
+        String price = extractValueFromScannedContent(scannedContent, "Price:");
+        String category = extractValueFromScannedContent(scannedContent, "Category:");
+
+        // Create a Product object and populate it with the parsed data
+        DeleteProductActivity.Product product = new DeleteProductActivity.Product();
+        product.setProductId(productId);
+        product.setProductName(productName);
+        product.setProductDescription(productDesc);
+        product.setPrice(price);
+        product.setCategory(category);
+
+        return product;
+    }
+
+    private String extractValueFromScannedContent(String scannedContent, String key) {
+        // Implement your logic to extract the value associated with a key in the scanned content
+        // Search for the key in the scanned content and return the associated value
+        // Example logic:
+        String[] lines = scannedContent.split("\n");
+        for (String line : lines) {
+            if (line.startsWith(key)) {
+                return line.substring(key.length()).trim();
+            }
+        }
+        return "";
+    }
+
+    private AlertDialog alertDialog;
+
+    // Call this method when you want to show the search dialog (e.g., after scanning a QR code)
+    private void onQRCodeScanned(String scannedContent) {
+        showSearchDialog();
+        AutoCompleteTextView autoCompleteTextViewSearch = alertDialog.findViewById(R.id.autoCompleteTextViewSearch);
+
+        // Set the scanned content as the text in autoCompleteTextViewSearch
+        if (autoCompleteTextViewSearch != null) {
+            autoCompleteTextViewSearch.setText(scannedContent);
+        }
+    }
+
+    private void showSearchDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.alert_dialog_search, null);
+        builder.setView(dialogView);
+
+        AutoCompleteTextView autoCompleteTextViewSearch = dialogView.findViewById(R.id.autoCompleteTextViewSearch);
+        Button buttonPopulateDetails = dialogView.findViewById(R.id.buttonPopulateDetails);
+
+        // Create an ArrayAdapter for the autoCompleteTextViewSearch using your searchAdapter
+        ArrayAdapter<String> searchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line);
+        autoCompleteTextViewSearch.setAdapter(searchAdapter);
+
+        // Set up the autoCompleteTextViewSearch and buttonPopulateDetails as you did in setupSearch
+        // (add item click listener and text change listener to autoCompleteTextViewSearch)
+
+        // Set up the button click listener to populate details
+        buttonPopulateDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String selectedProductName = autoCompleteTextViewSearch.getText().toString();
+                populateUIWithProductData(selectedProductName);
+
+                // Dismiss the dialog after populating details
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    // Method to populate UI elements with product data based on the product name
+    private void populateUIWithProductData(String productName) {
+        // Find the corresponding product in the productList
+        DeleteProductActivity.Product selectedProduct = findProductByName(productName);
+
+        if (selectedProduct != null) {
+            // Populate the editText fields with the selected product's data
+            textViewDeleteSuppName.setText(selectedProduct.getSupplierName());
+            textViewDeleteProductDesc.setText(selectedProduct.getProductDescription());
+            textViewDeleteQuantity.setText(selectedProduct.getQuantity());
+            textViewDeletePrice.setText(selectedProduct.getPrice());
+            textViewDeleteCategory.setText(selectedProduct.getCategory());
+
+            // Update the TextViews for productId and productName
+            TextView textViewProductIdValue = findViewById(R.id.textViewDeleteProductIdValue);
+            TextView textViewProductNameValue = findViewById(R.id.textViewDeleteProductNameValue);
+
+            textViewProductIdValue.setText(selectedProduct.getProductId());
+            textViewProductNameValue.setText(selectedProduct.getProductName());
+
+            // Display the product image
+            ImageView imageViewProductImage = findViewById(R.id.imageViewDeleteProductImage);
+            displayProductImage(selectedProduct.getUserUid(), selectedProduct.getProductId(), imageViewProductImage);
+        } else {
+            Log.e(TAG, "Selected product is null.");
+        }
     }
 
     // Implement setupSearch() method for delete functionality
@@ -194,7 +350,7 @@ public class DeleteProductActivity extends AppCompatActivity {
 
     }
 
-    private void checkUserRoleForAccess() {
+    private void checkUserRoleForAccess(String userUid) {
         DatabaseReference userRolesRef = FirebaseDatabase.getInstance().getReference("UserRoles")
                 .child(getCurrentUserUid())
                 .child("role");
@@ -381,6 +537,12 @@ public class DeleteProductActivity extends AppCompatActivity {
 
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.qr_code_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
@@ -388,6 +550,11 @@ public class DeleteProductActivity extends AppCompatActivity {
             Intent intent = new Intent(DeleteProductActivity.this, ManageInventoryActivity.class);
             startActivity(intent);
             finish();// Close the current activity and return to the previous one
+            return true;
+        } else if (itemId == R.id.menu_item_scan_qr_code) {
+            // Launch the QR code scanner activity
+            Intent intent = new Intent(this, QRCodeDeleteScannerActivity.class);
+            startActivity(intent);
             return true;
         }
 
