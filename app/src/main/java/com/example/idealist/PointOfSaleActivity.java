@@ -12,6 +12,8 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -193,13 +195,13 @@ public class PointOfSaleActivity extends AppCompatActivity {
         int itemId = item.getItemId();
         if (itemId == R.id.action_cart) {
             Intent intent = new Intent(PointOfSaleActivity.this, AddToCartActivity.class);
-            intent.putExtra("cart", (Serializable) carts.getCartItems());
+            intent.putParcelableArrayListExtra("cart", carts.getCartItems());
             startActivity(intent);
-
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     private void addToCart() {
         // Retrieve and validate the entered data, similar to the updateProduct method
@@ -231,23 +233,12 @@ public class PointOfSaleActivity extends AppCompatActivity {
         selectedProduct.setPrice(price);
         selectedProduct.setCategory(category);
 
-        Cart cart = new Cart();  // Create a new Cart
-        Product product = new Product();  // Create a Product object
-// Set product details (name, description, price, etc.)
-
-        cart.addProduct(product);  // Add the product to the cart
-
-        // Log a message to confirm that the product is added to the cart
-        Log.d(TAG, "Product added to cart: " + selectedProduct.getProductName());
-        Log.d(TAG, "Product added to cart: " + selectedProduct.getProductDescription());
-        Log.d(TAG, "Product added to cart: " + selectedProduct.getQuantity());
-        Log.d(TAG, "Product added to cart: " + selectedProduct.getPrice());
-        Log.d(TAG, "Product added to cart: " + selectedProduct.getCategory());
+        // Add the selected product to the cart
+        carts.addProduct(selectedProduct);
 
         // Optionally, you can also display a confirmation message
         Toast.makeText(this, "Product added to cart.", Toast.LENGTH_LONG).show();
     }
-
 
 
     private void updateQuantityTextView() {
@@ -621,7 +612,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
     }
 
     public class Cart {
-        private List<Product> cartItems;
+        private ArrayList<Product> cartItems;
 
         public Cart() {
             // Initialize the cartItems list when a new Cart is created
@@ -639,9 +630,14 @@ public class PointOfSaleActivity extends AppCompatActivity {
         }
 
         // Get the list of cart items
-        public List<Product> getCartItems() {
+        public ArrayList<Product> getCartItems() {
             return cartItems;
         }
+
+        public void setCartItems(ArrayList<Product> cartItems) {
+            this.cartItems = cartItems;
+        }
+
 
         // Clear the cart
         public void clearCart() {
@@ -667,7 +663,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
 
 
     // Define a Product class to manage product data (if needed)
-    public class Product implements Serializable {
+    public static class Product implements Parcelable {
         private String productId;
         private String userUid;
         private String productName;
@@ -746,6 +742,48 @@ public class PointOfSaleActivity extends AppCompatActivity {
 
         public void setPrice(String price) {
             this.price = price;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(productId);
+            dest.writeString(userUid);
+            dest.writeString(productName);
+            dest.writeString(supplierName);
+            dest.writeString(category);
+            dest.writeString(productDescription);
+            dest.writeString(quantity);
+            dest.writeString(price);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        // Add a Parcelable.Creator field
+        public static final Creator<Product> CREATOR = new Creator<Product>() {
+            @Override
+            public Product createFromParcel(Parcel in) {
+                return new Product(in);
+            }
+
+            @Override
+            public Product[] newArray(int size) {
+                return new Product[size];
+            }
+        };
+
+        // Add a constructor that reads from a Parcel
+        protected Product(Parcel in) {
+            productId = in.readString();
+            userUid = in.readString();
+            productName = in.readString();
+            supplierName = in.readString();
+            category = in.readString();
+            productDescription = in.readString();
+            quantity = in.readString();
+            price = in.readString();
         }
     }
 }

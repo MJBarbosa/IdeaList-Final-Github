@@ -36,9 +36,13 @@ public class AddToCartActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Shopping Cart");
 
+        // Initialize recyclerView and totalTextView
+        recyclerView = findViewById(R.id.recyclerViewCart);
+        totalTextView = findViewById(R.id.textViewTotal);
+
         // Get the cart items passed from PointOfSaleActivity
         Intent intent = getIntent();
-        cartItems = (List<PointOfSaleActivity.Product>) intent.getSerializableExtra("cart");
+        cartItems = intent.getParcelableArrayListExtra("cart");
 
         if (cartItems.isEmpty()) {
             // Handle the case when the cart is empty (e.g., display a message)
