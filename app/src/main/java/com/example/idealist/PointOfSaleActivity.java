@@ -226,7 +226,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
         }
 
         // Create a new Product object and populate its fields
-        selectedProduct = new PointOfSaleActivity.Product();
+        PointOfSaleActivity.Product selectedProduct = new PointOfSaleActivity.Product();
         selectedProduct.setProductName(productName);
         selectedProduct.setProductDescription(productDesc);
         selectedProduct.setQuantity(quantity);
@@ -238,7 +238,9 @@ public class PointOfSaleActivity extends AppCompatActivity {
 
         // Optionally, you can also display a confirmation message
         Toast.makeText(this, "Product added to cart.", Toast.LENGTH_LONG).show();
+        clearFields();
     }
+
 
 
     private void updateQuantityTextView() {

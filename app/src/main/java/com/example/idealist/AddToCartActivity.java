@@ -126,17 +126,26 @@ public class AddToCartActivity extends AppCompatActivity {
     private class CartViewHolder extends RecyclerView.ViewHolder {
 
         private TextView productNameTextView;
+        private TextView productDescriptionTextView;
+        private TextView productCategoryTextView;
+        private TextView productQuantityTextView;
         private TextView productPriceTextView;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
             productNameTextView = itemView.findViewById(R.id.itemNameTextView);
+            productDescriptionTextView = itemView.findViewById(R.id.itemDescriptionTextView);
+            productCategoryTextView = itemView.findViewById(R.id.itemCategoryTextView);
+            productQuantityTextView = itemView.findViewById(R.id.itemQuantityTextView);
             productPriceTextView = itemView.findViewById(R.id.itemPriceTextView);
         }
 
         public void bind(PointOfSaleActivity.Product product) {
             productNameTextView.setText(product.getProductName());
-            productPriceTextView.setText("$" + product.getPrice());
+            productDescriptionTextView.setText(product.getProductDescription());
+            productCategoryTextView.setText(product.getCategory());
+            productQuantityTextView.setText(product.getQuantity());
+            productPriceTextView.setText(product.getPrice());
         }
     }
 }
