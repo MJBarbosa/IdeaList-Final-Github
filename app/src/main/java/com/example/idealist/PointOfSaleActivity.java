@@ -58,7 +58,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
     private ImageView imageViewProduct;
     private Uri selectedImageUri;
     private PointOfSaleActivity.Product selectedProduct;
-    private List<Product> cart = new ArrayList<>();// Declare the TextView for quantity
+    private Cart carts;
     private int currentQuantity = 0;
     private static final String TAG = "PointOfSaleActivity";
 
@@ -87,7 +87,8 @@ public class PointOfSaleActivity extends AppCompatActivity {
         setupSearch();
         fetchDataFromIntentAndFirebase();
 
-        cart = new ArrayList<>();
+        // Initialize the cart
+        carts = new Cart();
 
         Button buttonAddToCart = findViewById(R.id.buttonAddToCart);
         buttonAddToCart.setOnClickListener(new View.OnClickListener() {
@@ -95,13 +96,8 @@ public class PointOfSaleActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     addToCart();
-
-                    // In PointOfSaleActivity.java
-                    Intent intent = new Intent(PointOfSaleActivity.this, AddToCartActivity.class);
-                    intent.putExtra("selectedProduct", selectedProduct);
-                    intent.putExtra("cart", (ArrayList) cart);
-                    startActivity(intent);
-
+                    // You can provide feedback to the user that the product has been added to the cart, e.g., with a Toast message.
+                    Toast.makeText(PointOfSaleActivity.this, "Product added to cart", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     // Log the exception for debugging purposes
                     Log.e(TAG, "Error when adding to cart: " + e.getMessage(), e);
@@ -196,9 +192,10 @@ public class PointOfSaleActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.action_cart) {
-            // Handle the cart button click, navigate to add_to_cart.xml
-            Intent intent = new Intent(PointOfSaleActivity.this, AddToCartActivity.class); // Replace with the correct Activity class
+            Intent intent = new Intent(PointOfSaleActivity.this, AddToCartActivity.class);
+            intent.putExtra("cart", (Serializable) carts.getCartItems());
             startActivity(intent);
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -236,7 +233,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
 
         Cart cart = new Cart();  // Create a new Cart
         Product product = new Product();  // Create a Product object
-        // Set product details (name, description, price, etc.)
+// Set product details (name, description, price, etc.)
 
         cart.addProduct(product);  // Add the product to the cart
 
@@ -646,10 +643,12 @@ public class PointOfSaleActivity extends AppCompatActivity {
             return cartItems;
         }
 
+        // Clear the cart
         public void clearCart() {
             cartItems.clear();
         }
 
+        // Calculate the total price of items in the cart
         public double calculateTotal(PointOfSaleActivity.Product selectedProduct) {
             double total = 0.0;
             try {
@@ -665,6 +664,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
             return total;
         }
     }
+
 
     // Define a Product class to manage product data (if needed)
     public class Product implements Serializable {

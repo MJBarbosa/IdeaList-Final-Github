@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:padding="16dp"
+    tools:context=".AddToCartActivity">
 
-    <!-- RecyclerView to display cart items -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="?attr/actionBarTheme"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="16dp"/>
 
-
-    <!-- TextView to display the total amount -->
     <TextView
-        android:id="@+id/textViewTotalAmount"
+        android:id="@+id/textViewTotal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Total Amount: $0.00"/>
+        android:layout_below="@+id/recyclerViewCart"
+        android:layout_marginTop="16dp"
+        android:text="Total: $0.00"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
 
-    <!-- Button to proceed to checkout -->
     <Button
         android:id="@+id/buttonCheckout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewTotal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
         android:text="Checkout"/>
 
-    <!-- Add any other views you need for your 'add_to_cart' layout -->
-
-</LinearLayout>
+</RelativeLayout>

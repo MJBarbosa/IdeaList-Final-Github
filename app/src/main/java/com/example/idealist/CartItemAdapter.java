@@ -10,18 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.idealist.model.Product;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHolder> {
-    private List<PointOfSaleActivity.Product> productList;
-    private List<PointOfSaleActivity.Product> cartItemList;
+    private List<Product> cartItemList;
 
-    public CartItemAdapter(List<PointOfSaleActivity.Product> cartItems, List<PointOfSaleActivity.Product> productDetails) {
-        this.cartItemList = (cartItems != null) ? cartItems : new ArrayList<>();
-        this.productList = (productDetails != null) ? productDetails : new ArrayList<>();
+    public CartItemAdapter(List<Product> cartItems) {
+        this.cartItemList = cartItems;
     }
-
 
     @NonNull
     @Override
@@ -31,22 +27,23 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         return new ViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        PointOfSaleActivity.Product product = productList.get(position);
+        Product product = cartItemList.get(position);
 
-        // Bind product data to the cart_item_layout views
+        // Bind product data to the custom_item_layout views
         holder.itemNameTextView.setText(product.getProductName());
         holder.itemDescriptionTextView.setText(product.getProductDescription());
         holder.itemCategoryTextView.setText(product.getCategory());
-        holder.itemQuantityTextView.setText(product.getQuantity());
+        holder.itemQuantityTextView.setText("Quantity: " + product.getQuantity());
         holder.itemPriceTextView.setText("$" + product.getPrice());
         // You can also load and display the item image here if needed
     }
 
     @Override
     public int getItemCount() {
-        return productList.size();
+        return cartItemList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
