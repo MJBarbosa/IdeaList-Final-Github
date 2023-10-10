@@ -1,9 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PointOfSaleActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- FrameLayout to contain the existing content -->
+    <FrameLayout
+        android:id="@+id/frameLayoutContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_alignParentTop="true">
+
+        <!-- ScrollView for existing content -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_white_bg_logo">
+
+            <!-- RelativeLayout for product content -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:layout_margin="15dp"
+                android:background="@color/light_gray">
+
+                <!-- AutoCompleteTextView for search -->
+                <AutoCompleteTextView
+                    android:id="@+id/autoCompleteTextViewPOSSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Search"
+                    android:drawableStart="@drawable/ic_search"
+                    android:drawablePadding="8dp"
+                    android:completionThreshold="1"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/border" />
+
+                <!-- Button for search -->
+                <Button
+                    android:id="@+id/buttonQRScanner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/autoCompleteTextViewPOSSearch"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"
+                    android:text="Scan" />
+
+                <ImageView
+                    android:id="@+id/imageViewPOSProductImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="230dp"
+                    android:layout_below="@+id/buttonQRScanner"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="centerCrop"
+                    android:text="Select Image"
+                    android:background="@drawable/default_product_image"
+                    android:contentDescription="Product Image" />
+
+                <!-- ProgressBar for loading -->
+                <ProgressBar
+                    android:id="@+id/progressBarViewPOSProduct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:elevation="10dp"
+                    android:visibility="gone" />
+
+                <!-- TextViews for displaying product details -->
+
+                <TextView
+                    android:id="@+id/textViewPOSProductName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageViewPOSProductImage"
+                    android:layout_marginTop="8dp"
+                    android:text="Product Name: "
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/textViewPOSProductDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewPOSProductName"
+                    android:layout_marginTop="8dp"
+                    android:text="Product Description: "
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textViewPOSCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewPOSProductDescription"
+                    android:layout_marginTop="8dp"
+                    android:text="Category: "
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textViewPOSPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewPOSCategory"
+                    android:layout_marginTop="8dp"
+                    android:text="Price: "
+                    android:textSize="16sp" />
+
+                <!-- Quantity TextView and Buttons -->
+                <TextView
+                    android:id="@+id/textViewPOSQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewPOSPrice"
+                    android:layout_marginTop="10dp"
+                    android:text="Quantity: 0"
+                    android:layout_toLeftOf="@id/buttonDecreaseQuantity"
+                    android:layout_toRightOf="@id/buttonIncreaseQuantity"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="18sp"
+                    android:layout_centerHorizontal="true" />
+
+                <Button
+                    android:id="@+id/buttonIncreaseQuantity"
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/textViewPOSPrice"
+                    android:layout_marginTop="8dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="80dp"
+                    android:background="@drawable/ic_increase"/>
+
+                <Button
+                    android:id="@+id/buttonDecreaseQuantity"
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/textViewPOSPrice"
+                    android:layout_marginTop="8dp"
+                    android:text="Decrease"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="80dp"
+                    android:background="@drawable/ic_decrease"/>
+
+
+                <!-- Button for generating QR -->
+                <Button
+                    android:id="@+id/buttonAddToCart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/buttonIncreaseQuantity"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"
+                    android:text="Add To Cart"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="30dp"/>
+
+                <Button
+                    android:id="@+id/buttonClearFields"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/buttonDecreaseQuantity"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"
+                    android:text="Clear"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="30dp"/>
+
+            </RelativeLayout>
+        </ScrollView>
+    </FrameLayout>
+
+    <!-- Bottom Navigation View -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        app:menu="@menu/bottom_nav_store_owner" />
+
+</RelativeLayout>

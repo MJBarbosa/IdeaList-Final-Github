@@ -23,6 +23,7 @@ public class ManageInventoryActivity extends AppCompatActivity {
         Toast.makeText(ManageInventoryActivity.this, "You can Manage Product now", Toast.LENGTH_LONG).show();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.menu_inventory);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();

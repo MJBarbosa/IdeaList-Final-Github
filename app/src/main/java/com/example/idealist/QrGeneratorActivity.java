@@ -77,6 +77,7 @@ public class QrGeneratorActivity extends AppCompatActivity {
         setupSearch();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.menu_qr_gene);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
