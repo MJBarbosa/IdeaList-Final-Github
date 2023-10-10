@@ -233,18 +233,12 @@ public class PointOfSaleActivity extends AppCompatActivity {
         selectedProduct.setPrice(price);
         selectedProduct.setCategory(category);
 
-        // Create a ParcelableArrayList and add the selected product
-        ArrayList<Product> cartItems = new ArrayList<>();
-        cartItems.add(selectedProduct);
-
-        // Add the ParcelableArrayList to the cart
-        carts.setCartItems(cartItems);
+        // Add the selected product to the cart
+        carts.addProduct(selectedProduct);
 
         // Optionally, you can also display a confirmation message
         Toast.makeText(this, "Product added to cart.", Toast.LENGTH_LONG).show();
     }
-
-
 
 
     private void updateQuantityTextView() {
@@ -640,21 +634,15 @@ public class PointOfSaleActivity extends AppCompatActivity {
             return cartItems;
         }
 
-        public void setCartItems(ArrayList<Product> cartItems) {
-            this.cartItems = cartItems;
-        }
-
-
         // Clear the cart
         public void clearCart() {
             cartItems.clear();
         }
 
         // Calculate the total price of items in the cart
-        public double calculateTotal(PointOfSaleActivity.Product selectedProduct) {
+        public double calculateTotal() {
             double total = 0.0;
             try {
-                double selectedProductPrice = Double.parseDouble(selectedProduct.getPrice());
                 for (Product product : cartItems) {
                     // Calculate the total price by summing up the prices of all items in the cart
                     total += Double.parseDouble(product.getPrice());
