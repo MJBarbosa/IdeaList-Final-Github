@@ -226,19 +226,25 @@ public class PointOfSaleActivity extends AppCompatActivity {
         }
 
         // Create a new Product object and populate its fields
-        PointOfSaleActivity.Product selectedProduct = new PointOfSaleActivity.Product();
+        selectedProduct = new PointOfSaleActivity.Product();
         selectedProduct.setProductName(productName);
         selectedProduct.setProductDescription(productDesc);
         selectedProduct.setQuantity(quantity);
         selectedProduct.setPrice(price);
         selectedProduct.setCategory(category);
 
-        // Add the selected product to the cart
-        carts.addProduct(selectedProduct);
+        // Create a ParcelableArrayList and add the selected product
+        ArrayList<Product> cartItems = new ArrayList<>();
+        cartItems.add(selectedProduct);
+
+        // Add the ParcelableArrayList to the cart
+        carts.setCartItems(cartItems);
 
         // Optionally, you can also display a confirmation message
         Toast.makeText(this, "Product added to cart.", Toast.LENGTH_LONG).show();
     }
+
+
 
 
     private void updateQuantityTextView() {
