@@ -10,6 +10,7 @@ import com.example.idealist.model.Product;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -48,7 +49,9 @@ import com.squareup.picasso.Picasso;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PointOfSaleActivity extends AppCompatActivity {
 
@@ -62,6 +65,9 @@ public class PointOfSaleActivity extends AppCompatActivity {
     private PointOfSaleActivity.Product selectedProduct;
     private Cart carts;
     private int currentQuantity = 0;
+    private SharedPreferences sharedPreferences;
+    private static final String CART_PREFERENCES = "cart_preferences";
+    private static final String CART_ITEMS_KEY = "cart_items";
     private static final String TAG = "PointOfSaleActivity";
 
     @Override
@@ -70,6 +76,9 @@ public class PointOfSaleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_point_of_sale);
 
         getSupportActionBar().setTitle("Point Of Sales");
+
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences(CART_PREFERENCES, MODE_PRIVATE);
 
         // Initialize UI elements
         progressBarViewPOSProduct = findViewById(R.id.progressBarViewPOSProduct);
@@ -204,42 +213,35 @@ public class PointOfSaleActivity extends AppCompatActivity {
 
 
     private void addToCart() {
-        // Retrieve and validate the entered data, similar to the updateProduct method
+        // Retrieve and validate the entered data
         String productName = textViewPOSProductName.getText().toString();
         String productDesc = textViewPOSProductDescription.getText().toString();
         String quantity = textViewPOSQuantity.getText().toString();
         String price = textViewPOSPrice.getText().toString();
         String category = textViewPOSCategory.getText().toString();
 
-        // Log the retrieved data to check if it's correct
-        Log.d(TAG, "Product Name: " + productName);
-        Log.d(TAG, "Product Description: " + productDesc);
-        Log.d(TAG, "Quantity: " + quantity);
-        Log.d(TAG, "Price: " + price);
-        Log.d(TAG, "Selected Category: " + category);
+        // Check if the cart exists in SharedPreferences
+        Set<String> cartItemsSet = sharedPreferences.getStringSet(CART_ITEMS_KEY, new HashSet<>());
 
-        if (TextUtils.isEmpty(productName) || TextUtils.isEmpty(productDesc) ||
-                TextUtils.isEmpty(quantity) || TextUtils.isEmpty(price) ||
-                TextUtils.isEmpty(category)) {
-            Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_LONG).show();
-            return;
-        }
+        // Create a string representation of the product
+        String cartItem = productName + "," + productDesc + "," + quantity + "," + price + "," + category;
 
-        // Create a new Product object and populate its fields
-        PointOfSaleActivity.Product selectedProduct = new PointOfSaleActivity.Product();
-        selectedProduct.setProductName(productName);
-        selectedProduct.setProductDescription(productDesc);
-        selectedProduct.setQuantity(quantity);
-        selectedProduct.setPrice(price);
-        selectedProduct.setCategory(category);
+        // Add the cart item to the set
+        cartItemsSet.add(cartItem);
 
-        // Add the selected product to the cart
-        carts.addProduct(selectedProduct);
+        // Store the updated cart in SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putStringSet(CART_ITEMS_KEY, cartItemsSet);
+        editor.apply();
+
+        // Debugging: Log to check if the cart item is added
+        Log.d("Cart", "Added to cart: " + cartItem);
 
         // Optionally, you can also display a confirmation message
         Toast.makeText(this, "Product added to cart.", Toast.LENGTH_LONG).show();
         clearFields();
     }
+
 
 
 
@@ -670,6 +672,24 @@ public class PointOfSaleActivity extends AppCompatActivity {
         private String price;
 
         // Constructors, getters, setters, and other methods go here
+        // Constructor with five string parameters
+        public Product(String productName, String productDescription, String category, String quantity, String price) {
+            this.productName = productName;
+            this.productDescription = productDescription;
+            this.category = category;
+            this.quantity = quantity;
+            this.price = price;
+        }
+        // Factory method to create Product objects
+        public static Product createProduct(String productName, String productDescription, String category, String quantity, String price) {
+            Product product = new Product();
+            product.setProductName(productName);
+            product.setProductDescription(productDescription);
+            product.setCategory(category);
+            product.setQuantity(quantity);
+            product.setPrice(price);
+            return product;
+        }
         public Product() {
             this.productId = ""; // Initialize productId to an empty string
         }

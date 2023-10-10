@@ -3,6 +3,7 @@ package com.example.idealist;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -20,14 +21,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AddToCartActivity extends AppCompatActivity {
-
+    private SharedPreferences sharedPreferences;
     private RecyclerView recyclerView;
     private CartAdapter cartAdapter;
     private List<PointOfSaleActivity.Product> cartItems;
     private TextView totalTextView;
+    private static final String CART_PREFERENCES = "cart_preferences";
+    private static final String CART_ITEMS_KEY = "cart_items";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,9 @@ public class AddToCartActivity extends AppCompatActivity {
         setContentView(R.layout.add_to_cart);
 
         getSupportActionBar().setTitle("Shopping Cart");
+
+        sharedPreferences = getSharedPreferences(CART_PREFERENCES, MODE_PRIVATE);
+
 
         // Initialize recyclerView and totalTextView
         recyclerView = findViewById(R.id.recyclerViewCart);
@@ -44,35 +53,47 @@ public class AddToCartActivity extends AppCompatActivity {
         Intent intent = getIntent();
         cartItems = intent.getParcelableArrayListExtra("cart");
 
-        if (cartItems.isEmpty()) {
-            // Handle the case when the cart is empty (e.g., display a message)
-            Toast.makeText(this, "Your cart is empty.", Toast.LENGTH_SHORT).show();
-            // Optionally, you can finish the activity or take other actions
-        } else {
-            // Set up RecyclerView for displaying the cart items
-            cartAdapter = new CartAdapter(cartItems);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(cartAdapter);
+        // Initialize the adapter and set it to the RecyclerView
+        cartAdapter = new CartAdapter(cartItems);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(cartAdapter);
 
-            // Calculate and display the total price
-            double total = calculateTotal(cartItems);
-            totalTextView.setText("Total: $" + formatPrice(total));
-        }
+        // Call the method to display cart items
+        displayCartItems();
+
+        // Calculate and display the total price
+        double total = calculateTotal(cartItems);
+        totalTextView.setText("Total: $" + formatPrice(total));
 
         // Handle checkout button click
         Button checkoutButton = findViewById(R.id.buttonCheckout);
-        checkoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Implement checkout logic here
-                // You can proceed with the payment process or any other actions
-                // you want to perform when the user checks out
-                // For this example, let's just display a message
-                Toast.makeText(AddToCartActivity.this, "Checkout clicked", Toast.LENGTH_SHORT).show();
-            }
+        checkoutButton.setOnClickListener(v -> {
+            // Implement checkout logic here
+            // You can proceed with the payment process or any other actions
+            // you want to perform when the user checks out
+            // For this example, let's just display a message
+            Toast.makeText(AddToCartActivity.this, "Checkout clicked", Toast.LENGTH_SHORT).show();
         });
     }
+
+    private void displayCartItems() {
+        Set<String> cartItemsSet = sharedPreferences.getStringSet(CART_ITEMS_KEY, new HashSet<>());
+        List<PointOfSaleActivity.Product> updatedCartItems = new ArrayList<>();
+
+        // Iterate through cart items and create Product objects
+        for (String cartItem : cartItemsSet) {
+            String[] cartItemParts = cartItem.split(",");
+            // Extract product details from cartItemParts and create a Product object
+            PointOfSaleActivity.Product product = new PointOfSaleActivity.Product(
+                    cartItemParts[0], cartItemParts[1], cartItemParts[2], cartItemParts[3], cartItemParts[4]
+            );
+            updatedCartItems.add(product);
+        }
+
+        // Update the cart items in the adapter
+        cartAdapter.updateCartItems(updatedCartItems);
+    }
+
 
     private double calculateTotal(List<PointOfSaleActivity.Product> cartItems) {
         double total = 0.0;
@@ -95,7 +116,7 @@ public class AddToCartActivity extends AppCompatActivity {
     }
 
     // Adapter for displaying cart items in RecyclerView
-    private class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
+    private class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
         private List<PointOfSaleActivity.Product> cartItems;
 
@@ -106,12 +127,14 @@ public class AddToCartActivity extends AppCompatActivity {
         @NonNull
         @Override
         public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_item_layout, parent, false);
-            return new CartViewHolder(view);
+            // Inflate the layout for each cart item view
+            return new CartViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.cart_item_layout, parent, false));
         }
 
         @Override
         public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
+            // Bind data to the cart item view
             PointOfSaleActivity.Product product = cartItems.get(position);
             holder.bind(product);
         }
@@ -120,32 +143,38 @@ public class AddToCartActivity extends AppCompatActivity {
         public int getItemCount() {
             return cartItems.size();
         }
-    }
 
-    // ViewHolder for each cart item in RecyclerView
-    private class CartViewHolder extends RecyclerView.ViewHolder {
-
-        private TextView productNameTextView;
-        private TextView productDescriptionTextView;
-        private TextView productCategoryTextView;
-        private TextView productQuantityTextView;
-        private TextView productPriceTextView;
-
-        public CartViewHolder(@NonNull View itemView) {
-            super(itemView);
-            productNameTextView = itemView.findViewById(R.id.itemNameTextView);
-            productDescriptionTextView = itemView.findViewById(R.id.itemDescriptionTextView);
-            productCategoryTextView = itemView.findViewById(R.id.itemCategoryTextView);
-            productQuantityTextView = itemView.findViewById(R.id.itemQuantityTextView);
-            productPriceTextView = itemView.findViewById(R.id.itemPriceTextView);
+        public void updateCartItems(List<PointOfSaleActivity.Product> updatedCartItems) {
+            // Update the cart items and refresh the adapter
+            cartItems = updatedCartItems;
+            notifyDataSetChanged();
         }
 
-        public void bind(PointOfSaleActivity.Product product) {
-            productNameTextView.setText(product.getProductName());
-            productDescriptionTextView.setText(product.getProductDescription());
-            productCategoryTextView.setText(product.getCategory());
-            productQuantityTextView.setText(product.getQuantity());
-            productPriceTextView.setText(product.getPrice());
+        // ViewHolder for each cart item in RecyclerView
+        class CartViewHolder extends RecyclerView.ViewHolder {
+
+            private TextView productNameTextView;
+            private TextView productDescriptionTextView;
+            private TextView productCategoryTextView;
+            private TextView productQuantityTextView;
+            private TextView productPriceTextView;
+
+            public CartViewHolder(@NonNull View itemView) {
+                super(itemView);
+                productNameTextView = itemView.findViewById(R.id.itemNameTextView);
+                productDescriptionTextView = itemView.findViewById(R.id.itemDescriptionTextView);
+                productCategoryTextView = itemView.findViewById(R.id.itemCategoryTextView);
+                productQuantityTextView = itemView.findViewById(R.id.itemQuantityTextView);
+                productPriceTextView = itemView.findViewById(R.id.itemPriceTextView);
+            }
+
+            public void bind(PointOfSaleActivity.Product product) {
+                productNameTextView.setText(product.getProductName());
+                productDescriptionTextView.setText(product.getProductDescription());
+                productCategoryTextView.setText(product.getCategory());
+                productQuantityTextView.setText(product.getQuantity());
+                productPriceTextView.setText(product.getPrice());
+            }
         }
     }
 }
