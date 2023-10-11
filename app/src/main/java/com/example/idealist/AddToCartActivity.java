@@ -33,6 +33,7 @@ public class AddToCartActivity extends AppCompatActivity {
     private TextView totalTextView;
     private static final String CART_PREFERENCES = "cart_preferences";
     private static final String CART_ITEMS_KEY = "cart_items";
+    private double total = 0.0;
 
 
     @Override
@@ -61,19 +62,20 @@ public class AddToCartActivity extends AppCompatActivity {
         // Call the method to display cart items
         displayCartItems();
 
-        // Calculate and display the total price
-        double total = calculateTotal(cartItems);
-        totalTextView.setText("Total: $" + formatPrice(total));
+        // Call the method to calculate and display total from SharedPreferences
+        calculateAndDisplayTotalFromSharedPreferences();
 
         // Handle checkout button click
         Button checkoutButton = findViewById(R.id.buttonCheckout);
         checkoutButton.setOnClickListener(v -> {
+            clearCart();
             // Implement checkout logic here
             // You can proceed with the payment process or any other actions
             // you want to perform when the user checks out
             // For this example, let's just display a message
             Toast.makeText(AddToCartActivity.this, "Checkout clicked", Toast.LENGTH_SHORT).show();
         });
+
     }
 
     private void displayCartItems() {
@@ -94,26 +96,137 @@ public class AddToCartActivity extends AppCompatActivity {
         cartAdapter.updateCartItems(updatedCartItems);
     }
 
+    private void calculateAndDisplayTotalFromSharedPreferences() {
+        Set<String> cartItemsSet = sharedPreferences.getStringSet(CART_ITEMS_KEY, new HashSet<>());
+        List<PointOfSaleActivity.Product> cartItems = new ArrayList<>();
 
-    private double calculateTotal(List<PointOfSaleActivity.Product> cartItems) {
-        double total = 0.0;
-        for (PointOfSaleActivity.Product product : cartItems) {
+        for (String cartItem : cartItemsSet) {
+            String[] cartItemParts = cartItem.split(",");
+
+            // Extract product details from cartItemParts
+            String productName = cartItemParts[0];
+            String productDesc = cartItemParts[1];
+            String category = cartItemParts[2];
+            String productQuantity = cartItemParts[3];
+            String productPrice = cartItemParts[4];
+
+            // Extract Quantity as int
+            int quantity = 0;
             try {
-                double price = Double.parseDouble(product.getPrice());
-                total += price;
+                // Extract and convert productQuantity, assuming it's in the format "Quantity: 3"
+                String[] quantityParts = productQuantity.split(":");
+                if (quantityParts.length == 2) {
+                    // Attempt to parse the second part as an integer
+                    quantity = Integer.parseInt(quantityParts[1].trim());
+                    // Log quantity value
+                    Log.d(TAG, "Quantity: " + quantity);
+                } else {
+                    // Handle cases where the format is unexpected
+                    Log.e(TAG, "Invalid quantity format for product: " + productQuantity);
+                }
             } catch (NumberFormatException e) {
-                // Handle the case where the price cannot be parsed as a double
+                // Handle parsing errors
+                Log.e(TAG, "Invalid quantity format for product: " + productQuantity);
                 e.printStackTrace();
             }
+            Log.d(TAG, "Quantity after: " + quantity);
+            // Extract Price as double
+            double price = 0.00;
+            try {
+                // Extract and convert productPrice, assuming it's in the format "Price: 250.00"
+                String[] priceParts = productPrice.split(":");
+                if (priceParts.length == 2 && priceParts[1] != null) {
+                    // Attempt to parse the second part as a double
+                    String priceValue = priceParts[1].trim();
+                    price = Double.parseDouble(priceValue);
+                    // Log price value
+                    Log.d(TAG, "Price: " + price);
+                } else {
+                    // Handle cases where the format is unexpected
+                    Log.e(TAG, "Invalid price format for product: " + productPrice);
+                }
+            } catch (NumberFormatException e) {
+                // Handle parsing errors
+                Log.e(TAG, "Invalid price format for product: " + productPrice);
+                e.printStackTrace();
+            }
+            Log.d(TAG, "Price after: " + price);
+
+
+            // Calculate item total
+            double itemTotal = price * quantity;
+            total += itemTotal;
+
+            Log.d(TAG, "Total after solving: " + total);
+
+            // Create a Product object with the extracted values
+            PointOfSaleActivity.Product product = new PointOfSaleActivity.Product(
+                    productName, productDesc, category, productQuantity, productPrice
+            );
+            cartItems.add(product);
+
+            // Add a log statement to identify the cart item
+            Log.d(TAG, "Cart Item: Product Name: " + productName + ", Product Description: " + productDesc + ", Category: " + category + ", Quantity: " + quantity + ", Price: " + price);
         }
-        return total;
+        // Call the calculateTotal method to update the total
+        total = calculateTotal(cartItems);
+
+        // Log the calculated total
+        Log.d(TAG, "Total: " + total);
+
+        // Update the totalTextView with the calculated total
+        totalTextView.setText("Total: $" + formatPrice(total));
     }
 
     private String formatPrice(double price) {
         // Format the price with two decimal places
         DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-        return decimalFormat.format(price);
+        String formattedPrice = decimalFormat.format(price);
+        return formattedPrice;
     }
+
+
+
+    private double calculateTotal(List<PointOfSaleActivity.Product> cartItems) {
+        double total = 0.0;
+
+        for (PointOfSaleActivity.Product product : cartItems) {
+            try {
+                double price = Double.parseDouble(product.getPrice());
+                int quantity = Integer.parseInt(product.getQuantity());
+                Log.d(TAG, "Price to calculate: " + price);
+
+                if (price > 0 && quantity > 0) {
+                    double itemTotal = price * quantity;
+                    total += itemTotal;
+                } else {
+                    Log.e(TAG, "Invalid price or quantity for product: " + product.getProductName());
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return total;
+    }
+
+
+
+
+
+    private void clearCart() {
+        // Clear the cart items in SharedPreferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putStringSet(CART_ITEMS_KEY, new HashSet<>());
+        editor.apply();
+
+        // Clear the list of cart items in your adapter
+        cartAdapter.clearCart();
+
+        // Update the total display to show $0.00
+        totalTextView.setText("Total: $0.00");
+    }
+
 
     // Adapter for displaying cart items in RecyclerView
     private class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
@@ -122,6 +235,11 @@ public class AddToCartActivity extends AppCompatActivity {
 
         public CartAdapter(List<PointOfSaleActivity.Product> cartItems) {
             this.cartItems = cartItems;
+        }
+
+        public void clearCart() {
+            cartItems.clear();
+            notifyDataSetChanged();
         }
 
         @NonNull
@@ -178,4 +296,3 @@ public class AddToCartActivity extends AppCompatActivity {
         }
     }
 }
-

@@ -216,15 +216,15 @@ public class PointOfSaleActivity extends AppCompatActivity {
         // Retrieve and validate the entered data
         String productName = textViewPOSProductName.getText().toString();
         String productDesc = textViewPOSProductDescription.getText().toString();
+        String category = textViewPOSCategory.getText().toString();
         String quantity = textViewPOSQuantity.getText().toString();
         String price = textViewPOSPrice.getText().toString();
-        String category = textViewPOSCategory.getText().toString();
 
         // Check if the cart exists in SharedPreferences
         Set<String> cartItemsSet = sharedPreferences.getStringSet(CART_ITEMS_KEY, new HashSet<>());
 
         // Create a string representation of the product
-        String cartItem = productName + "," + productDesc + "," + quantity + "," + price + "," + category;
+        String cartItem = productName + "," + productDesc + "," + category + "," + quantity + "," + price;
 
         // Add the cart item to the set
         cartItemsSet.add(cartItem);
@@ -241,9 +241,6 @@ public class PointOfSaleActivity extends AppCompatActivity {
         Toast.makeText(this, "Product added to cart.", Toast.LENGTH_LONG).show();
         clearFields();
     }
-
-
-
 
     private void updateQuantityTextView() {
         // Just update the text of the existing textViewPOSQuantity
