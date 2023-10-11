@@ -118,21 +118,11 @@
                     android:layout_below="@+id/textViewPOSPrice"
                     android:layout_marginTop="10dp"
                     android:text="Quantity: 0"
-                    android:layout_toLeftOf="@id/buttonDecreaseQuantity"
-                    android:layout_toRightOf="@id/buttonIncreaseQuantity"
+                    android:layout_toLeftOf="@id/buttonIncreaseQuantity"
+                    android:layout_toRightOf="@id/buttonDecreaseQuantity"
                     android:layout_marginLeft="5dp"
                     android:textSize="18sp"
                     android:layout_centerHorizontal="true" />
-
-                <Button
-                    android:id="@+id/buttonIncreaseQuantity"
-                    android:layout_width="40dp"
-                    android:layout_height="30dp"
-                    android:layout_below="@+id/textViewPOSPrice"
-                    android:layout_marginTop="8dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="80dp"
-                    android:background="@drawable/ic_increase"/>
 
                 <Button
                     android:id="@+id/buttonDecreaseQuantity"
@@ -141,9 +131,19 @@
                     android:layout_below="@+id/textViewPOSPrice"
                     android:layout_marginTop="8dp"
                     android:text="Decrease"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="80dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="90dp"
                     android:background="@drawable/ic_decrease"/>
+
+                <Button
+                    android:id="@+id/buttonIncreaseQuantity"
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/textViewPOSPrice"
+                    android:layout_marginTop="8dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="90dp"
+                    android:background="@drawable/ic_increase"/>
 
 
                 <!-- Button for generating QR -->

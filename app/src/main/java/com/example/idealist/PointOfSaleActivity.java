@@ -667,6 +667,9 @@ public class PointOfSaleActivity extends AppCompatActivity {
         private String productDescription;
         private String quantity;
         private String price;
+        // Additional fields to store calculated numeric values
+        private int intQuantity;
+        private double doublePrice;
 
         // Constructors, getters, setters, and other methods go here
         // Constructor with five string parameters
@@ -676,7 +679,21 @@ public class PointOfSaleActivity extends AppCompatActivity {
             this.category = category;
             this.quantity = quantity;
             this.price = price;
+
+            // Initialize the additional fields
+            try {
+                intQuantity = Integer.parseInt(quantity);
+            } catch (NumberFormatException e) {
+                intQuantity = 0; // Handle parsing errors
+            }
+
+            try {
+                doublePrice = Double.parseDouble(price);
+            } catch (NumberFormatException e) {
+                doublePrice = 0.0; // Handle parsing errors
+            }
         }
+
         // Factory method to create Product objects
         public static Product createProduct(String productName, String productDescription, String category, String quantity, String price) {
             Product product = new Product();
@@ -686,6 +703,26 @@ public class PointOfSaleActivity extends AppCompatActivity {
             product.setQuantity(quantity);
             product.setPrice(price);
             return product;
+        }
+
+        public int getIntQuantity() {
+            return intQuantity;
+        }
+
+        public void setIntQuantity(int intQuantity) {
+            this.intQuantity = intQuantity;
+            // Update the original string value
+            this.quantity = String.valueOf(intQuantity);
+        }
+
+        public double getDoublePrice() {
+            return doublePrice;
+        }
+
+        public void setDoublePrice(double doublePrice) {
+            this.doublePrice = doublePrice;
+            // Update the original string value
+            this.price = String.valueOf(doublePrice);
         }
         public Product() {
             this.productId = ""; // Initialize productId to an empty string

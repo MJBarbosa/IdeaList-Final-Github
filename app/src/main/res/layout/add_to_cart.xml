@@ -33,12 +33,25 @@
         android:textStyle="bold"/>
 
     <Button
+        android:id="@+id/buttonClearCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewTotal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="70dp"
+        android:text="Clear"/>
+
+    <Button
         android:id="@+id/buttonCheckout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textViewTotal"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="70dp"
         android:text="Checkout"/>
 
 </RelativeLayout>

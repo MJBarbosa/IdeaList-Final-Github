@@ -65,10 +65,19 @@ public class AddToCartActivity extends AppCompatActivity {
         // Call the method to calculate and display total from SharedPreferences
         calculateAndDisplayTotalFromSharedPreferences();
 
+        Button clearCartButton = findViewById(R.id.buttonClearCart);
+        clearCartButton.setOnClickListener(v -> {
+            clearCart();
+            // Implement checkout logic here
+            // You can proceed with the payment process or any other actions
+            // you want to perform when the user checks out
+            // For this example, let's just display a message
+            Toast.makeText(AddToCartActivity.this, "Cart Has Been Cleared", Toast.LENGTH_SHORT).show();
+        });
+
         // Handle checkout button click
         Button checkoutButton = findViewById(R.id.buttonCheckout);
         checkoutButton.setOnClickListener(v -> {
-            clearCart();
             // Implement checkout logic here
             // You can proceed with the payment process or any other actions
             // you want to perform when the user checks out
@@ -168,14 +177,11 @@ public class AddToCartActivity extends AppCompatActivity {
             // Add a log statement to identify the cart item
             Log.d(TAG, "Cart Item: Product Name: " + productName + ", Product Description: " + productDesc + ", Category: " + category + ", Quantity: " + quantity + ", Price: " + price);
         }
-        // Call the calculateTotal method to update the total
-        total = calculateTotal(cartItems);
-
         // Log the calculated total
         Log.d(TAG, "Total: " + total);
 
         // Update the totalTextView with the calculated total
-        totalTextView.setText("Total: $" + formatPrice(total));
+        totalTextView.setText("Total: ₱" + formatPrice(total));
     }
 
     private String formatPrice(double price) {
@@ -185,8 +191,6 @@ public class AddToCartActivity extends AppCompatActivity {
         return formattedPrice;
     }
 
-
-
     private double calculateTotal(List<PointOfSaleActivity.Product> cartItems) {
         double total = 0.0;
 
@@ -194,7 +198,6 @@ public class AddToCartActivity extends AppCompatActivity {
             try {
                 double price = Double.parseDouble(product.getPrice());
                 int quantity = Integer.parseInt(product.getQuantity());
-                Log.d(TAG, "Price to calculate: " + price);
 
                 if (price > 0 && quantity > 0) {
                     double itemTotal = price * quantity;
@@ -209,10 +212,6 @@ public class AddToCartActivity extends AppCompatActivity {
 
         return total;
     }
-
-
-
-
 
     private void clearCart() {
         // Clear the cart items in SharedPreferences
