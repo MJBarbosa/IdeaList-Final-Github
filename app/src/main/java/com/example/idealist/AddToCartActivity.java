@@ -18,11 +18,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class AddToCartActivity extends AppCompatActivity {
@@ -78,6 +90,7 @@ public class AddToCartActivity extends AppCompatActivity {
         // Handle checkout button click
         Button checkoutButton = findViewById(R.id.buttonCheckout);
         checkoutButton.setOnClickListener(v -> {
+            performCheckout();
             // Implement checkout logic here
             // You can proceed with the payment process or any other actions
             // you want to perform when the user checks out
@@ -183,7 +196,6 @@ public class AddToCartActivity extends AppCompatActivity {
         // Update the totalTextView with the calculated total
         totalTextView.setText("Total: ₱" + formatPrice(total));
     }
-
     private String formatPrice(double price) {
         // Format the price with two decimal places
         DecimalFormat decimalFormat = new DecimalFormat("#0.00");
@@ -191,26 +203,168 @@ public class AddToCartActivity extends AppCompatActivity {
         return formattedPrice;
     }
 
-    private double calculateTotal(List<PointOfSaleActivity.Product> cartItems) {
-        double total = 0.0;
+    private void performCheckout() {
+        Log.d(TAG, "Checkout button clicked");
 
-        for (PointOfSaleActivity.Product product : cartItems) {
-            try {
-                double price = Double.parseDouble(product.getPrice());
-                int quantity = Integer.parseInt(product.getQuantity());
-
-                if (price > 0 && quantity > 0) {
-                    double itemTotal = price * quantity;
-                    total += itemTotal;
-                } else {
-                    Log.e(TAG, "Invalid price or quantity for product: " + product.getProductName());
-                }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
+        // Ensure the user is authenticated
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            // Handle unauthenticated user
+            Log.e(TAG, "User is not authenticated");
+            return;
         }
 
-        return total;
+        // Initialize Firebase Database reference
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Sales");
+
+        Set<String> cartItemsSet = sharedPreferences.getStringSet(CART_ITEMS_KEY, new HashSet<>());
+
+        if (cartItemsSet != null && !cartItemsSet.isEmpty()) {
+            for (String cartItem : cartItemsSet) {
+                String[] cartItemParts = cartItem.split(",");
+                String productName = cartItemParts[0];
+                String productDesc = cartItemParts[1];
+                String category = cartItemParts[2];
+                String productQuantity = cartItemParts[3];
+                String productPrice = cartItemParts[4];
+
+                // Extract Quantity as int
+                int quantity = 0;
+                try {
+                    String[] quantityParts = productQuantity.split(":");
+                    if (quantityParts.length == 2) {
+                        quantity = Integer.parseInt(quantityParts[1].trim());
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Invalid quantity format for product: " + productQuantity);
+                }
+
+                // Extract Price as double
+                double price = 0.00;
+                try {
+                    String[] priceParts = productPrice.split(":");
+                    if (priceParts.length == 2 && priceParts[1] != null) {
+                        String priceValue = priceParts[1].trim();
+                        price = Double.parseDouble(priceValue);
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Invalid price format for product: " + productPrice);
+                }
+
+                // Create a transaction object (you can customize this based on your database structure)
+                Transaction transaction = new Transaction(
+                        productName,
+                        price,
+                        quantity,
+                        getCurrentTimestamp(),
+                        currentUser.getUid() // Set the user's UID in the transaction
+                );
+
+                //Log.d(TAG, "Product Transaction: " + product);
+
+                // Push the transaction object to the "Sales" node in Firebase
+                databaseReference.push().setValue(transaction);
+
+                // Deduct the quantity of the product from its database (adjust this based on your actual database structure)
+                // You may call this function here or in a loop
+                //updateProductQuantity(product.getProductId(), quantity);
+            }
+
+            // Clear the cart and display a success message
+            clearCart();
+            Log.d(TAG, "Checkout successful");
+            Toast.makeText(AddToCartActivity.this, "Checkout successful", Toast.LENGTH_SHORT).show();
+        } else {
+            // Handle case where the cart is empty
+            Log.e(TAG, "Cart is empty. Nothing to checkout.");
+        }
+
+        checkUserRoleForAccess(getCurrentUserUid());
+    }
+
+
+
+    private long getCurrentTimestamp() {
+        return System.currentTimeMillis();
+    }
+
+    // This function updates the quantity of the product in your Firebase Database
+    private void updateProductQuantity(String productId, int quantityToDeduct) {
+        DatabaseReference productRef = FirebaseDatabase.getInstance().getReference().child("ProductInventory").child(productId);
+
+        productRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get the current product quantity from the database
+                int currentQuantity = dataSnapshot.child("quantity").getValue(Integer.class);
+
+                // Deduct the purchased quantity
+                int updatedQuantity = currentQuantity - quantityToDeduct;
+
+                if (updatedQuantity >= 0) {
+                    // Update the product quantity in the database
+                    productRef.child("quantity").setValue(updatedQuantity);
+                } else {
+                    // Handle cases where the quantity goes negative (out of stock)
+                    Toast.makeText(AddToCartActivity.this, "Product out of stock: " + dataSnapshot.child("productName").getValue(String.class), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle any errors that occur while updating the quantity
+                Log.e(TAG, "Failed to update product quantity: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void checkUserRoleForAccess(String userUid) {
+        DatabaseReference userRolesRef = FirebaseDatabase.getInstance().getReference("UserRoles")
+                .child(userUid)  // Use the provided userUid here
+                .child("storeOwner");
+        Log.d(TAG, "User: " + userUid);
+
+        userRolesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@androidx.annotation.NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String userRoles = dataSnapshot.getValue(String.class);
+                    Log.d(TAG, "User role retrieved: " + userRoles);
+                    if ("storeOwner".equals(userRoles)) {
+                        // User has the "storeOwner" role, allow access
+                        performCheckout();
+                        Log.d(TAG, "User is a store owner. Allowing access.");
+                    } else {
+                        // User does not have the "storeOwner" role, show an error message
+                        Log.d(TAG, "User does not have the 'storeOwner' role.");
+                        Toast.makeText(AddToCartActivity.this, "Only Store Owners can access this feature.", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    // User role data does not exist, handle it as needed
+                    Log.d(TAG, "User role data not found.");
+                    Toast.makeText(AddToCartActivity.this, "User role not found.", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@androidx.annotation.NonNull DatabaseError databaseError) {
+                // Handle database error
+                Toast.makeText(AddToCartActivity.this, "Error checking user role.", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "Error checking user role: " + databaseError.getMessage());
+            }
+        });
+    }
+
+
+    private String getCurrentUserUid() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            return currentUser.getUid();
+        } else {
+            return "";
+        }
     }
 
     private void clearCart() {
@@ -294,4 +448,49 @@ public class AddToCartActivity extends AppCompatActivity {
             }
         }
     }
+
+    public class Transaction {
+        private String productName;
+        private double price;
+        private int quantity;
+        private long timestamp;
+        private String userUid;
+
+        public Transaction() {
+            // Default constructor required for Firebase Realtime Database
+        }
+
+        public Transaction(String productName, double price, int quantity, long timestamp, String userUid) {
+            this.productName = productName;
+            this.price = price;
+            this.quantity = quantity;
+            this.timestamp = timestamp;
+            this.userUid = userUid;
+        }
+
+        public String getUserUid() {
+            return userUid;
+        }
+
+        public void setUserUid(String userUid) {
+            this.userUid = userUid;
+        }
+
+        public String getProductName() {
+            return productName;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public long getTimestamp() {
+            return timestamp;
+        }
+    }
+
 }

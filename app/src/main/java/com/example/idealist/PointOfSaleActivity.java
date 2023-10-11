@@ -545,8 +545,8 @@ public class PointOfSaleActivity extends AppCompatActivity {
 
     private void checkUserRoleForAccess(String userUid) {
         DatabaseReference userRolesRef = FirebaseDatabase.getInstance().getReference("UserRoles")
-                .child(getCurrentUserUid())
-                .child("role");
+                .child(userUid)
+                .child("storeOwner");
 
         userRolesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
