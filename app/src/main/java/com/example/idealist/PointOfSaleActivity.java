@@ -58,7 +58,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
     private AutoCompleteTextView autoCompleteTextViewPOSSearch;
     private ProgressBar progressBarViewPOSProduct;
     private List<PointOfSaleActivity.Product> productList;
-    private TextView textViewPOSSuppName, textViewPOSProductDescription, textViewPOSQuantity, textViewPOSPrice, textViewPOSProductId, textViewPOSProductName, textViewPOSCategory;
+    private TextView invisibleProductIdTextView, textViewPOSSuppName, textViewPOSProductDescription, textViewPOSQuantity, textViewPOSPrice, textViewPOSProductId, textViewPOSProductName, textViewPOSCategory;
     private ArrayAdapter<String> searchAdapter, adapter;
     private ImageView imageViewProduct;
     private Uri selectedImageUri;
@@ -89,6 +89,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
         textViewPOSCategory = findViewById(R.id.textViewPOSCategory);
         imageViewProduct = findViewById(R.id.imageViewPOSProductImage);
         textViewPOSQuantity = findViewById(R.id.textViewPOSQuantity);
+        invisibleProductIdTextView = findViewById(R.id.invisibleProductIdTextView);
 
         // Initialize the productList and set up the search functionality
         productList = new ArrayList<>();
@@ -219,12 +220,14 @@ public class PointOfSaleActivity extends AppCompatActivity {
         String category = textViewPOSCategory.getText().toString();
         String quantity = textViewPOSQuantity.getText().toString();
         String price = textViewPOSPrice.getText().toString();
+        String productId = invisibleProductIdTextView.getText().toString();
 
         // Check if the cart exists in SharedPreferences
         Set<String> cartItemsSet = sharedPreferences.getStringSet(CART_ITEMS_KEY, new HashSet<>());
 
         // Create a string representation of the product
-        String cartItem = productName + "," + productDesc + "," + category + "," + quantity + "," + price;
+        String cartItem = productName + "," + productDesc + "," + category + "," + quantity + "," + price + "," + productId;
+        Log.d(TAG, "Value of addttocart Product: " + productId);
 
         // Add the cart item to the set
         cartItemsSet.add(cartItem);
@@ -287,8 +290,9 @@ public class PointOfSaleActivity extends AppCompatActivity {
                     textViewPOSCategory.setText(labelCategory + product.getCategory());
                     textViewPOSProductName.setText(labelProductName + product.getProductName());
                     autoCompleteTextViewPOSSearch.setText(product.getProductName());
+                    invisibleProductIdTextView.setText(product.getProductId());
 
-                    onQRCodeScanned(product.getProductName());
+                    onQRCodeScanned(product.getProductName(), product.getProductId());
 
                     // Display product image after fetching data
                     ImageView imageViewProductImage = findViewById(R.id.imageViewPOSProductImage);
@@ -296,7 +300,6 @@ public class PointOfSaleActivity extends AppCompatActivity {
 
                     // Check user role for access
                     checkUserRoleForAccess(userUid);
-                    Log.e(TAG, "Selected Product has a value");
                 }
             }
         }
@@ -341,7 +344,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
     private AlertDialog alertDialog = null;
 
     // Call this method when you want to show the search dialog (e.g., after scanning a QR code)
-    private void onQRCodeScanned(String scannedContent) {
+    private void onQRCodeScanned(String scannedContent, String productId) {
         showSearchDialog();
         AutoCompleteTextView autoCompleteTextViewSearch = alertDialog.findViewById(R.id.autoCompleteTextViewSearch);
 
@@ -373,6 +376,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String selectedProductName = autoCompleteTextViewSearch.getText().toString();
                 populateUIWithProductData(selectedProductName);
+                //Log.d(TAG, "Value of Product: " + productId);
 
                 // Dismiss the dialog after populating details
                 alertDialog.dismiss();

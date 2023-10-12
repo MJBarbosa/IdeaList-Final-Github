@@ -169,6 +169,16 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="30dp"/>
 
+                <TextView
+                    android:id="@+id/invisibleProductIdTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/buttonAddToCart"
+                    android:visibility="gone"
+                    android:clickable="false"
+                    android:text="This is an invisible TextView" />
+
+
             </RelativeLayout>
         </ScrollView>
     </FrameLayout>

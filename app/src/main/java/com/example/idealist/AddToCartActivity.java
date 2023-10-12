@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -227,6 +228,7 @@ public class AddToCartActivity extends AppCompatActivity {
                 String category = cartItemParts[2];
                 String productQuantity = cartItemParts[3];
                 String productPrice = cartItemParts[4];
+                String productId = cartItemParts[5];
 
                 // Extract Quantity as int
                 int quantity = 0;
@@ -259,13 +261,16 @@ public class AddToCartActivity extends AppCompatActivity {
                         price,
                         quantity,
                         getCurrentTimestamp(),
-                        currentUser.getUid() // Set the user's UID in the transaction
+                        currentUser.getUid(), // Set the user's UID in the transaction
+                        productId
                 );
 
                 //Log.d(TAG, "Product Transaction: " + product);
 
                 // Push the transaction object to the "Sales" node in Firebase
                 databaseReference.push().setValue(transaction);
+
+                updateProductQuantity(productId, quantity);
 
                 // Deduct the quantity of the product from its database (adjust this based on your actual database structure)
                 // You may call this function here or in a loop
@@ -286,36 +291,56 @@ public class AddToCartActivity extends AppCompatActivity {
 
 
 
-    private long getCurrentTimestamp() {
-        return System.currentTimeMillis();
+    private String getCurrentTimestamp() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
+        return dateFormat.format(calendar.getTime());
     }
 
     // This function updates the quantity of the product in your Firebase Database
     private void updateProductQuantity(String productId, int quantityToDeduct) {
-        DatabaseReference productRef = FirebaseDatabase.getInstance().getReference().child("ProductInventory").child(productId);
+        DatabaseReference productRef = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("ProductInventory")
+                .child(getCurrentUserUid());
 
-        productRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        // Use the orderByChild and equalTo query to find the product by productId
+        productRef.orderByChild("productId").equalTo(productId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get the current product quantity from the database
-                int currentQuantity = dataSnapshot.child("quantity").getValue(Integer.class);
+                if (dataSnapshot.exists()) {
+                    // Since we used equalTo, dataSnapshot will point to the product with the matching productId
+                    DataSnapshot productSnapshot = dataSnapshot.getChildren().iterator().next();
+                    String quantityStr = productSnapshot.child("quantity").getValue(String.class);
+                    Log.d(TAG, "Quantity Current Value: " + quantityStr);
 
-                // Deduct the purchased quantity
-                int updatedQuantity = currentQuantity - quantityToDeduct;
+                    if (quantityStr != null) {
+                        int currentQuantity = Integer.parseInt(quantityStr);
 
-                if (updatedQuantity >= 0) {
-                    // Update the product quantity in the database
-                    productRef.child("quantity").setValue(updatedQuantity);
+                        // Now you have the quantity value, you can use it in your code
+                        int updatedQuantity = currentQuantity - quantityToDeduct;
+
+                        if (updatedQuantity >= 0) {
+                            // Update the product quantity in the database as a string
+                            productSnapshot.child("quantity").getRef().setValue(String.valueOf(updatedQuantity));
+                        } else {
+                            // Handle cases where the quantity goes negative (out of stock)
+                            Toast.makeText(AddToCartActivity.this, "Product out of stock: " + productSnapshot.child("productName").getValue(String.class), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        // Handle cases where quantity is not set in the database
+                        Log.e(TAG, "Quantity is not set in the database.");
+                    }
                 } else {
-                    // Handle cases where the quantity goes negative (out of stock)
-                    Toast.makeText(AddToCartActivity.this, "Product out of stock: " + dataSnapshot.child("productName").getValue(String.class), Toast.LENGTH_SHORT).show();
+                    // Handle cases where the product with the given productId doesn't exist
+                    Log.e(TAG, "Product with productId " + productId + " not found in the database.");
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Handle any errors that occur while updating the quantity
-                Log.e(TAG, "Failed to update product quantity: " + databaseError.getMessage());
+                // Handle any errors that occur while retrieving the quantity
+                Log.e(TAG, "Failed to retrieve product quantity: " + databaseError.getMessage());
             }
         });
     }
@@ -450,22 +475,30 @@ public class AddToCartActivity extends AppCompatActivity {
     }
 
     public class Transaction {
+        private String productId;
         private String productName;
         private double price;
         private int quantity;
-        private long timestamp;
+        private String timestamp;
         private String userUid;
 
         public Transaction() {
             // Default constructor required for Firebase Realtime Database
         }
 
-        public Transaction(String productName, double price, int quantity, long timestamp, String userUid) {
+        public Transaction(String productName, double price, int quantity, String timestamp, String userUid, String productId) {
+            this.productId = productId;
             this.productName = productName;
             this.price = price;
             this.quantity = quantity;
             this.timestamp = timestamp;
             this.userUid = userUid;
+        }
+
+        public  String getProductId() {return productId;}
+
+        public void setProductId(String productId) {
+            this.productId = productId;
         }
 
         public String getUserUid() {
@@ -488,7 +521,7 @@ public class AddToCartActivity extends AppCompatActivity {
             return quantity;
         }
 
-        public long getTimestamp() {
+        public String getTimestamp() {
             return timestamp;
         }
     }
