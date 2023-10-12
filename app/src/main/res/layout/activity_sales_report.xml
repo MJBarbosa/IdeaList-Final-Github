@@ -60,14 +60,124 @@
                     android:elevation="10dp"
                     android:visibility="gone" />
 
-                <!-- TableLayout for displaying sales data -->
                 <TableLayout
-                    android:id="@+id/salesTableLayout"
+                    android:id="@+id/salesTableHeaderLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/buttonSalesSearch"
                     android:layout_marginTop="20dp"
                     android:stretchColumns="*">
+
+                    <!-- Header Row -->
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/orange_main">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Product Name"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:padding="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Price"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:padding="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Quantity"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:padding="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Timestamp"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:padding="10dp" />
+                    </TableRow>
+                </TableLayout>
+
+                <!-- TableLayout for displaying sales data -->
+                <TableLayout
+                    android:id="@+id/salesTableLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/salesTableHeaderLayout"
+                    android:stretchColumns="*">
+
+                    <!-- Header Row -->
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/orange_main">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Product Name"
+                            android:textColor="@color/black"
+                            android:textAlignment="center"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:background="@drawable/tabel_border"
+                            android:padding="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Price"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:background="@drawable/tabel_border"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:padding="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Quantity"
+                            android:textAlignment="center"
+                            android:background="@drawable/tabel_border"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:padding="10dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Timestamp"
+                            android:textAlignment="center"
+                            android:background="@drawable/tabel_border"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:padding="10dp" />
+                    </TableRow>
                 </TableLayout>
             </RelativeLayout>
         </ScrollView>
