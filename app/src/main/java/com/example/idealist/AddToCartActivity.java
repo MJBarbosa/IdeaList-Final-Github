@@ -304,12 +304,10 @@ public class AddToCartActivity extends AppCompatActivity {
                 .child("ProductInventory")
                 .child(getCurrentUserUid());
 
-        // Use the orderByChild and equalTo query to find the product by productId
         productRef.orderByChild("productId").equalTo(productId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // Since we used equalTo, dataSnapshot will point to the product with the matching productId
                     DataSnapshot productSnapshot = dataSnapshot.getChildren().iterator().next();
                     String quantityStr = productSnapshot.child("quantity").getValue(String.class);
                     Log.d(TAG, "Quantity Current Value: " + quantityStr);
@@ -317,12 +315,18 @@ public class AddToCartActivity extends AppCompatActivity {
                     if (quantityStr != null) {
                         int currentQuantity = Integer.parseInt(quantityStr);
 
-                        // Now you have the quantity value, you can use it in your code
+                        // Now you have the quantity value as an integer
                         int updatedQuantity = currentQuantity - quantityToDeduct;
 
                         if (updatedQuantity >= 0) {
                             // Update the product quantity in the database as a string
-                            productSnapshot.child("quantity").getRef().setValue(String.valueOf(updatedQuantity));
+                            String updatedQuantityStr = Integer.toString(updatedQuantity);
+                            productSnapshot.child("quantity").getRef().setValue(updatedQuantityStr);
+
+                            // After updating the quantity in the database, you can update the corresponding items in the cart
+                            // Implement a function to update the cart item's quantity. You'll need to find the corresponding cart item
+                            // and update its quantity based on the product ID and updated quantity.
+                            updateCartItemQuantity(productId, updatedQuantity);
                         } else {
                             // Handle cases where the quantity goes negative (out of stock)
                             Toast.makeText(AddToCartActivity.this, "Product out of stock: " + productSnapshot.child("productName").getValue(String.class), Toast.LENGTH_SHORT).show();
@@ -344,6 +348,21 @@ public class AddToCartActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void updateCartItemQuantity(String productId, int updatedQuantity) {
+        // Find the corresponding cart item in your cartItems list
+        for (PointOfSaleActivity.Product cartItem : cartItems) {
+            if (cartItem.getProductId().equals(productId)) {
+                // Update the cart item's quantity
+                cartItem.setQuantity("Quantity: " + updatedQuantity);
+                // Update the RecyclerView or UI to reflect the change
+                cartAdapter.notifyDataSetChanged();
+                break;  // Exit the loop once you've found and updated the cart item
+            }
+        }
+    }
+
+
 
     private void checkUserRoleForAccess(String userUid) {
         DatabaseReference userRolesRef = FirebaseDatabase.getInstance().getReference("UserRoles")
@@ -434,6 +453,8 @@ public class AddToCartActivity extends AppCompatActivity {
             PointOfSaleActivity.Product product = cartItems.get(position);
             holder.bind(product);
         }
+
+
 
         @Override
         public int getItemCount() {

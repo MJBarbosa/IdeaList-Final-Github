@@ -498,6 +498,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
                     textViewPOSProductDescription.setText(labelProductDescription + selectedProduct.getProductDescription());
                     textViewPOSPrice.setText(labelPrice + selectedProduct.getPrice());
                     textViewPOSCategory.setText(labelCategory + selectedProduct.getCategory());
+                    invisibleProductIdTextView.setText(selectedProduct.getProductId());
 
                     // Update the TextViews for productId and productName
                     TextView textViewPOSProductName = findViewById(R.id.textViewPOSProductName);
@@ -604,6 +605,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
         autoCompleteTextViewPOSSearch.setText(""); // Clear the search field
         textViewPOSCategory.setText("Category: "); // Set the spinner to the first item (or default selection)
         textViewPOSQuantity.setText("Quantity: 0");
+        invisibleProductIdTextView.setText("This is an invisible TextView");
 
         // Clear the productId and productName TextViews
         textViewPOSProductName.setText("Product Name: ");
