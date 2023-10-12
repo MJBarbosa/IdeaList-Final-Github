@@ -48,6 +48,11 @@ public class ManageInventoryActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
                 return true;
+            } else if (itemId == R.id.menu_sales_report) {
+                Intent intent = new Intent(ManageInventoryActivity.this, SalesReportActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
             }
             return false;
         });

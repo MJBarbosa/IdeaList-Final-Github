@@ -101,6 +101,11 @@ public class QrGeneratorActivity extends AppCompatActivity {
             } else if (itemId == R.id.menu_qr_gene) {
                 // You are already in the QR Gene tab, no action needed
                 return true;
+            } else if (itemId == R.id.menu_sales_report) {
+                Intent intent = new Intent(QrGeneratorActivity.this, SalesReportActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
             }
             return false;
         });
