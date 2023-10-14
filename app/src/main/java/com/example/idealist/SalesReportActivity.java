@@ -7,7 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -25,6 +29,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +37,7 @@ import java.util.Map;
 public class SalesReportActivity extends AppCompatActivity {
 
     private Map<String, Sale> salesMap = new HashMap<>();
-
+    private AutoCompleteTextView autoCompleteTextView;
     private String userUid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,53 @@ public class SalesReportActivity extends AppCompatActivity {
         if (currentUser != null) {
             userUid = currentUser.getUid(); // Initialize userUid with the UID of the currently logged-in user
             fetchSalesData(userUid); // Now userUid is initialized and can be used to fetch data
+        }
+
+        // Initialize the AutoCompleteTextView
+        autoCompleteTextView = findViewById(R.id.autoCompleteTextViewSalesSearch);
+        ArrayAdapter<String> productNamesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, getProductNames());
+        autoCompleteTextView.setAdapter(productNamesAdapter);
+
+        // Set a TextChangedListener to filter sales data when text changes
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                filterSalesData(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+    }
+
+    // Get a list of product names for the AutoCompleteTextView
+    private List<String> getProductNames() {
+        List<String> productNames = new ArrayList<>();
+        for (Sale sale : salesMap.values()) {
+            productNames.add(sale.getProductName());
+        }
+        return productNames;
+    }
+
+    private void filterSalesData(String query) {
+        TableLayout tableLayout = findViewById(R.id.salesTableLayout);
+        tableLayout.removeAllViews();
+
+        for (Map.Entry<String, Sale> entry : salesMap.entrySet()) {
+            Sale sale = entry.getValue();
+            if (sale.getProductName().toLowerCase().contains(query.toLowerCase())) {
+                TableRow row = new TableRow(this);
+                addTextView(row, sale.getProductName());
+                addTextView(row, String.valueOf(sale.getPrice()));
+                addTextView(row, String.valueOf(sale.getQuantity()));
+                addTextView(row, sale.getTimestamp());
+                tableLayout.addView(row);
+            }
         }
     }
 

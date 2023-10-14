@@ -98,7 +98,6 @@ public class AddToCartActivity extends AppCompatActivity {
             // For this example, let's just display a message
             Toast.makeText(AddToCartActivity.this, "Checkout clicked", Toast.LENGTH_SHORT).show();
         });
-
     }
 
     private void displayCartItems() {
