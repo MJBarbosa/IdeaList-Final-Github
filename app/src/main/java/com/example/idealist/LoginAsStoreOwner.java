@@ -45,6 +45,7 @@ public class LoginAsStoreOwner extends AppCompatActivity {
         Button buttonLoginSO = findViewById(R.id.buttonLoginSO);
         TextView textViewLoginSignUpSO = findViewById(R.id.textViewLoginSignUpSO);
         TextView textViewLoginAsCustomer = findViewById(R.id.textViewLoginAsCustomerSO);
+        TextView textViewLoginForgotPassSO = findViewById(R.id.textViewLoginForPswSO);
 
         authSO = FirebaseAuth.getInstance();
         userRolesRefSO = FirebaseDatabase.getInstance().getReference("UserRoles"); // Initialize the reference
@@ -92,6 +93,15 @@ public class LoginAsStoreOwner extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Login.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        textViewLoginForgotPassSO.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ForgotPasswordStoreOwner.class);
                 startActivity(intent);
                 finish();
             }

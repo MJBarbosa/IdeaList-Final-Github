@@ -2,19 +2,29 @@ package com.example.idealist;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintJob;
+import android.print.PrintManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.print.PrintHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -220,7 +230,12 @@ public class AddToCartActivity extends AppCompatActivity {
         Set<String> cartItemsSet = sharedPreferences.getStringSet(CART_ITEMS_KEY, new HashSet<>());
 
         if (cartItemsSet != null && !cartItemsSet.isEmpty()) {
+            // Create a StringBuilder to build the receipt message
+            StringBuilder receiptMessage = new StringBuilder();
+            receiptMessage.append("Receipt:\n\n");
+
             for (String cartItem : cartItemsSet) {
+
                 String[] cartItemParts = cartItem.split(",");
                 String productName = cartItemParts[0];
                 String productDesc = cartItemParts[1];
@@ -254,6 +269,14 @@ public class AddToCartActivity extends AppCompatActivity {
                     Log.e(TAG, "Invalid price format for product: " + productPrice);
                 }
 
+                // Build the receipt message with item details
+                receiptMessage.append("").append(productName).append("\n");
+                receiptMessage.append("").append(productDesc).append("\n");
+                receiptMessage.append("").append(category).append("\n");
+                receiptMessage.append("Quantity: ").append(quantity).append("\n");
+                receiptMessage.append("Price: ₱").append(price).append("\n\n");
+                receiptMessage.append("Total: ").append(total).append("\n\n");
+
                 // Create a transaction object (you can customize this based on your database structure)
                 Transaction transaction = new Transaction(
                         productName,
@@ -279,7 +302,29 @@ public class AddToCartActivity extends AppCompatActivity {
             // Clear the cart and display a success message
             clearCart();
             Log.d(TAG, "Checkout successful");
-            Toast.makeText(AddToCartActivity.this, "Checkout successful", Toast.LENGTH_SHORT).show();
+            // Show the receipt in a pop-up dialog
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddToCartActivity.this);
+            alertDialogBuilder
+                    .setTitle("Checkout Successful")
+                    .setMessage(receiptMessage.toString())
+                    .setPositiveButton("Print", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            printReceipt(receiptMessage.toString());
+                        }
+                    })
+                    .setNeutralButton("Share", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            shareReceipt(receiptMessage.toString());
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create()
+                    .show();
+
         } else {
             // Handle case where the cart is empty
             Log.e(TAG, "Cart is empty. Nothing to checkout.");
@@ -288,7 +333,40 @@ public class AddToCartActivity extends AppCompatActivity {
         checkUserRoleForAccess(getCurrentUserUid());
     }
 
+    // Function to print the receipt
+    private void printReceipt(String receiptText) {
+        // Get a PrintManager instance
+        PrintManager printManager = (PrintManager) getSystemService(Context.PRINT_SERVICE);
 
+        String jobName = "Receipt";
+
+        // Create a WebView to render the receipt text as an HTML page
+        WebView webView = new WebView(this);
+        webView.loadDataWithBaseURL(null, "<html><body>" + receiptText + "</body></html>", "text/HTML", "UTF-8", null);
+
+        // Create a print document adapter
+        PrintDocumentAdapter printAdapter = webView.createPrintDocumentAdapter();
+
+        // Start the print job
+        PrintJob printJob = printManager.print(jobName, printAdapter, new PrintAttributes.Builder().build());
+
+        // You can monitor the print job status if needed
+        if (printJob.isCompleted()) {
+            // Printing is complete
+        } else if (printJob.isFailed()) {
+            // Printing failed
+        }
+    }
+
+    // Function to share the receipt
+    private void shareReceipt(String receiptText) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, receiptText);
+
+        // Start an activity to share the receipt
+        startActivity(Intent.createChooser(shareIntent, "Share Receipt via"));
+    }
 
     private String getCurrentTimestamp() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());

@@ -145,7 +145,10 @@ public class StoreOwnerProfileActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(StoreOwnerProfileActivity.this);
+            Intent intent = new Intent(StoreOwnerProfileActivity.this, MainSOActivity.class);
+            startActivity(intent);
+            finish();// Close the current activity and return to the previous one
+            return true;
         } else if (id == R.id.menuRefreshSO) {
             showStoreOwnerProfile(authProfileSO.getCurrentUser());
         } else if (id == R.id.menuHomeSO) {

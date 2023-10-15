@@ -78,11 +78,10 @@ public class MainSOActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainSOActivity.this, StoreOwnerProfileActivity.class);
                     startActivity(intent);
                     finish();
-                } else if (itemId == R.id.menuLogout) {
-                    authProfileSO = FirebaseAuth.getInstance();
+                } else if (itemId == R.id.menuLogoutHomeSO) {
                     authProfileSO.signOut();
+                    Toast.makeText(MainSOActivity.this, "Logged Out", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(MainSOActivity.this, LoginAsStoreOwner.class);
-
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();

@@ -42,7 +42,7 @@ public class UploadSOProfilePicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_soprofile_pic);
 
-        getSupportActionBar().setTitle("Upload Store Owner Profile Picture");
+        getSupportActionBar().setTitle("Upload Store Logo");
 
         Button buttonUploadPicChoose = findViewById(R.id.uploadPicChooseButtonSO);
         Button buttonUploadPic = findViewById(R.id.uploadPicButtonSO);

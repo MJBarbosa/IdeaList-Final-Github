@@ -47,7 +47,7 @@ public class Login extends AppCompatActivity {
         TextView textViewLoginAsSO = findViewById(R.id.textViewLoginAsSO);
 
         auth = FirebaseAuth.getInstance();
-        userRolesRef = FirebaseDatabase.getInstance().getReference("UserRoles"); // Initialize the reference
+        userRolesRef = FirebaseDatabase.getInstance().getReference("UserRolesCus"); // Initialize the reference
 
         //Show Hide Password using Eye Icon
         ImageView imageViewShowHidePwd = findViewById(R.id.imageViewShowHidePwd);

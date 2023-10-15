@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -253,5 +254,22 @@ public class RegisterStoreOwnerActivity extends AppCompatActivity {
     private void setUserRole(String uid, String role) {
         DatabaseReference userRolesRef = FirebaseDatabase.getInstance().getReference("UserRoles");
         userRolesRef.child(uid).setValue(role);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+
+        if (itemId == android.R.id.home) {
+            Intent intent = new Intent(RegisterStoreOwnerActivity.this, LoginAsStoreOwner.class);
+            startActivity(intent);
+            finish();// Close the current activity and return to the previous one
+            return true;
+        }
+
+        // Handle other menu items if needed
+        // ...
+
+        return super.onOptionsItemSelected(item);
     }
 }
