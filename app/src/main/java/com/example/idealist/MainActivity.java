@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     // Declare the RecyclerView and its adapter as class members
     private RecyclerView storeRecyclerView;
     private StoreAdapter storeAdapter;
+    // Create a member variable to store the selected store information
+    private String selectedStoreName;
+    private String selectedUserUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,77 +73,94 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference userRolesReference = FirebaseDatabase.getInstance().getReference("UserRolesCus");
         String currentUserId = firebaseUser.getUid();
 
-        // Check if the current user has the role of "customer"
         userRolesReference.child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    DataSnapshot userSnapshot = dataSnapshot.child("role"); // Replace with your actual child name
-                    String userUid = userSnapshot.getKey(); // Get the user's UID
-                    String storeName = userSnapshot.child("storeName").getValue(String.class);
+                    String role = dataSnapshot.getValue(String.class);
+                    Log.d(TAG, "User Role: " + role);
 
-                    if (userSnapshot.exists()) {
-                        String role = userSnapshot.getValue(String.class);
-                        if (role != null && role.equals("customer")) {
-                            // The user has the role of "customer," so proceed to fetch store owner data
-                            DatabaseReference storeOwnerReference = FirebaseDatabase.getInstance().getReference("Registered Store Owner Users");
+                    if ("customer".equals(role)) {
+                        DatabaseReference storeOwnerReference = FirebaseDatabase.getInstance().getReference("Registered Store Owner Users");
+                        Log.d(TAG, "Getting Store Name Link: " + storeOwnerReference);
 
-                            storeOwnerReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    HashMap<String, String> storeMap = new HashMap<>();
-                                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                                        String userUid = userSnapshot.getKey(); // Get the user's UID
+                        storeOwnerReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                HashMap<String, String> storeMap = new HashMap<>();
 
-                                        if (userSnapshot.hasChild("storeName")) {
-                                            String storeName = userSnapshot.child("storeName").getValue(String.class);
+                                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                                    String userUid = userSnapshot.getKey();
+                                    String fullName = userSnapshot.child("fullName").getValue(String.class);
+                                    String storeName = userSnapshot.child("storeName").getValue(String.class);
+                                    String dob = userSnapshot.child("dob").getValue(String.class);
+                                    String gender = userSnapshot.child("gender").getValue(String.class);
+                                    String mobile = userSnapshot.child("mobile").getValue(String.class);
+                                    String storeLocation = userSnapshot.child("storeLocation").getValue(String.class);
 
-                                            if (storeName != null && userUid != null) {
-                                                storeMap.put(storeName, userUid);
-                                            }
-                                        }
+                                    Log.d(TAG, "User UID: " + userUid);
+                                    Log.d(TAG, "Full Name: " + fullName);
+                                    Log.d(TAG, "Store Name: " + storeName);
+                                    Log.d(TAG, "Date of Birth: " + dob);
+                                    Log.d(TAG, "Gender: " + gender);
+                                    Log.d(TAG, "Mobile: " + mobile);
+                                    Log.d(TAG, "Store Location: " + storeLocation);
+
+                                    if (storeName != null) {
+                                        storeMap.put(storeName, userUid);
                                     }
-
-                                    storeAdapter = new StoreAdapter(storeMap, (storeName, userUid) -> {
-                                        fetchAndDisplayStoreData(storeName, userUid);
-                                    });
-
-                                    storeRecyclerView.setAdapter(storeAdapter);
-                                    storeRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                                 }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                    // Handle errors during data retrieval
-                                    Log.e("Firebase", "Data retrieval error: " + databaseError.getMessage());
-                                    Toast.makeText(MainActivity.this, "Data retrieval error", Toast.LENGTH_SHORT).show();
+                                for (Map.Entry<String, String> entry : storeMap.entrySet()) {
+                                    Log.d(TAG, "Store Name: " + entry.getKey() + ", User UID: " + entry.getValue());
                                 }
-                            });
-                        } else {
-                            // The user does not have the role of "customer." Handle this case.
-                            Log.d(TAG, "User does not have the role of 'customer'");
-                            Toast.makeText(MainActivity.this, "You do not have the role of 'customer'", Toast.LENGTH_SHORT).show();
-                        }
+
+                                storeAdapter = new StoreAdapter(MainActivity.this, storeMap, (storeName, userUid) -> {
+                                    // Handle the click event, start the new activity
+                                    navigateToStoreProducts(storeName, userUid);
+                                });
+
+
+                                storeRecyclerView.setAdapter(storeAdapter);
+                                storeRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.e("Firebase", "Data retrieval error: " + databaseError.getMessage());
+                                Toast.makeText(MainActivity.this, "Data retrieval error", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     } else {
-                        // Handle the case where "role" child doesn't exist
-                        // ...
+                        Log.d(TAG, "User is not a customer.");
+                        Toast.makeText(MainActivity.this, "You are not a customer", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    // Handle the case where the dataSnapshot doesn't exist
-                    // ...
+                    Log.d(TAG, "DataSnapshot does not exist for the current user.");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors during role check
                 Log.e("Firebase", "Role check error: " + databaseError.getMessage());
                 Toast.makeText(MainActivity.this, "Role check error", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private void navigateToStoreProducts(String storeName, String userUid) {
+        Intent intent = new Intent(this, CustomerStoreProductActivity.class);
+        intent.putExtra("storeName", storeName);
+        Log.d(TAG, "Navigate Store Name: " + storeName);
+        intent.putExtra("userUid", userUid);
+        Log.d(TAG, "Navigate User UID: " + userUid);
+        startActivity(intent);
+    }
+
+
     private void fetchAndDisplayStoreData(String storeName, String userUid) {
+        selectedStoreName = storeName;
+        selectedUserUid = userUid;
         // Fetch product information for the selected store based on storeName and userUid
         DatabaseReference productReference = FirebaseDatabase.getInstance().getReference("ProductInventory");
 
@@ -208,8 +229,10 @@ public class MainActivity extends AppCompatActivity {
         private HashMap<String, String> storeMap;
         private List<PointOfSaleActivity.Product> products;
         private StoreClickListener clickListener;
+        private Context context;
 
-        public StoreAdapter(HashMap<String, String> storeMap, StoreClickListener clickListener) {
+        public StoreAdapter(Context context, HashMap<String, String> storeMap, StoreClickListener clickListener) {
+            this.context = context;
             this.storeMap = storeMap;
             this.clickListener = clickListener;
             this.products = new ArrayList<>();
@@ -275,25 +298,23 @@ public class MainActivity extends AppCompatActivity {
                 storeNameTextView.setText(storeName);
             }
         }
+
+        public class Store {
+            private String storeName;
+            private String userUid;
+
+            public Store(String storeName, String userUid) {
+                this.storeName = storeName;
+                this.userUid = userUid;
+            }
+
+            public String getStoreName() {
+                return storeName;
+            }
+
+            public String getUserUid() {
+                return userUid;
+            }
+        }
     }
-
-    public class Store {
-        private String storeName;
-        private String userUid;
-
-        public Store(String storeName, String userUid) {
-            this.storeName = storeName;
-            this.userUid = userUid;
-        }
-
-        public String getStoreName() {
-            return storeName;
-        }
-
-        public String getUserUid() {
-            return userUid;
-        }
-    }
-
-
 }

@@ -9,11 +9,11 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_WRITE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.CAMERA" />
-
-
 
     <application
         android:allowBackup="true"
@@ -25,6 +25,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.Light"
         tools:targetApi="31">
+        <activity
+            android:name=".CustomerStoreProductActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -34,25 +42,28 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <activity
             android:name=".ViewProductActivity"
-            android:exported="false" >
+            android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ManageInventoryActivity" />
         </activity>
-        <activity android:name=".QRCodeViewScannerActivity"
+        <activity
+            android:name=".QRCodeViewScannerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ViewProductActivity" />
+
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".AddToCartActivity"
-            android:exported="false" >
+            android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".PointOfSaleActivity" />
@@ -65,11 +76,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ManageInventoryActivity" />
         </activity>
-        <activity android:name=".QRCodeDeleteScannerActivity"
+        <activity
+            android:name=".QRCodeDeleteScannerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DeleteProductActivity" />
+
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -82,11 +95,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ManageInventoryActivity" />
         </activity>
-        <activity android:name=".QRCodeScannerActivity"
+        <activity
+            android:name=".QRCodeScannerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UpdateProductActivity" />
+
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -107,11 +122,13 @@
         <activity
             android:name=".PointOfSaleActivity"
             android:exported="false" />
-        <activity android:name=".QRCodePOSScannerActivity"
+        <activity
+            android:name=".QRCodePOSScannerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".PointOfSaleActivity" />
+
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

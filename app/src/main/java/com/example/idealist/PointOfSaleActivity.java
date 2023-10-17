@@ -572,7 +572,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
                     }
                 } else {
                     // User role data does not exist, handle it as needed
-                    Toast.makeText(PointOfSaleActivity.this, "User role not found.", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(PointOfSaleActivity.this, "User role not found.", Toast.LENGTH_LONG).show();
                 }
             }
 

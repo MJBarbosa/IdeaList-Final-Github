@@ -465,7 +465,7 @@ public class AddToCartActivity extends AppCompatActivity {
                 } else {
                     // User role data does not exist, handle it as needed
                     Log.d(TAG, "User role data not found.");
-                    Toast.makeText(AddToCartActivity.this, "User role not found.", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(AddToCartActivity.this, "User role not found.", Toast.LENGTH_LONG).show();
                 }
             }
 

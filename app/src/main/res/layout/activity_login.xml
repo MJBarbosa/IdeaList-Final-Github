@@ -72,6 +72,7 @@
             android:layout_width="30dp"
             android:layout_height="32dp"
             android:id="@+id/imageViewShowHidePwd"
+            android:layout_alignParentRight="true"
             android:layout_below="@+id/textViewLoginPassword"/>
 
         <EditText
@@ -79,7 +80,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/editTextLoginPassword"
             android:hint="Enter Password"
-            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
             android:inputType="textPassword"
             android:padding="6dp"
             android:textSize="16dp"

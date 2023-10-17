@@ -43,8 +43,7 @@
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="2"
-                android:layout_below="@id/autoCompleteTextViewCustomerSearch"
-                android:background="@drawable/tabel_border"/>
+                android:layout_below="@id/autoCompleteTextViewCustomerSearch" />
 
     </RelativeLayout>
 </ScrollView>

@@ -1,37 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="150dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="8dp"
     app:cardElevation="4dp"
-    app:cardCornerRadius="8dp">
+    app:cardCornerRadius="8dp"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="130dp"
         android:padding="15dp"
-        android:background="@drawable/tabel_border">
+        android:background="@drawable/tabel_border"
+        android:backgroundTint="@color/blue_main"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
         <ImageView
             android:id="@+id/imageViewStore"
-            android:layout_width="130dp"
-            android:layout_height="140dp"
+            android:layout_width="120dp"
+            android:layout_height="100dp"
             android:contentDescription="Store Picture"
             android:background="@drawable/default_product_image"
-            android:layout_centerHorizontal="true" />
+            android:layout_alignParentLeft="true" />
 
         <TextView
             android:id="@+id/textViewStoreNameCus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Store Name"
-            android:layout_below="@id/imageViewStore"
+            android:layout_toRightOf="@id/imageViewStore"
             android:gravity="center"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="15dp"
+            android:layout_marginLeft="5dp"
+            android:padding="15dp"
             android:background="@color/orange_main"
-            android:layout_marginTop="8dp" />
+            android:layout_centerVertical="true" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
