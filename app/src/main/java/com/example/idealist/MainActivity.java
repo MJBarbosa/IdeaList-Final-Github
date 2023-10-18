@@ -30,6 +30,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,10 +51,13 @@ public class MainActivity extends AppCompatActivity {
     private String selectedStoreName;
     private String selectedUserUid;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getSupportActionBar().setTitle("IdealList");
 
         authProfile = FirebaseAuth.getInstance();
         textView = findViewById(R.id.textView);
@@ -116,10 +122,9 @@ public class MainActivity extends AppCompatActivity {
                                 }
 
                                 storeAdapter = new StoreAdapter(MainActivity.this, storeMap, (storeName, userUid) -> {
-                                    // Handle the click event, start the new activity
+                                    // Handle the click event or navigation if needed
                                     navigateToStoreProducts(storeName, userUid);
                                 });
-
 
                                 storeRecyclerView.setAdapter(storeAdapter);
                                 storeRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
@@ -147,6 +152,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
 
     private void navigateToStoreProducts(String storeName, String userUid) {
         Intent intent = new Intent(this, CustomerStoreProductActivity.class);
@@ -280,10 +288,14 @@ public class MainActivity extends AppCompatActivity {
 
         class StoreViewHolder extends RecyclerView.ViewHolder {
             private TextView storeNameTextView;
+            private FirebaseStorage storage;
+            private ImageView imageView;
 
             StoreViewHolder(@NonNull View itemView) {
                 super(itemView);
                 storeNameTextView = itemView.findViewById(R.id.textViewStoreNameCus);
+                storage = FirebaseStorage.getInstance();
+                imageView = itemView.findViewById(R.id.imageViewStore);
 
                 itemView.setOnClickListener(v -> {
                     int position = getAdapterPosition();
@@ -296,6 +308,31 @@ public class MainActivity extends AppCompatActivity {
 
             void bind(String storeName, String userUid) {
                 storeNameTextView.setText(storeName);
+                displayStoreImage(userUid, storeName, storeMap);
+            }
+            private void displayStoreImage(String userUid, String storeName, Map<String, String> storeMap) {
+                String storeOwnerUid = storeMap.get(storeName);
+
+                if (storeOwnerUid != null && userUid.equals(storeOwnerUid)) {
+                    // Create a reference to the specific image in the "DisplayPics" folder
+                    StorageReference imageRef = storage.getReference().child("DisplayPics/" + userUid + "/displaypic.jpg");
+
+                    // Get the download URL for the image
+                    imageRef.getDownloadUrl()
+                            .addOnSuccessListener(uri -> {
+                                // Load the image into the ImageView using a library like Picasso or Glide
+                                Picasso.get().load(uri).into(imageView);
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle any errors that may occur
+                                Log.e(TAG, "Error getting image URL: " + e.getMessage());
+                                // You can set a default image or show an error message here
+                            });
+                } else {
+                    // Handle the case where the userUids don't match (e.g., no permission)
+                    Log.e(TAG, "UserUid does not match storeName.");
+                    // You can set a default image or show an error message here
+                }
             }
         }
 
