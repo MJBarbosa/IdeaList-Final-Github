@@ -119,7 +119,7 @@ public class AddToCartActivity extends AppCompatActivity {
             String[] cartItemParts = cartItem.split(",");
             // Extract product details from cartItemParts and create a Product object
             PointOfSaleActivity.Product product = new PointOfSaleActivity.Product(
-                    cartItemParts[0], cartItemParts[1], cartItemParts[2], cartItemParts[3], cartItemParts[4]
+                    cartItemParts[0], cartItemParts[1], cartItemParts[2], cartItemParts[3], cartItemParts[4], cartItemParts[5]
             );
             updatedCartItems.add(product);
         }
@@ -141,6 +141,7 @@ public class AddToCartActivity extends AppCompatActivity {
             String category = cartItemParts[2];
             String productQuantity = cartItemParts[3];
             String productPrice = cartItemParts[4];
+            String productId = cartItemParts[5];
 
             // Extract Quantity as int
             int quantity = 0;
@@ -193,7 +194,7 @@ public class AddToCartActivity extends AppCompatActivity {
 
             // Create a Product object with the extracted values
             PointOfSaleActivity.Product product = new PointOfSaleActivity.Product(
-                    productName, productDesc, category, productQuantity, productPrice
+                    productName, productDesc, category, productQuantity, productPrice, productId
             );
             cartItems.add(product);
 

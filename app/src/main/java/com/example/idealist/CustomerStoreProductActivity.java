@@ -26,6 +26,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +38,7 @@ import java.util.List;
 public class CustomerStoreProductActivity extends AppCompatActivity {
     private RecyclerView productsRecyclerView;
     private ProductsAdapter productsAdapter;
+    private String selectedUserUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,7 @@ public class CustomerStoreProductActivity extends AppCompatActivity {
         // No need for the query since you're directly accessing the user's products
         Log.d(TAG, "Fetching products for User UID: " + userUid);
 
+
         productReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -78,25 +84,29 @@ public class CustomerStoreProductActivity extends AppCompatActivity {
                     HashMap<String, String> productData = (HashMap<String, String>) productSnapshot.getValue();
 
                     if (productData != null) {
+                        String productId = productData.get("productId");
                         String productName = productData.get("productName");
                         String productDescription = productData.get("productDescription");
                         String category = productData.get("category");
                         String quantity = productData.get("quantity");
                         String productPrice = productData.get("price");
 
+                        Log.d(TAG, "Product ID: " + productId);
                         Log.d(TAG, "Product Name: " + productName);
                         Log.d(TAG, "Product Description: " + productDescription);
                         Log.d(TAG, "Category: " + category);
                         Log.d(TAG, "Quantity: " + quantity);
                         Log.d(TAG, "Product Price: " + productPrice);
 
-                        PointOfSaleActivity.Product product = new PointOfSaleActivity.Product(productName, productDescription, category, quantity, productPrice);
+                        PointOfSaleActivity.Product product = new PointOfSaleActivity.Product(productName, productDescription, category, quantity, productPrice, productId);
                         productList.add(product);
                     }
                 }
 
                 // Set the product list to the adapter
                 productsAdapter.setProductList(productList);
+                selectedUserUid = userUid;
+                Log.d(TAG, "Selected userUid: " + selectedUserUid);
             }
 
             @Override
@@ -183,8 +193,36 @@ public class CustomerStoreProductActivity extends AppCompatActivity {
                 quantity.setText(product.getQuantity());
                 price.setText(product.getPrice());
 
-                // You can load the product image here using a library like Picasso or Glide
-                // Example: Picasso.get().load(product.getImageUrl()).into(productImage);
+                displayProductImage(product, productImage); // Pass the product and ImageView
+
+            }
+
+            private void displayProductImage(PointOfSaleActivity.Product product, ImageView imageView) {
+                // Retrieve userUid and productId from the product
+                String userUid = selectedUserUid;
+                String productId = product.getProductId();
+
+                // Create a reference to the specific image in the "ProductImages" folder
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference imageRef = storage.getReference().child("ProductImages/" + userUid + "/" + productId);
+
+                Log.d(TAG, "UserUid Image: " + userUid);
+                Log.d(TAG, "Product ID Image: " + productId);
+                // Get the download URL for the image
+                imageRef.getDownloadUrl()
+                        .addOnSuccessListener(uri -> {
+                            // Load the image into the ImageView using Picasso
+                            Picasso.get().load(uri).into(imageView);
+                        })
+                        .addOnFailureListener(e -> {
+                            if (e instanceof StorageException && ((StorageException) e).getErrorCode() == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                                // Handle the case where the file does not exist
+                                Log.e(TAG, "Image does not exist at location.");
+                            } else {
+                                // Handle other errors
+                                Log.e(TAG, "Error getting image URL: " + e.getMessage());
+                            }
+                        });
             }
         }
     }

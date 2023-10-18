@@ -184,8 +184,9 @@ public class MainActivity extends AppCompatActivity {
                     String category = productSnapshot.child("category").getValue(String.class);
                     String quantity = productSnapshot.child("quantity").getValue(String.class);
                     String productPrice = productSnapshot.child("productPrice").getValue(String.class);
+                    String productId = productSnapshot.child("productId").getValue(String.class);
 
-                    products.add(new PointOfSaleActivity.Product(productName, productDescription, category, quantity, productPrice));
+                    products.add(new PointOfSaleActivity.Product(productName, productDescription, category, quantity, productPrice, productId));
                 }
 
                 // Update the RecyclerView with the products

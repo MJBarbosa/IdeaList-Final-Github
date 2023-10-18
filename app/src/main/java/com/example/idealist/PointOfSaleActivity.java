@@ -684,12 +684,13 @@ public class PointOfSaleActivity extends AppCompatActivity {
 
         // Constructors, getters, setters, and other methods go here
         // Constructor with five string parameters
-        public Product(String productName, String productDescription, String category, String quantity, String price) {
+        public Product(String productName, String productDescription, String category, String quantity, String price, String productId) {
             this.productName = productName;
             this.productDescription = productDescription;
             this.category = category;
             this.quantity = quantity;
             this.price = price;
+            this.productId = productId;
 
             // Initialize the additional fields
             try {
