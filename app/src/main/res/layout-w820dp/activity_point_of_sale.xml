@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PointOfSaleActivity">
+
+    <!-- FrameLayout to contain the existing content -->
+    <FrameLayout
+        android:id="@+id/frameLayoutContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/bottom_navigation"
+        android:layout_alignParentTop="true">
+
+        <!-- ScrollView for existing content -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scrollView"
+            android:backgroundTint="@color/blue_main"
+            android:background="@drawable/ic_white_bg_logo">
+
+            <!-- RelativeLayout for product content -->
+            <RelativeLayout
+                android:layout_width="1500dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:layout_margin="15dp"
+                android:background="@color/light_gray">
+
+                <!-- AutoCompleteTextView for search -->
+                <AutoCompleteTextView
+                    android:id="@+id/autoCompleteTextViewPOSSearch"
+                    android:layout_width="1000dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="wrap_content"
+                    android:hint="Search"
+                    android:layout_marginTop="100dp"
+                    android:drawableStart="@drawable/ic_search"
+                    android:drawablePadding="8dp"
+                    android:completionThreshold="1"
+                    android:textSize="30dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/border" />
+
+                <!-- Button for search -->
+                <Button
+                    android:id="@+id/buttonQRScanner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/autoCompleteTextViewPOSSearch"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone"
+                    android:text="Scan" />
+
+                <ImageView
+                    android:id="@+id/imageViewPOSProductImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_below="@+id/buttonQRScanner"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="400dp"
+                    android:layout_marginRight="400dp"
+                    android:scaleType="centerCrop"
+                    android:text="Select Image"
+                    android:background="@drawable/default_product_image"
+                    android:contentDescription="Product Image" />
+
+                <!-- ProgressBar for loading -->
+                <ProgressBar
+                    android:id="@+id/progressBarViewPOSProduct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:elevation="10dp"
+                    android:visibility="gone" />
+
+                <!-- TextViews for displaying product details -->
+
+                <TextView
+                    android:id="@+id/textViewPOSProductName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageViewPOSProductImage"
+                    android:layout_marginTop="8dp"
+                    android:text="Product Name: "
+                    android:layout_marginLeft="400dp"
+                    android:textSize="30sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/textViewPOSProductDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewPOSProductName"
+                    android:layout_marginTop="8dp"
+                    android:text="Product Description: "
+                    android:layout_marginLeft="400dp"
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:id="@+id/textViewPOSCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewPOSProductDescription"
+                    android:layout_marginTop="8dp"
+                    android:text="Category: "
+                    android:layout_marginLeft="400dp"
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:id="@+id/textViewPOSPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewPOSCategory"
+                    android:layout_marginTop="8dp"
+                    android:text="Price: "
+                    android:layout_marginLeft="400dp"
+                    android:textSize="30sp" />
+
+                <!-- Quantity TextView and Buttons -->
+                <TextView
+                    android:id="@+id/textViewPOSQuantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewPOSPrice"
+                    android:layout_marginTop="10dp"
+                    android:textAlignment="center"
+                    android:text="Quantity: 0"
+                    android:layout_toLeftOf="@id/buttonIncreaseQuantity"
+                    android:layout_toRightOf="@id/buttonDecreaseQuantity"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="30sp"
+                    android:layout_centerHorizontal="true" />
+
+                <Button
+                    android:id="@+id/buttonDecreaseQuantity"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/textViewPOSPrice"
+                    android:layout_marginTop="8dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="500dp"
+                    android:background="@drawable/ic_decrease"/>
+
+                <Button
+                    android:id="@+id/buttonIncreaseQuantity"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/textViewPOSPrice"
+                    android:layout_marginTop="8dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="500dp"
+                    android:background="@drawable/ic_increase"/>
+
+
+                <!-- Button for generating QR -->
+                <Button
+                    android:id="@+id/buttonAddToCart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/buttonIncreaseQuantity"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"
+                    android:textSize="30dp"
+                    android:text="Add To Cart"
+                    android:layout_alignParentRight="true"
+                    android:backgroundTint="@color/orange_main"
+                    android:layout_marginRight="400dp"/>
+
+                <Button
+                    android:id="@+id/buttonClearFields"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/buttonDecreaseQuantity"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"
+                    android:textSize="30dp"
+                    android:text="Clear"
+                    android:backgroundTint="@color/orange_main"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="400dp"/>
+
+                <TextView
+                    android:id="@+id/invisibleProductIdTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/buttonAddToCart"
+                    android:visibility="gone"
+                    android:clickable="false"
+                    android:text="This is an invisible TextView" />
+
+
+            </RelativeLayout>
+        </ScrollView>
+    </FrameLayout>
+
+    <!-- Bottom Navigation View -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/orange_main"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_store_owner" />
+
+</RelativeLayout>

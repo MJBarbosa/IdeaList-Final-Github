@@ -239,7 +239,13 @@
         </activity>
         <activity
             android:name=".LoginAsStoreOwner"
-            android:exported="false" />
+            android:exported="false">
+            <!-- Desktop Landing Page -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".RegisterActivity"
             android:exported="false">
@@ -260,7 +266,6 @@
             android:theme="@style/Theme.Material3.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -10,12 +10,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -50,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     // Create a member variable to store the selected store information
     private String selectedStoreName;
     private String selectedUserUid;
+    private AutoCompleteTextView autoCompleteTextView;
+    private Map<String, StoreAdapter.Store> storeMap = new HashMap<>();
 
 
     @Override
@@ -73,6 +79,53 @@ public class MainActivity extends AppCompatActivity {
             textView.setText(firebaseUser.getEmail());
             fetchStoreOwnerData();
         }
+
+        // Initialize the AutoCompleteTextView
+        autoCompleteTextView = findViewById(R.id.autoCompleteTextViewCustomerSearch);
+
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed, but must be implemented.
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // This method is called whenever the text in the AutoCompleteTextView changes.
+                // You can use it to filter the store names.
+                filterStoreNames(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Not needed, but must be implemented.
+            }
+        });
+
+    }
+
+    private void filterStoreNames(String userInput) {
+        List<String> filteredStoreNames = new ArrayList<>();
+
+        for (StoreAdapter.Store store : storeMap.values()) {
+            if (store.getStoreName().toLowerCase().contains(userInput.toLowerCase())) {
+                filteredStoreNames.add(store.getStoreName());
+            }
+        }
+
+        // Create a new ArrayAdapter with the filtered store names and set it to the AutoCompleteTextView
+        ArrayAdapter<String> filteredAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, filteredStoreNames);
+        autoCompleteTextView.setAdapter(filteredAdapter);
+    }
+
+
+    // Get a list of product names for the AutoCompleteTextView
+    private List<String> getStoreName() {
+        List<String> storeNames = new ArrayList<>();
+        for (StoreAdapter.Store store : storeMap.values()) {
+            storeNames.add(store.getStoreName());
+        }
+        return storeNames;
     }
 
     private void fetchStoreOwnerData() {

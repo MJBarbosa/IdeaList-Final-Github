@@ -8,22 +8,33 @@
     android:background="#CAC9CC">
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="700dp"
         android:layout_height="wrap_content"
         android:padding="15dp"
         android:layout_margin="15dp"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/imageViewLoginLogoSO"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="75dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/ic_white_bg_logo" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textViewLoginHead"
-            android:layout_marginTop="30dp"
+            android:layout_below="@id/imageViewLoginLogoSO"
             android:text="Login"
             android:fontFamily="@font/poppinsbold"
             android:gravity="center"
-            android:textColor="@color/colorAccent"
-            android:textSize="30dp"/>
+            android:textColor="@color/orange_main"
+            android:textSize="50dp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -31,6 +42,7 @@
             android:id="@+id/textViewLoginEmail"
             android:layout_marginTop="50dp"
             android:padding="6dp"
+            android:visibility="gone"
             android:layout_below="@+id/textViewLoginHead"
             android:text="Email*"
             android:textColor="#555555"
@@ -41,6 +53,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/editTextLoginEmail"
             android:hint="Enter Email"
+            android:visibility="gone"
             android:inputType="textEmailAddress"
             android:padding="6dp"
             android:textSize="16dp"
@@ -51,6 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textViewLoginPassword"
+            android:visibility="gone"
             android:layout_marginTop="10dp"
             android:layout_below="@+id/editTextLoginEmail"
             android:text="Password*"
@@ -61,6 +75,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="32dp"
+            android:visibility="gone"
             android:id="@+id/imageViewShowHidePwd"
             android:layout_below="@+id/textViewLoginPassword"/>
 
@@ -69,6 +84,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/editTextLoginPassword"
             android:hint="Enter Password"
+            android:visibility="gone"
             android:layout_marginStart="30dp"
             android:inputType="textPassword"
             android:padding="6dp"
@@ -80,6 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Login"
+            android:visibility="gone"
             android:id="@+id/buttonLogin"
             android:layout_below="@+id/editTextLoginPassword"
             android:layout_marginTop="50dp"
@@ -88,6 +105,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_below="@+id/buttonLogin"
             android:id="@+id/textInputLayoutLogin">
 
@@ -116,13 +134,12 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Login As Store Owner"
+            android:layout_height="100dp"
             android:id="@+id/textViewLoginAsSO"
-            android:layout_below="@+id/textInputLayoutLogin"
+            android:layout_below="@+id/textViewLoginHead"
             android:gravity="center"
             android:layout_marginTop="16dp"
-            android:textSize="16dp"
+            android:background="@drawable/login_button"
             android:textStyle="bold"/>
 
         <ProgressBar

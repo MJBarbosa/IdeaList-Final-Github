@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddProductActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_margin="15dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewAddInventoryHead"
+            android:layout_marginTop="30dp"
+            android:text="Please Enter Item Details to Add Item on the App Inventory"
+            android:textAlignment="center"
+            android:textSize="35sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:id="@+id/relativeLayoutAddProductImage"
+            android:background="@drawable/black_border"
+            android:layout_below="@+id/textViewAddInventoryHead"
+            android:layout_toRightOf="@id/relativeLayoutAddProduct"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp">
+
+        <ImageButton
+            android:id="@+id/imageButtonAddProductImage"
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:scaleType="centerCrop"
+            android:text="Select Image"
+            android:background="@drawable/default_product_image"
+            android:contentDescription="Product Image" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="700dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/relativeLayoutAddProduct"
+            android:layout_below="@id/textViewAddInventoryHead"
+            android:background="@drawable/black_border"
+            android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewAddProductId"
+            android:text="Product ID*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextAddProductId"
+            android:hint="Enter Product ID"
+            android:inputType="text|number"
+            android:textSize="25sp"
+            android:padding="6dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@+id/textViewAddProductId"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewAddProductName"
+            android:layout_below="@+id/editTextAddProductId"
+            android:text="Product Name*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextAddProductName"
+            android:hint="Enter Product Name"
+            android:inputType="text"
+            android:textSize="25sp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewAddProductName"
+            android:background="@drawable/border"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewAddSuppName"
+            android:layout_below="@+id/editTextAddProductName"
+            android:text="Supplier Name*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextAddSuppName"
+            android:hint="Enter Supplier Name"
+            android:inputType="textPersonName"
+            android:textSize="25sp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewAddSuppName"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewAddCategory"
+            android:layout_below="@+id/editTextAddSuppName"
+            android:text="Category*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutSpinnerAddCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewAddCategory">
+
+            <Spinner
+                android:id="@+id/spinnerAddCategory"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="10dp"
+                android:hint="Select a Category" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewAddProductDesc"
+            android:layout_below="@+id/textInputLayoutSpinnerAddCategory"
+            android:text="Description*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextAddProductDesc"
+            android:hint="Enter Color (Size)"
+            android:inputType="text"
+            android:textSize="25sp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewAddProductDesc"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewAddQuantity"
+            android:layout_below="@+id/editTextAddProductDesc"
+            android:text="Quantity*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextAddQuantity"
+            android:hint="Enter Quantity"
+            android:inputType="number"
+            android:textSize="25sp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewAddQuantity"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewAddPrice"
+            android:layout_below="@+id/editTextAddQuantity"
+            android:text="Price*"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextAddPrice"
+            android:hint="Enter Price (₱0.00)"
+            android:inputType="numberDecimal"
+            android:textSize="25sp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewAddPrice"
+            android:background="@drawable/border"/>
+
+        </RelativeLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="320dp"
+            android:layout_marginRight="320dp"
+            android:layout_below="@+id/relativeLayoutAddProductImage"
+            android:layout_marginTop="50dp"
+            android:layout_toRightOf="@id/relativeLayoutAddProduct"
+            android:text="Add"
+            android:textSize="35sp"
+            android:backgroundTint="@color/orange_main"
+            android:id="@+id/buttonAddProduct"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBarAddProduct"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="10dp"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+</ScrollView>

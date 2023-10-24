@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -548,6 +553,7 @@ public class AddToCartActivity extends AppCompatActivity {
         // ViewHolder for each cart item in RecyclerView
         class CartViewHolder extends RecyclerView.ViewHolder {
 
+            private ImageView productImage;
             private TextView productNameTextView;
             private TextView productDescriptionTextView;
             private TextView productCategoryTextView;
@@ -556,6 +562,7 @@ public class AddToCartActivity extends AppCompatActivity {
 
             public CartViewHolder(@NonNull View itemView) {
                 super(itemView);
+                productImage = itemView.findViewById(R.id.itemDefaultImageView);
                 productNameTextView = itemView.findViewById(R.id.itemNameTextView);
                 productDescriptionTextView = itemView.findViewById(R.id.itemDescriptionTextView);
                 productCategoryTextView = itemView.findViewById(R.id.itemCategoryTextView);
@@ -569,6 +576,36 @@ public class AddToCartActivity extends AppCompatActivity {
                 productCategoryTextView.setText(product.getCategory());
                 productQuantityTextView.setText(product.getQuantity());
                 productPriceTextView.setText(product.getPrice());
+
+                displayProductImage(product, productImage);
+            }
+
+            private void displayProductImage(PointOfSaleActivity.Product product, ImageView imageView) {
+                // Retrieve userUid and productId from the product
+                String userUid = getCurrentUserUid();
+                String productId = product.getProductId();
+
+                // Create a reference to the specific image in the "ProductImages" folder
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference imageRef = storage.getReference().child("ProductImages/" + userUid + "/" + productId);
+
+                Log.d(TAG, "UserUid Image: " + userUid);
+                Log.d(TAG, "Product ID Image: " + productId);
+                // Get the download URL for the image
+                imageRef.getDownloadUrl()
+                        .addOnSuccessListener(uri -> {
+                            // Load the image into the ImageView using Picasso
+                            Picasso.get().load(uri).into(imageView);
+                        })
+                        .addOnFailureListener(e -> {
+                            if (e instanceof StorageException && ((StorageException) e).getErrorCode() == StorageException.ERROR_OBJECT_NOT_FOUND) {
+                                // Handle the case where the file does not exist
+                                Log.e(TAG, "Image does not exist at location.");
+                            } else {
+                                // Handle other errors
+                                Log.e(TAG, "Error getting image URL: " + e.getMessage());
+                            }
+                        });
             }
         }
     }
