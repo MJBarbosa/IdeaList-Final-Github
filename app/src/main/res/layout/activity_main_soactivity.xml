@@ -46,6 +46,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 
+                <!-- Wrap the GraphView with a HorizontalScrollView for horizontal scrolling -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_marginTop="300dp">
+
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/salesGraph"
+                        android:layout_width="wrap_content"
+                        android:layout_height="300dp"
+                        android:layout_marginLeft="10dp"/>
+                </RelativeLayout>
+
             </FrameLayout>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
