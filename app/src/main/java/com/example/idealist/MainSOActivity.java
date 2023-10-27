@@ -147,6 +147,11 @@ public class MainSOActivity extends AppCompatActivity {
         // Initialize the graph
         initializeGraph();
 
+        // Load data for each month
+        for (int month = 1; month <= 12; month++) {
+            loadSalesDataForYearAndMonth(currentYear, month);
+        }
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.menu_home_so);
 
@@ -210,13 +215,8 @@ public class MainSOActivity extends AppCompatActivity {
         calendar.set(currentYear, 11, 31, 23, 59, 59);
         long maxX = calendar.getTimeInMillis();
 
-        // Calculate the number of visible months based on screen width
-        int maxDataPoints = 12;
-        int pixelsPerDataPoint = (int) (maxX - minX) / maxDataPoints;
-        int maxVisibleRange = maxDataPoints;
-
-        // Calculate the minimum visible points based on screen width
-        int minDataPoints = maxVisibleRange;
+        // Set the Y-axis bounds to start from zero
+        viewport.setMinY(0);
 
         // Disable scrolling
         viewport.setScalable(false);
@@ -225,7 +225,6 @@ public class MainSOActivity extends AppCompatActivity {
         // Set the calculated bounds
         viewport.setMaxX(maxX);
         viewport.setMinX(minX);
-        viewport.setMaxY(calculateMaxSalesValue());
 
         // Implement a custom X-axis label formatter
         GridLabelRenderer gridLabel = salesGraph.getGridLabelRenderer();
@@ -248,10 +247,8 @@ public class MainSOActivity extends AppCompatActivity {
             }
         });
 
-        // Initialize the graph with data points by loading sales data for each month
-        for (int month = 1; month <= 12; month++) {
-            loadSalesDataForYearAndMonth(currentYear, month);
-        }
+        // Initialize the graph with zero data points
+        series.resetData(new DataPoint[]{new DataPoint(minX, 0)});
     }
 
     private void loadSalesDataForYearAndMonth(int year, int month) {
@@ -329,6 +326,12 @@ public class MainSOActivity extends AppCompatActivity {
     }
 
     private void updateGraphView() {
+        // Ensure that the series starts from zero
+        if (dataPoints.size() > 0) {
+            // Add a data point at the beginning with a Y-value of 0
+            dataPoints.add(0, new DataPoint(dataPoints.get(0).getX(), 0));
+        }
+
         // Set the maximum Y value for the graph
         salesGraph.getViewport().setMaxY(maxSalesValue);
 
