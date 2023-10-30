@@ -147,10 +147,12 @@ public class MainSOActivity extends AppCompatActivity {
         // Initialize the graph
         initializeGraph();
 
-        // Load data for each month
+        // Inside the onCreate method, modify the loop for loading data:
         for (int month = 1; month <= 12; month++) {
+            dataPoints.clear(); // Clear the dataPoints list for each month
             loadSalesDataForYearAndMonth(currentYear, month);
         }
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.menu_home_so);
@@ -321,8 +323,10 @@ public class MainSOActivity extends AppCompatActivity {
 
     private String formatXLabel(long timestamp) {
         // Convert the timestamp to a readable date format with month names
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timestamp);
         SimpleDateFormat sdf = new SimpleDateFormat("MMM");
-        return sdf.format(new Date(timestamp));
+        return sdf.format(calendar.getTime());
     }
 
     private void updateGraphView() {

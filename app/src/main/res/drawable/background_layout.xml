@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background with blur -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#99FFFFFF"/> <!-- 60% white with 99 as alpha -->
+        </shape>
+    </item>
+
+    <!-- Border -->
+    <item android:left="1dp" android:right="1dp" android:top="1dp" android:bottom="1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#4CFFFFFF"/> <!-- 30% white with 4C as alpha -->
+        </shape>
+    </item>
+</layer-list>

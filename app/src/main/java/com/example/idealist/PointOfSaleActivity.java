@@ -681,6 +681,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
         // Additional fields to store calculated numeric values
         private int intQuantity;
         private double doublePrice;
+        private double total;
 
         // Constructors, getters, setters, and other methods go here
         // Constructor with five string parameters
@@ -691,6 +692,7 @@ public class PointOfSaleActivity extends AppCompatActivity {
             this.quantity = quantity;
             this.price = price;
             this.productId = productId;
+            this.total = 0.0;
 
             // Initialize the additional fields
             try {
@@ -715,6 +717,15 @@ public class PointOfSaleActivity extends AppCompatActivity {
             product.setQuantity(quantity);
             product.setPrice(price);
             return product;
+        }
+
+        // Getter and setter methods for itemTotal
+        public double getTotal() {
+            return total;
+        }
+
+        public void setTotal(double total) {
+            this.total = total;
         }
 
         public int getIntQuantity() {

@@ -136,6 +136,7 @@ public class AddToCartActivity extends AppCompatActivity {
     private void calculateAndDisplayTotalFromSharedPreferences() {
         Set<String> cartItemsSet = sharedPreferences.getStringSet(CART_ITEMS_KEY, new HashSet<>());
         List<PointOfSaleActivity.Product> cartItems = new ArrayList<>();
+        total = 0.0; // Reset the total
 
         for (String cartItem : cartItemsSet) {
             String[] cartItemParts = cartItem.split(",");
@@ -212,6 +213,7 @@ public class AddToCartActivity extends AppCompatActivity {
         // Update the totalTextView with the calculated total
         totalTextView.setText("Total: ₱" + formatPrice(total));
     }
+
     private String formatPrice(double price) {
         // Format the price with two decimal places
         DecimalFormat decimalFormat = new DecimalFormat("#0.00");
@@ -260,6 +262,17 @@ public class AddToCartActivity extends AppCompatActivity {
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     Log.e(TAG, "Invalid quantity format for product: " + productQuantity);
+                }
+
+                // Check if the quantityChanged flag is set for the corresponding CartViewHolder
+                for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                    CartAdapter.CartViewHolder cartViewHolder = (CartAdapter.CartViewHolder) recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
+                    if (cartViewHolder.quantityChanged) {
+                        // Use the updated quantity
+                        cartViewHolder.quantityChanged = false; // Reset the flag
+                        quantity = cartViewHolder.currentQuantity;
+                        break;
+                    }
                 }
 
                 // Extract Price as double
@@ -512,9 +525,19 @@ public class AddToCartActivity extends AppCompatActivity {
     private class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
         private List<PointOfSaleActivity.Product> cartItems;
+        private double total;
 
         public CartAdapter(List<PointOfSaleActivity.Product> cartItems) {
             this.cartItems = cartItems;
+            this.total = calculateTotalPrice(cartItems);
+        }
+
+        private double calculateTotalPrice(List<PointOfSaleActivity.Product> items) {
+            double newTotal = 0.0;
+            for (PointOfSaleActivity.Product cartItem : items) {
+                newTotal += cartItem.getTotal();
+            }
+            return newTotal;
         }
 
         public void clearCart() {
@@ -559,6 +582,12 @@ public class AddToCartActivity extends AppCompatActivity {
             private TextView productCategoryTextView;
             private TextView productQuantityTextView;
             private TextView productPriceTextView;
+            // Find the buttons
+            private Button buttonIncreaseQuantity;
+            private Button buttonDecreaseQuantity;
+            private int currentQuantity = 0;
+            private boolean quantityChanged = false;
+            private boolean quantityChangeInProgress = false;
 
             public CartViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -568,17 +597,111 @@ public class AddToCartActivity extends AppCompatActivity {
                 productCategoryTextView = itemView.findViewById(R.id.itemCategoryTextView);
                 productQuantityTextView = itemView.findViewById(R.id.itemQuantityTextView);
                 productPriceTextView = itemView.findViewById(R.id.itemPriceTextView);
+                buttonDecreaseQuantity = itemView.findViewById(R.id.buttonCartItemLayoutDec);
+                buttonIncreaseQuantity = itemView.findViewById(R.id.buttonCartItemLayoutInc);
+
+                buttonIncreaseQuantity.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!quantityChangeInProgress) {
+                            quantityChangeInProgress = true;
+                            incrementQuantity();
+                            quantityChanged = true;
+                            updateCartItemsList();
+                            quantityChangeInProgress = false;
+                        }
+                    }
+                });
+
+// Set a click listener for the "Decrease Quantity" button
+                buttonDecreaseQuantity.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!quantityChangeInProgress) {
+                            quantityChangeInProgress = true;
+                            decrementQuantity();
+                            quantityChanged = true;
+                            updateCartItemsList();
+                            quantityChangeInProgress = false;
+                        }
+                    }
+                });
+            }
+
+            private double extractPriceFromString(String priceString) {
+                try {
+                    String[] priceParts = priceString.split(":");
+                    if (priceParts.length == 2) {
+                        String priceValue = priceParts[1].trim();
+                        return Double.parseDouble(priceValue);
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Invalid price format for product: " + priceString);
+                }
+                return 0.0; // Return 0.0 for any errors
+            }
+
+            private int extractQuantityFromString(String quantityString) {
+                try {
+                    String[] quantityParts = quantityString.split(":");
+                    if (quantityParts.length == 2) {
+                        String quantityValue = quantityParts[1].trim();
+                        return Integer.parseInt(quantityValue);
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "Invalid quantity format for product: " + quantityString);
+                }
+                return 0; // Return 0 for any errors
+            }
+
+
+            private void updateQuantityTextView() {
+                // Just update the text of the existing textViewPOSQuantity
+                productQuantityTextView.setText("Quantity: " + currentQuantity);
+            }
+
+            private void decrementQuantity() {
+                if (currentQuantity > 0) {
+                    currentQuantity--;
+                    updateQuantityTextView();
+                    updateCartItemsList();
+                }
+            }
+
+            private void incrementQuantity() {
+                if (currentQuantity >= 0) {
+                    currentQuantity++;
+                    updateQuantityTextView();
+                    updateCartItemsList();
+                }
+            }
+
+            private void updateCartItemsList() {
+                PointOfSaleActivity.Product product = cartItems.get(getAdapterPosition());
+                int quantity = currentQuantity;
+                double price = extractPriceFromString(product.getPrice());
+                double itemTotal = quantity * price;
+                product.setTotal(itemTotal);
+                total = calculateTotalPrice(cartItems);
+                totalTextView.setText("Total: ₱" + formatPrice(total));
             }
 
             public void bind(PointOfSaleActivity.Product product) {
                 productNameTextView.setText(product.getProductName());
                 productDescriptionTextView.setText(product.getProductDescription());
                 productCategoryTextView.setText(product.getCategory());
-                productQuantityTextView.setText(product.getQuantity());
+                // Set the currentQuantity directly from the product's quantity
+                currentQuantity = extractQuantityFromString(product.getQuantity());
+                // Update the productQuantityTextView with the current quantity
+                productQuantityTextView.setText("Quantity: " + currentQuantity);
+
                 productPriceTextView.setText(product.getPrice());
 
                 displayProductImage(product, productImage);
             }
+
 
             private void displayProductImage(PointOfSaleActivity.Product product, ImageView imageView) {
                 // Retrieve userUid and productId from the product
