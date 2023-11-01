@@ -83,7 +83,7 @@ public class AddToCartActivity extends AppCompatActivity {
         cartItems = intent.getParcelableArrayListExtra("cart");
 
         // Initialize the adapter and set it to the RecyclerView
-        cartAdapter = new CartAdapter(cartItems);
+        cartAdapter = new CartAdapter(cartItems, totalTextView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(cartAdapter);
 
@@ -136,7 +136,7 @@ public class AddToCartActivity extends AppCompatActivity {
     private void calculateAndDisplayTotalFromSharedPreferences() {
         Set<String> cartItemsSet = sharedPreferences.getStringSet(CART_ITEMS_KEY, new HashSet<>());
         List<PointOfSaleActivity.Product> cartItems = new ArrayList<>();
-        total = 0.0; // Reset the total
+        total = 0.0;
 
         for (String cartItem : cartItemsSet) {
             String[] cartItemParts = cartItem.split(",");
@@ -210,8 +210,8 @@ public class AddToCartActivity extends AppCompatActivity {
         // Log the calculated total
         Log.d(TAG, "Total: " + total);
 
-        // Update the totalTextView with the calculated total
         totalTextView.setText("Total: ₱" + formatPrice(total));
+
     }
 
     private String formatPrice(double price) {
@@ -241,6 +241,8 @@ public class AddToCartActivity extends AppCompatActivity {
             // Create a StringBuilder to build the receipt message
             StringBuilder receiptMessage = new StringBuilder();
             receiptMessage.append("Receipt:\n\n");
+
+            double totalAmount = 0.0;
 
             for (String cartItem : cartItemsSet) {
 
@@ -288,13 +290,16 @@ public class AddToCartActivity extends AppCompatActivity {
                     Log.e(TAG, "Invalid price format for product: " + productPrice);
                 }
 
+                double itemTotal = quantity * price; // Calculate item total
+                totalAmount += itemTotal;
+
                 // Build the receipt message with item details
                 receiptMessage.append("").append(productName).append("\n");
                 receiptMessage.append("").append(productDesc).append("\n");
                 receiptMessage.append("").append(category).append("\n");
                 receiptMessage.append("Quantity: ").append(quantity).append("\n");
                 receiptMessage.append("Price: ₱").append(price).append("\n\n");
-                receiptMessage.append("Total: ").append(total).append("\n\n");
+                receiptMessage.append("Total: ₱").append(itemTotal).append("\n\n"); // Calculate and display item total
 
                 // Create a transaction object (you can customize this based on your database structure)
                 Transaction transaction = new Transaction(
@@ -317,6 +322,9 @@ public class AddToCartActivity extends AppCompatActivity {
                 // You may call this function here or in a loop
                 //updateProductQuantity(product.getProductId(), quantity);
             }
+
+            // Add the total amount to the receipt message
+            receiptMessage.append("Total Amount: ₱").append(totalAmount).append("\n\n");
 
             // Clear the cart and display a success message
             clearCart();
@@ -526,10 +534,13 @@ public class AddToCartActivity extends AppCompatActivity {
 
         private List<PointOfSaleActivity.Product> cartItems;
         private double total;
+        private TextView totalTextView;
 
-        public CartAdapter(List<PointOfSaleActivity.Product> cartItems) {
+        public CartAdapter(List<PointOfSaleActivity.Product> cartItems, TextView totalTextView) {
             this.cartItems = cartItems;
             this.total = calculateTotalPrice(cartItems);
+            this.totalTextView = totalTextView;
+            updateTotalTextView();
         }
 
         private double calculateTotalPrice(List<PointOfSaleActivity.Product> items) {
@@ -540,9 +551,19 @@ public class AddToCartActivity extends AppCompatActivity {
             return newTotal;
         }
 
+        private void updateCartTotal() {
+            double newTotal = 0.0;
+            for (PointOfSaleActivity.Product cartItem : cartItems) {
+                newTotal += cartItem.getTotal();
+            }
+            total = newTotal;
+            updateTotalTextView();
+        }
+
         public void clearCart() {
             cartItems.clear();
             notifyDataSetChanged();
+            total = 0.0;
         }
 
         @NonNull
@@ -560,7 +581,9 @@ public class AddToCartActivity extends AppCompatActivity {
             holder.bind(product);
         }
 
-
+        private void updateTotalTextView() {
+            totalTextView.setText("Total: ₱" + formatPrice(total));
+        }
 
         @Override
         public int getItemCount() {
@@ -570,6 +593,8 @@ public class AddToCartActivity extends AppCompatActivity {
         public void updateCartItems(List<PointOfSaleActivity.Product> updatedCartItems) {
             // Update the cart items and refresh the adapter
             cartItems = updatedCartItems;
+            total = calculateTotalPrice(cartItems);
+            updateTotalTextView();
             notifyDataSetChanged();
         }
 
@@ -582,6 +607,7 @@ public class AddToCartActivity extends AppCompatActivity {
             private TextView productCategoryTextView;
             private TextView productQuantityTextView;
             private TextView productPriceTextView;
+            private TextView itemTotalTextView;
             // Find the buttons
             private Button buttonIncreaseQuantity;
             private Button buttonDecreaseQuantity;
@@ -599,6 +625,7 @@ public class AddToCartActivity extends AppCompatActivity {
                 productPriceTextView = itemView.findViewById(R.id.itemPriceTextView);
                 buttonDecreaseQuantity = itemView.findViewById(R.id.buttonCartItemLayoutDec);
                 buttonIncreaseQuantity = itemView.findViewById(R.id.buttonCartItemLayoutInc);
+                itemTotalTextView = itemView.findViewById(R.id.itemTotalTextView);
 
                 buttonIncreaseQuantity.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -607,7 +634,7 @@ public class AddToCartActivity extends AppCompatActivity {
                             quantityChangeInProgress = true;
                             incrementQuantity();
                             quantityChanged = true;
-                            updateCartItemsList();
+                            updateCartItemsList(true);
                             quantityChangeInProgress = false;
                         }
                     }
@@ -619,13 +646,46 @@ public class AddToCartActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if (!quantityChangeInProgress) {
                             quantityChangeInProgress = true;
-                            decrementQuantity();
-                            quantityChanged = true;
-                            updateCartItemsList();
+                            if (currentQuantity > 0) {
+                                decrementQuantity();
+                                quantityChanged = true;
+                            } else {
+                                // If quantity is zero, show a confirmation dialog to remove the item
+                                showRemoveItemDialog();
+                            }
+                            updateCartItemsList(true);
                             quantityChangeInProgress = false;
                         }
                     }
                 });
+            }
+
+            private void showRemoveItemDialog() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
+                builder.setTitle("Remove Item");
+                builder.setMessage("The quantity of this item is zero. Do you want to remove it from the cart?");
+                builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Remove the item from the cartItems list
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION && position < cartItems.size()) {
+                            cartItems.remove(position);
+                            notifyItemRemoved(position);
+                            notifyItemRangeChanged(position, cartItems.size());
+                            updateCartTotal();
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+            }
+
+            private void updateItemTotalTextView(PointOfSaleActivity.Product product) {
+                int quantity = currentQuantity;
+                double price = extractPriceFromString(product.getPrice());
+                double itemTotal = quantity * price;
+                itemTotalTextView.setText("Item Total: ₱" + formatPrice(itemTotal));
             }
 
             private double extractPriceFromString(String priceString) {
@@ -666,7 +726,8 @@ public class AddToCartActivity extends AppCompatActivity {
                 if (currentQuantity > 0) {
                     currentQuantity--;
                     updateQuantityTextView();
-                    updateCartItemsList();
+                    PointOfSaleActivity.Product product = cartItems.get(getAdapterPosition());
+                    updateItemTotalTextView(product);
                 }
             }
 
@@ -674,17 +735,22 @@ public class AddToCartActivity extends AppCompatActivity {
                 if (currentQuantity >= 0) {
                     currentQuantity++;
                     updateQuantityTextView();
-                    updateCartItemsList();
+                    PointOfSaleActivity.Product product = cartItems.get(getAdapterPosition());
+                    updateItemTotalTextView(product);
                 }
             }
 
-            private void updateCartItemsList() {
+            private void updateCartItemsList(boolean buttonClicked) {
                 PointOfSaleActivity.Product product = cartItems.get(getAdapterPosition());
                 int quantity = currentQuantity;
                 double price = extractPriceFromString(product.getPrice());
                 double itemTotal = quantity * price;
                 product.setTotal(itemTotal);
-                total = calculateTotalPrice(cartItems);
+                if (buttonClicked) {
+                    updateCartTotal(); // Update the total when an item is modified via button clicks
+                }
+
+                // Update the totalTextView to display the overall cart total
                 totalTextView.setText("Total: ₱" + formatPrice(total));
             }
 
@@ -692,8 +758,18 @@ public class AddToCartActivity extends AppCompatActivity {
                 productNameTextView.setText(product.getProductName());
                 productDescriptionTextView.setText(product.getProductDescription());
                 productCategoryTextView.setText(product.getCategory());
+
+                // Extract the quantity and price
+                int quantity = extractQuantityFromString(product.getQuantity());
+                double price = extractPriceFromString(product.getPrice());
+
+                // Calculate and set the item total
+                double itemTotal = quantity * price;
+                itemTotalTextView.setText("Item Total: ₱" + formatPrice(itemTotal));
+
                 // Set the currentQuantity directly from the product's quantity
-                currentQuantity = extractQuantityFromString(product.getQuantity());
+                currentQuantity = quantity;
+
                 // Update the productQuantityTextView with the current quantity
                 productQuantityTextView.setText("Quantity: " + currentQuantity);
 

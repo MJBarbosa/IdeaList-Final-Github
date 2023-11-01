@@ -84,6 +84,18 @@
             android:background="@drawable/ic_decrease"
             android:layout_marginLeft="15dp"/>
 
+        <TextView
+            android:id="@+id/itemTotalTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total: ₱0.00"
+            android:layout_below="@id/itemPriceTextView"
+            android:gravity="right"
+            android:paddingRight="20dp"
+            android:background="@color/orange_main"
+            android:textColor="@color/black"
+            android:layout_marginTop="8dp" />
+
     </RelativeLayout>
 
 </LinearLayout>
