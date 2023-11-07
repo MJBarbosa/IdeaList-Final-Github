@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterStoreOwnerActivity">
+    tools:context="com.inventory.idealist.RegisterStoreOwnerActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -229,7 +229,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/editTextRegStoreLocationSO"
             android:hint="Enter Store Location"
-            android:inputType="text"
+            android:inputType="textPostalAddress"
             android:textSize="16sp"
             android:padding="6dp"
             android:layout_below="@+id/textViewRegStoreLocationSO"
@@ -243,7 +243,8 @@
             android:layout_below="@+id/editTextRegStoreLocationSO"
             android:layout_marginTop="50dp"
             android:text="Register"
-            android:id="@+id/buttonRegisterSO"/>
+            android:id="@+id/buttonRegisterSO"
+            android:backgroundTint="@color/orange_main"/>
 
         <ProgressBar
             android:layout_width="wrap_content"

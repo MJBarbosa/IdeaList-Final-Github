@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SalesReportActivity">
+    tools:context="com.inventory.idealist.SalesReportActivity">
 
     <!-- FrameLayout to contain the existing content -->
     <FrameLayout
@@ -18,12 +18,12 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/ic_white_bg_logo">
+            android:background="@color/blue_main">
 
             <!-- RelativeLayout for product content -->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="1000dp"
                 android:padding="15dp"
                 android:layout_margin="15dp"
                 android:background="@color/light_gray">
@@ -52,7 +52,8 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
                     android:textSize="25dp"
-                    android:text="Search" />
+                    android:text="Search"
+                    android:backgroundTint="@color/blue_main"/>
 
                 <!-- ProgressBar for loading -->
                 <ProgressBar
@@ -64,13 +65,22 @@
                     android:elevation="10dp"
                     android:visibility="gone" />
 
+                <RelativeLayout
+                    android:layout_width="1500dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/relativeLayoutSalesReport"
+                    android:layout_below="@+id/buttonSalesSearch"
+                    android:background="@drawable/gray_border_bg"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:padding="10dp">
+
                 <TableLayout
                     android:id="@+id/salesTableHeaderLayout"
                     android:layout_width="1500dp"
                     android:layout_centerHorizontal="true"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/buttonSalesSearch"
-                    android:layout_marginTop="20dp"
                     android:stretchColumns="*">
 
                     <!-- Header Row -->
@@ -189,6 +199,7 @@
                             android:padding="10dp" />
                     </TableRow>
                 </TableLayout>
+                </RelativeLayout>
             </RelativeLayout>
         </ScrollView>
     </FrameLayout>

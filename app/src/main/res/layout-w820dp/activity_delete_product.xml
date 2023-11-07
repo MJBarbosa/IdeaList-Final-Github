@@ -1,6 +1,248 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.inventory.idealist.DeleteProductActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_margin="15dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeleteInventoryHead"
+            android:layout_marginTop="30dp"
+            android:text="Please Search Item Details to Delete Item on the App Inventory"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewDeleteSearch"
+            android:layout_width="800dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewDeleteInventoryHead"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/border"
+            android:completionThreshold="1"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="8dp"
+            android:hint="Search"
+            android:textSize="25dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:id="@+id/relativeLayoutDeleteProductImage"
+            android:layout_below="@+id/autoCompleteTextViewDeleteSearch"
+            android:layout_toRightOf="@id/relativeLayoutDeleteProduct"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:padding="10dp"
+            android:background="@drawable/black_border">
+
+        <ImageView
+            android:id="@+id/imageViewDeleteProductImage"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            android:text="Select Image"
+            android:background="@drawable/default_product_image"
+            android:contentDescription="Product Image" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="700dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/relativeLayoutDeleteProduct"
+            android:layout_below="@id/autoCompleteTextViewDeleteSearch"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/black_border"
+            android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeleteProductId"
+            android:text="Product ID"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeleteProductIdValue"
+            android:hint="Delete Product ID"
+            android:inputType="text|number"
+            android:textSize="20sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewDeleteProductId"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeleteProductName"
+            android:layout_below="@+id/textViewDeleteProductIdValue"
+            android:text="Product Name"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeleteProductNameValue"
+            android:hint="Delete Product Name"
+            android:inputType="text"
+            android:textSize="20sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewDeleteProductName"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeleteSuppName"
+            android:layout_below="@+id/textViewDeleteProductNameValue"
+            android:text="Supplier Name"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeleteSuppNameValue"
+            android:hint="Delete Supplier Name"
+            android:inputType="textPersonName"
+            android:textSize="20sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewDeleteSuppName"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeleteCategory"
+            android:layout_below="@+id/textViewDeleteSuppNameValue"
+            android:text="Category"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/textViewDeleteCategoryValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Delete a Category"
+                android:textSize="20sp"
+                android:padding="6dp"
+                android:layout_below="@id/textViewDeleteCategory"
+                android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeleteProductDesc"
+            android:layout_below="@+id/textViewDeleteCategoryValue"
+            android:text="Description"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeleteProductDescValue"
+            android:hint="Delete Product Description"
+            android:inputType="text"
+            android:textSize="20sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewDeleteProductDesc"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeleteQuantity"
+            android:layout_below="@+id/textViewDeleteProductDescValue"
+            android:text="Quantity"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeleteQuantityValue"
+            android:hint="Delete Quantity"
+            android:inputType="number"
+            android:textSize="20sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewDeleteQuantity"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeletePrice"
+            android:layout_below="@+id/textViewDeleteQuantityValue"
+            android:text="Price"
+            android:textColor="#555555"
+            android:padding="6dp"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDeletePriceValue"
+            android:hint="Delete Price"
+            android:inputType="numberDecimal"
+            android:textSize="20sp"
+            android:padding="6dp"
+            android:layout_below="@+id/textViewDeletePrice"
+            android:background="@drawable/border"/>
+
+        </RelativeLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="320dp"
+            android:layout_marginRight="320dp"
+            android:layout_below="@+id/relativeLayoutDeleteProductImage"
+            android:layout_marginTop="50dp"
+            android:text="Delete"
+            android:textSize="25sp"
+            android:backgroundTint="@color/orange_main"
+            android:layout_toRightOf="@id/relativeLayoutDeleteProduct"
+            android:id="@+id/buttonDeleteProduct"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBarDeleteProduct"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="10dp"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+</ScrollView>

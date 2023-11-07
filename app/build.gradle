@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.idealist'
+    namespace 'com.inventory.idealist'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.idealist"
+        applicationId "com.inventory.idealist"
         minSdk 24
         targetSdk 33
         versionCode 1

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PointOfSaleActivity">
+    tools:context="com.inventory.idealist.PointOfSaleActivity">
 
     <!-- FrameLayout to contain the existing content -->
     <FrameLayout
@@ -48,7 +48,8 @@
                     android:layout_below="@+id/autoCompleteTextViewPOSSearch"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
-                    android:text="Scan" />
+                    android:text="Scan"
+                    android:backgroundTint="@color/blue_main"/>
 
                 <ImageView
                     android:id="@+id/imageViewPOSProductImage"
@@ -132,7 +133,7 @@
                     android:layout_marginTop="8dp"
                     android:text="Decrease"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="90dp"
+                    android:layout_marginLeft="50dp"
                     android:background="@drawable/ic_decrease"/>
 
                 <Button
@@ -142,7 +143,7 @@
                     android:layout_below="@+id/textViewPOSPrice"
                     android:layout_marginTop="8dp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="90dp"
+                    android:layout_marginRight="50dp"
                     android:background="@drawable/ic_increase"/>
 
 
@@ -151,23 +152,25 @@
                     android:id="@+id/buttonAddToCart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/buttonIncreaseQuantity"
+                    android:layout_below="@+id/buttonDecreaseQuantity"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
                     android:text="Add To Cart"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="30dp"/>
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="30dp"
+                    android:backgroundTint="@color/orange_main"/>
 
                 <Button
                     android:id="@+id/buttonClearFields"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/buttonDecreaseQuantity"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
+                    android:layout_below="@+id/buttonIncreaseQuantity"
                     android:text="Clear"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="30dp"/>
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="30dp"
+                    android:backgroundTint="@color/orange_main"/>
 
                 <TextView
                     android:id="@+id/invisibleProductIdTextView"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UpdateEmailActivity"
+    tools:context="com.inventory.idealist.UpdateEmailActivity"
     android:background="#CAC9CC">
 
     <LinearLayout
@@ -83,7 +83,8 @@
                 android:layout_marginLeft="70dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="70dp"
-                android:text="Authenticate" />
+                android:text="Authenticate"
+                android:backgroundTint="@color/blue_main"/>
 
             <ProgressBar
                 android:layout_width="wrap_content"
@@ -148,7 +149,8 @@
                 android:text="Update Email"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="70dp"
-                android:layout_marginLeft="70dp"/>
+                android:layout_marginLeft="70dp"
+                android:backgroundTint="@color/orange_main"/>
 
         </RelativeLayout>
 

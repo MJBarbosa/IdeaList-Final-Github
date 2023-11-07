@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewProductActivity">
+    tools:context="com.inventory.idealist.ViewProductActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,7 +30,8 @@
             android:layout_below="@+id/autoCompleteTextViewSearch"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:text="Search" />
+            android:text="Search"
+            android:backgroundTint="@color/blue_main"/>
 
         <ImageView
             android:id="@+id/imageViewProductImage"

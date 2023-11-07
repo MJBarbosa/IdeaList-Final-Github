@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
+    tools:context="com.inventory.idealist.RegisterActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -243,7 +243,8 @@
             android:layout_below="@+id/editTextRegConfirmPassword"
             android:layout_marginTop="50dp"
             android:text="Register"
-            android:id="@+id/buttonRegister"/>
+            android:id="@+id/buttonRegister"
+            android:backgroundTint="@color/orange_main"/>
         
         <ProgressBar
             android:layout_width="wrap_content"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddProductActivity">
+    tools:context="com.inventory.idealist.AddProductActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,11 +27,11 @@
             android:layout_width="match_parent"
             android:layout_height="500dp"
             android:id="@+id/relativeLayoutAddProductImage"
-            android:background="@drawable/black_border"
             android:layout_below="@+id/textViewAddInventoryHead"
             android:layout_toRightOf="@id/relativeLayoutAddProduct"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/black_border">
 
         <ImageButton
             android:id="@+id/imageButtonAddProductImage"
@@ -237,13 +237,25 @@
         </RelativeLayout>
 
         <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonGenerateProductId"
+            android:layout_toRightOf="@id/relativeLayoutAddProduct"
+            android:text="Generate ID"
+            android:layout_below="@id/relativeLayoutAddProductImage"
+            android:layout_marginTop="50dp"
+            android:backgroundTint="@color/blue_main"
+            android:textSize="30sp"
+            android:layout_marginLeft="100dp"/>
+
+        <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="320dp"
-            android:layout_marginRight="320dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="300dp"
             android:layout_below="@+id/relativeLayoutAddProductImage"
             android:layout_marginTop="50dp"
-            android:layout_toRightOf="@id/relativeLayoutAddProduct"
+            android:layout_toRightOf="@id/buttonGenerateProductId"
             android:text="Add"
             android:textSize="35sp"
             android:backgroundTint="@color/orange_main"

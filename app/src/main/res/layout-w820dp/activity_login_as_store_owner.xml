@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginAsStoreOwner"
+    tools:context="com.inventory.idealist.LoginAsStoreOwner"
     android:background="#CAC9CC">
 
     <RelativeLayout
-        android:layout_width="650dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp"
         android:layout_margin="15dp"
@@ -17,24 +17,25 @@
 
         <ImageView
             android:id="@+id/imageViewLoginLogo"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="900dp"
+            android:layout_height="700dp"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="75dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/ic_white_bg_logo" />
+            android:background="@drawable/ic_complete_logo" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textViewLoginHeadSO"
-            android:layout_below="@id/imageViewLoginLogo"
             android:text="Login"
             android:fontFamily="@font/poppinsbold"
             android:gravity="center"
             android:textColor="@color/blue_main"
-            android:textSize="50dp"/>
+            android:textSize="45dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="50dp"
+            android:layout_toRightOf="@id/imageViewLoginLogo"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -45,7 +46,10 @@
             android:layout_below="@+id/textViewLoginHeadSO"
             android:text="Email*"
             android:textColor="#555555"
-            android:textSize="30dp"/>
+            android:textSize="25dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="50dp"
+            android:layout_toRightOf="@id/imageViewLoginLogo"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -55,8 +59,11 @@
             android:inputType="textEmailAddress"
             android:padding="6dp"
             android:textSize="25dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="50dp"
             android:background="@drawable/border"
-            android:layout_below="@+id/textViewLoginEmailSO"/>
+            android:layout_below="@+id/textViewLoginEmailSO"
+            android:layout_toRightOf="@id/imageViewLoginLogo"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -67,15 +74,18 @@
             android:text="Password*"
             android:textColor="#555555"
             android:padding="6dp"
-            android:textSize="30dp"/>
+            android:textSize="25dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="50dp"
+            android:layout_toRightOf="@id/imageViewLoginLogo"/>
 
         <ImageView
             android:id="@+id/imageViewShowHidePwdSO"
-            android:layout_width="50dp"
-            android:layout_height="52dp"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
             android:layout_below="@+id/textViewLoginPasswordSO"
-            android:layout_marginTop="1dp"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="50dp"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -83,11 +93,13 @@
             android:id="@+id/editTextLoginPasswordSO"
             android:hint="Enter Password"
             android:inputType="textPassword"
-            android:layout_marginEnd="50dp"
             android:padding="6dp"
             android:textSize="25dp"
+            android:layout_marginStart="100dp"
+            android:layout_marginEnd="90dp"
             android:background="@drawable/border"
-            android:layout_below="@+id/textViewLoginPasswordSO"/>
+            android:layout_below="@+id/textViewLoginPasswordSO"
+            android:layout_toRightOf="@id/imageViewLoginLogo"/>
 
         <Button
             android:layout_width="match_parent"
@@ -97,21 +109,24 @@
             android:textSize="25dp"
             android:layout_below="@+id/editTextLoginPasswordSO"
             android:layout_marginTop="50dp"
-            android:layout_marginRight="70dp"
-            android:layout_marginLeft="70dp"
-            android:backgroundTint="@color/orange_main"/>
+            android:layout_marginRight="150dp"
+            android:layout_marginLeft="200dp"
+            android:backgroundTint="@color/orange_main"
+            android:layout_toRightOf="@id/imageViewLoginLogo"/>
 
             <TextView
                 android:id="@+id/textViewLoginForPswSO"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
                 android:layout_marginTop="16dp"
                 android:layout_below="@id/buttonLoginSO"
                 android:gravity="center"
                 android:text="Forgot Password"
                 android:textSize="23dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_toRightOf="@id/imageViewLoginLogo"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="50dp"/>
 
             <TextView
                 android:id="@+id/textViewLoginSignUpSO"
@@ -122,19 +137,24 @@
                 android:layout_below="@id/textViewLoginForPswSO"
                 android:text="Sign Up"
                 android:textSize="23dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_toRightOf="@id/imageViewLoginLogo"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="50dp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Login As Customer"
-            android:visibility="gone"
             android:id="@+id/textViewLoginAsCustomerSO"
             android:layout_below="@+id/textViewLoginSignUpSO"
             android:gravity="center"
             android:layout_marginTop="16dp"
-            android:textSize="16dp"
-            android:textStyle="bold"/>
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_toRightOf="@id/imageViewLoginLogo"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="50dp"/>
 
         <ProgressBar
             android:layout_width="wrap_content"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddProductActivity">
+    tools:context="com.inventory.idealist.AddProductActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -53,19 +53,30 @@
             android:inputType="text|number"
             android:textSize="16sp"
             android:padding="6dp"
+            android:clickable="false"
             android:layout_below="@+id/textViewAddProductId"
             android:background="@drawable/border"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generate ID"
+            android:backgroundTint="@color/blue_main"
+            android:layout_below="@id/editTextAddProductId"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/buttonGenerateProductId"
+            android:layout_marginTop="5dp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textViewAddProductName"
-            android:layout_below="@+id/editTextAddProductId"
+            android:layout_below="@+id/buttonGenerateProductId"
             android:text="Product Name*"
             android:textColor="#555555"
             android:padding="6dp"
             android:textSize="16dp"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="5dp"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -199,7 +210,8 @@
             android:layout_below="@+id/editTextAddPrice"
             android:layout_marginTop="50dp"
             android:text="Add"
-            android:id="@+id/buttonAddProduct"/>
+            android:id="@+id/buttonAddProduct"
+            android:backgroundTint="@color/orange_main"/>
 
         <ProgressBar
             android:layout_width="wrap_content"

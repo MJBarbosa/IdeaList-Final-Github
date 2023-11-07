@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".QrGeneratorActivity">
+    tools:context="com.inventory.idealist.QrGeneratorActivity">
 
     <!-- FrameLayout to contain the existing content -->
     <FrameLayout
@@ -48,7 +48,8 @@
                     android:layout_below="@+id/autoCompleteTextViewQRSearch"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
-                    android:text="Search" />
+                    android:text="Search"
+                    android:backgroundTint="@color/blue_main"/>
 
                 <!-- ListView for products -->
                 <ListView
@@ -123,7 +124,8 @@
                     android:layout_below="@+id/textViewQRCategory"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
-                    android:text="Generate QR Code" />
+                    android:text="Generate QR Code"
+                    android:backgroundTint="@color/orange_main"/>
             </RelativeLayout>
         </ScrollView>
     </FrameLayout>

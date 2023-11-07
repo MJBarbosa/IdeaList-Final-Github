@@ -26,11 +26,18 @@
         android:theme="@style/Theme.Material3.Light"
         tools:targetApi="31">
         <activity
-            android:name=".CustomerStoreProductActivity"
+            android:name="com.inventory.idealist.SetStoreTimeActivity"
+            android:exported="false" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.inventory.idealist.StoreOwnerProfileActivity" />
+        </activity>
+        <activity
+            android:name="com.inventory.idealist.CustomerStoreProductActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.inventory.idealist.MainActivity" />
         </activity>
 
         <provider
@@ -44,233 +51,236 @@
         </provider>
 
         <activity
-            android:name=".ViewProductActivity"
+            android:name="com.inventory.idealist.ViewProductActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ManageInventoryActivity" />
+                android:value="com.inventory.idealist.ManageInventoryActivity" />
         </activity>
         <activity
-            android:name=".QRCodeViewScannerActivity"
+            android:name="com.inventory.idealist.QRCodeViewScannerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ViewProductActivity" />
+                android:value="com.inventory.idealist.ViewProductActivity" />
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddToCartActivity"
+            android:name="com.inventory.idealist.AddToCartActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".PointOfSaleActivity" />
+                android:value="com.inventory.idealist.PointOfSaleActivity" />
         </activity>
         <activity
-            android:name=".DeleteProductActivity"
+            android:name="com.inventory.idealist.DeleteProductActivity"
             android:exported="false"
-            android:parentActivityName=".MainSOActivity">
+            android:parentActivityName="com.inventory.idealist.MainSOActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ManageInventoryActivity" />
+                android:value="com.inventory.idealist.ManageInventoryActivity" />
         </activity>
         <activity
-            android:name=".QRCodeDeleteScannerActivity"
+            android:name="com.inventory.idealist.QRCodeDeleteScannerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DeleteProductActivity" />
+                android:value="com.inventory.idealist.DeleteProductActivity" />
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".UpdateProductActivity"
+            android:name="com.inventory.idealist.UpdateProductActivity"
             android:exported="false"
             android:label="Update Product">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ManageInventoryActivity" />
+                android:value="com.inventory.idealist.ManageInventoryActivity" />
         </activity>
         <activity
-            android:name=".QRCodeScannerActivity"
+            android:name="com.inventory.idealist.QRCodeScannerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UpdateProductActivity" />
+                android:value="com.inventory.idealist.UpdateProductActivity" />
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddProductActivity"
+            android:name="com.inventory.idealist.AddProductActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ManageInventoryActivity" />
+                android:value="com.inventory.idealist.ManageInventoryActivity" />
         </activity>
         <activity
-            android:name=".QrGeneratorActivity"
+            android:name="com.inventory.idealist.QrGeneratorActivity"
             android:exported="false" />
         <activity
-            android:name=".SalesReportActivity"
+            android:name="com.inventory.idealist.SalesReportActivity"
             android:exported="false" />
         <activity
-            android:name=".PointOfSaleActivity"
+            android:name="com.inventory.idealist.PointOfSaleActivity"
             android:exported="false" />
         <activity
-            android:name=".QRCodePOSScannerActivity"
+            android:name="com.inventory.idealist.QRCodePOSScannerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".PointOfSaleActivity" />
+                android:value="com.inventory.idealist.PointOfSaleActivity" />
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".ManageInventoryActivity"
+            android:name="com.inventory.idealist.ManageInventoryActivity"
             android:exported="false" />
         <activity
-            android:name=".DeleteSOProfileActivity"
+            android:name="com.inventory.idealist.DeleteSOProfileActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StoreOwnerProfileActivity" />
+                android:value="com.inventory.idealist.StoreOwnerProfileActivity" />
         </activity>
         <activity
-            android:name=".DeleteProfileActivity"
+            android:name="com.inventory.idealist.DeleteProfileActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UsersProfileActivity" />
+                android:value="com.inventory.idealist.UsersProfileActivity" />
         </activity>
         <activity
-            android:name=".ChangeSOPasswordActivity"
+            android:name="com.inventory.idealist.ChangeSOPasswordActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StoreOwnerProfileActivity" />
+                android:value="com.inventory.idealist.StoreOwnerProfileActivity" />
         </activity>
         <activity
-            android:name=".ChangePasswordActivity"
+            android:name="com.inventory.idealist.ChangePasswordActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UsersProfileActivity" />
+                android:value="com.inventory.idealist.UsersProfileActivity" />
         </activity>
         <activity
-            android:name=".UpdateSOEmailActivity"
+            android:name="com.inventory.idealist.UpdateSOEmailActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StoreOwnerProfileActivity" />
+                android:value="com.inventory.idealist.StoreOwnerProfileActivity" />
         </activity>
         <activity
-            android:name=".UpdateEmailActivity"
+            android:name="com.inventory.idealist.UpdateEmailActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UsersProfileActivity" />
+                android:value="com.inventory.idealist.UsersProfileActivity" />
         </activity>
         <activity
-            android:name=".UpdateSOProfileActivity"
+            android:name="com.inventory.idealist.UpdateSOProfileActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StoreOwnerProfileActivity" />
+                android:value="com.inventory.idealist.StoreOwnerProfileActivity" />
         </activity>
         <activity
-            android:name=".MainSOActivity"
+            android:name="com.inventory.idealist.MainSOActivity"
             android:exported="false" />
         <activity
-            android:name=".UpdateProfileActivity"
+            android:name="com.inventory.idealist.UpdateProfileActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UsersProfileActivity" />
+                android:value="com.inventory.idealist.UsersProfileActivity" />
         </activity>
         <activity
-            android:name=".UploadSOProfilePicActivity"
+            android:name="com.inventory.idealist.UploadSOProfilePicActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".StoreOwnerProfileActivity" />
+                android:value="com.inventory.idealist.StoreOwnerProfileActivity" />
         </activity>
         <activity
-            android:name=".UploadProfilePicActivity"
+            android:name="com.inventory.idealist.UploadProfilePicActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UsersProfileActivity" />
+                android:value="com.inventory.idealist.UsersProfileActivity" />
         </activity>
         <activity
-            android:name=".UsersProfileActivity"
+            android:name="com.inventory.idealist.UsersProfileActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UsersProfileActivity" />
+                android:value="com.inventory.idealist.UsersProfileActivity" />
         </activity>
         <activity
-            android:name=".StoreOwnerProfileActivity"
+            android:name="com.inventory.idealist.StoreOwnerProfileActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainSOActivity" />
+                android:value="com.inventory.idealist.MainSOActivity" />
         </activity>
         <activity
-            android:name=".ForgotPasswordStoreOwner"
+            android:name="com.inventory.idealist.ForgotPasswordStoreOwner"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoginAsStoreOwner" />
+                android:value="com.inventory.idealist.LoginAsStoreOwner" />
         </activity>
         <activity
-            android:name=".RegisterStoreOwnerActivity"
+            android:name="com.inventory.idealist.RegisterStoreOwnerActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoginAsStoreOwner" />
+                android:value="com.inventory.idealist.LoginAsStoreOwner" />
         </activity>
         <activity
-            android:name=".LoginAsStoreOwner"
+            android:name="com.inventory.idealist.LoginAsStoreOwner"
             android:exported="false">
+
             <!-- Desktop Landing Page -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name="com.inventory.idealist.RegisterActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Login" />
+                android:value="com.inventory.idealist.Login" />
         </activity>
         <activity
-            android:name=".ForgotPassword"
+            android:name="com.inventory.idealist.ForgotPassword"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Login" />
+                android:value="com.inventory.idealist.Login" />
         </activity>
         <activity
-            android:name=".Login"
+            android:name="com.inventory.idealist.Login"
             android:exported="true"
             android:theme="@style/Theme.Material3.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.inventory.idealist.MainActivity"
             android:exported="false" />
     </application>
 

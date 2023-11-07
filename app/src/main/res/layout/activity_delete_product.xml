@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DeleteProductActivity">
+    tools:context="com.inventory.idealist.DeleteProductActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -212,6 +212,7 @@
             android:layout_below="@+id/textViewDeletePrice"
             android:layout_marginTop="50dp"
             android:text="Delete"
+            android:backgroundTint="@color/orange_main"
             android:id="@+id/buttonDeleteProduct"/>
 
         <ProgressBar

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.inventory.idealist.UploadSOProfilePicActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_margin="15dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewUploadPicHeadSO"
+            android:text="Upload Your Store Logo"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/uploadPicChooseButtonSO"
+            android:layout_below="@+id/textViewUploadPicHeadSO"
+            android:layout_marginTop="20dp"
+            android:text="Choose Picture"
+            android:layout_marginStart="500dp"
+            android:layout_marginEnd="500dp"
+            android:textSize="20sp"
+            android:backgroundTint="@color/blue_main"/>
+
+    <RelativeLayout
+        android:layout_width="1000dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayoutUpdatePicSO"
+        android:layout_below="@id/uploadPicChooseButtonSO"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:background="@drawable/gray_border_bg">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:id="@+id/imageViewProfileDpSO"
+            android:background="@drawable/border" />
+
+    </RelativeLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/uploadPicButtonSO"
+            android:layout_below="@id/relativeLayoutUpdatePicSO"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="500dp"
+            android:layout_marginEnd="500dp"
+            android:textSize="20sp"
+            android:backgroundTint="@color/orange_main"
+            android:text="Upload"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBarUploadPicSO"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="10dp"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+</ScrollView>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UpdateProfileActivity"
+    tools:context="com.inventory.idealist.UpdateProfileActivity"
     android:background="#CAC9CC">
 
     <RelativeLayout
@@ -178,7 +178,7 @@
             android:layout_marginLeft="70dp"
             android:layout_marginRight="70dp"
             android:layout_below="@id/editTextUpdateProfileMobile"
-            android:backgroundTint="#C5832B"/>
+            android:backgroundTint="@color/blue_main"/>
 
         <Button
             android:layout_width="match_parent"
@@ -188,7 +188,7 @@
             android:layout_marginLeft="70dp"
             android:layout_marginRight="70dp"
             android:layout_below="@id/buttonUploadProfilePic"
-            android:backgroundTint="#C5832B"/>
+            android:backgroundTint="@color/blue_main"/>
 
         <Button
             android:layout_width="match_parent"
@@ -197,7 +197,8 @@
             android:text="Update Profile"
             android:layout_marginLeft="70dp"
             android:layout_marginRight="70dp"
-            android:layout_below="@id/buttonUpdateProfileEmail" />
+            android:layout_below="@id/buttonUpdateProfileEmail"
+            android:backgroundTint="@color/orange_main"/>
 
         <ProgressBar
             android:layout_width="wrap_content"

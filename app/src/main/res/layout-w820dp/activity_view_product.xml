@@ -1,6 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.inventory.idealist.ViewProductActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewSearch"
+            android:layout_width="1000dp"
+            android:layout_height="wrap_content"
+            android:hint="Search"
+            android:textSize="30sp"
+            android:padding="6dp"
+            android:layout_centerHorizontal="true"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="8dp"
+            android:completionThreshold="1"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/border" />
+
+        <!-- Add other UI elements for displaying product information here -->
+        <Button
+            android:id="@+id/buttonSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/autoCompleteTextViewSearch"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textSize="25sp"
+            android:text="Search"
+            android:backgroundTint="@color/blue_main"/>
+
+        <RelativeLayout
+            android:layout_width="900dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/relativeLayoutViewProduct"
+            android:layout_below="@+id/buttonSearch"
+            android:padding="20dp"
+            android:background="@drawable/black_border"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp">
+
+        <ImageView
+            android:id="@+id/imageViewProductImage"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:scaleType="centerCrop"
+            android:text="Select Image"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/default_product_image"
+            android:contentDescription="Product Image" />
+
+        <!-- TextViews for displaying product details -->
+        <TextView
+            android:id="@+id/textViewProductId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageViewProductImage"
+            android:text="Product ID: "
+            android:layout_marginTop="20dp"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="20dp"
+            android:padding="6dp"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:id="@+id/textViewProductName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewProductId"
+            android:layout_marginTop="8dp"
+            android:text="Product Name: "
+            android:textSize="25sp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="20dp"
+            android:padding="6dp"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:id="@+id/textViewSuppName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewProductName"
+            android:layout_marginTop="8dp"
+            android:text="Supplier Name: "
+            android:textSize="25sp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="20dp"
+            android:padding="6dp"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:id="@+id/textViewCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewSuppName"
+            android:layout_marginTop="8dp"
+            android:text="Category: "
+            android:textSize="25sp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="20dp"
+            android:padding="6dp"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:id="@+id/textViewProductDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewCategory"
+            android:layout_marginTop="8dp"
+            android:text="Product Description: "
+            android:textSize="25sp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="20dp"
+            android:padding="6dp"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:id="@+id/textViewQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewProductDescription"
+            android:layout_marginTop="8dp"
+            android:text="Quantity: "
+            android:textSize="25sp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="20dp"
+            android:padding="6dp"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:id="@+id/textViewPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewQuantity"
+            android:layout_marginTop="8dp"
+            android:text="Price: "
+            android:textSize="25sp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="20dp"
+            android:padding="6dp"
+            android:background="@drawable/border"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/relativeLayoutUpdateProductList"
+            android:layout_below="@id/buttonSearch"
+            android:layout_toRightOf="@id/relativeLayoutViewProduct"
+            android:background="@drawable/black_border"
+            android:padding="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp">
+
+        <ListView
+            android:id="@+id/listViewProducts"
+            android:layout_width="match_parent"
+            android:layout_height="715dp"
+            android:background="@drawable/border"/>
+
+        <ProgressBar
+            android:id="@+id/progressBarViewProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="10dp"
+            android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <!-- Add more TextViews for other product details (e.g., Price, Quantity, SupplierName, etc.) -->
+
+    </RelativeLayout>
+
+</ScrollView>

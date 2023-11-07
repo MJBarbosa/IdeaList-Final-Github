@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UpdateProductActivity">
+    tools:context="com.inventory.idealist.UpdateProductActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -210,7 +210,8 @@
             android:layout_below="@+id/editTextUpdatePrice"
             android:layout_marginTop="50dp"
             android:text="Update"
-            android:id="@+id/buttonUpdateProduct"/>
+            android:id="@+id/buttonUpdateProduct"
+            android:backgroundTint="@color/orange_main"/>
 
         <ProgressBar
             android:layout_width="wrap_content"

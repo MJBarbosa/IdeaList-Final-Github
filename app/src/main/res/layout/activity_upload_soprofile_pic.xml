@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UploadSOProfilePicActivity">
+    tools:context="com.inventory.idealist.UploadSOProfilePicActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             android:text="Choose Picture"
             android:layout_marginRight="70dp"
             android:layout_marginLeft="70dp"
-            android:backgroundTint="#C5832B"/>
+            android:backgroundTint="@color/blue_main"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -48,7 +48,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginLeft="70dp"
             android:layout_marginRight="70dp"
-            android:text="Upload"/>
+            android:text="Upload"
+            android:backgroundTint="@color/orange_main"/>
 
         <ProgressBar
             android:layout_width="wrap_content"

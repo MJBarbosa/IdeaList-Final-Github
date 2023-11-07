@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.inventory.idealist.SetStoreTimeActivity"
+    android:background="@color/light_gray">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@color/white"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set Your Store Time"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textAlignment="center"
+            android:layout_marginTop="20dp"
+            android:id="@+id/textViewSetStoreTimeHeader"/>
+
+        <TextView
+            android:id="@+id/textViewOpenTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:layout_below="@id/textViewSetStoreTimeHeader"
+            android:text="Open Time"
+            android:textSize="20sp" />
+
+        <TimePicker
+            android:id="@+id/timePickerOpenTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewOpenTime"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/textViewCloseTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timePickerOpenTime"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="Close Time"
+            android:textSize="20sp" />
+
+        <TimePicker
+            android:id="@+id/timePickerCloseTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewCloseTime"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/buttonSaveTimes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timePickerCloseTime"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:text="Set Store Time"
+            android:backgroundTint="@color/orange_main"
+            android:layout_marginBottom="20dp"/>
+
+    </RelativeLayout>
+
+</ScrollView>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SalesReportActivity">
+    tools:context="com.inventory.idealist.SalesReportActivity">
 
     <!-- FrameLayout to contain the existing content -->
     <FrameLayout
@@ -48,7 +48,8 @@
                     android:layout_below="@+id/autoCompleteTextViewSalesSearch"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
-                    android:text="Search" />
+                    android:text="Search"
+                    android:backgroundTint="@color/blue_main"/>
 
                 <!-- ProgressBar for loading -->
                 <ProgressBar

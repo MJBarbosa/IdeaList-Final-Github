@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".AddToCartActivity">
+    tools:context="com.inventory.idealist.AddToCartActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/blue_main"
             android:theme="?attr/actionBarTheme"/>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -45,7 +45,8 @@
             android:layout_marginTop="16dp"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="70dp"
-            android:text="Clear"/>
+            android:text="Clear"
+            android:backgroundTint="@color/orange_main"/>
 
         <Button
             android:id="@+id/buttonCheckout"
@@ -56,7 +57,8 @@
             android:layout_marginTop="16dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="70dp"
-            android:text="Checkout"/>
+            android:text="Checkout"
+            android:backgroundTint="@color/orange_main"/>
 
     </RelativeLayout>
 </ScrollView>

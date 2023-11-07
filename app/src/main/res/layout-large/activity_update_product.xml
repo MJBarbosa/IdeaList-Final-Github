@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UpdateProductActivity">
+    tools:context="com.inventory.idealist.UpdateProductActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,36 +24,57 @@
 
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTextViewUpdateSearch"
-            android:layout_width="match_parent"
+            android:layout_width="800dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:hint="Search"
+            android:textSize="25sp"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="8dp"
+            android:layout_centerInParent="true"
             android:background="@drawable/border"
             android:layout_below="@id/textViewUpdateInventoryHead"
             android:completionThreshold="1" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:id="@+id/relativeLayoutUpdateProductImage"
+            android:layout_below="@+id/autoCompleteTextViewUpdateSearch"
+            android:layout_toRightOf="@id/relativeLayoutUpdateProduct"
+            android:padding="10dp"
+            android:background="@drawable/black_border"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp">
+
         <ImageView
             android:id="@+id/imageViewUpdateProductImage"
             android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:layout_below="@+id/autoCompleteTextViewUpdateSearch"
-            android:layout_marginTop="10dp"
+            android:layout_height="500dp"
             android:scaleType="centerCrop"
             android:text="Select Image"
             android:background="@drawable/default_product_image"
             android:contentDescription="Product Image" />
 
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="700dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/relativeLayoutUpdateProduct"
+            android:layout_below="@+id/autoCompleteTextViewUpdateSearch"
+            android:background="@drawable/black_border"
+            android:padding="30dp"
+            android:layout_marginTop="20dp">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textViewUpdateProductId"
-            android:layout_below="@+id/imageViewUpdateProductImage"
             android:text="Product ID*"
             android:textColor="#555555"
             android:padding="6dp"
-            android:textSize="16dp"
+            android:textSize="20dp"
             android:layout_marginTop="10dp"/>
 
         <TextView
@@ -62,7 +83,7 @@
             android:id="@+id/textViewProductIdValue"
             android:hint="Update Product ID"
             android:inputType="text|number"
-            android:textSize="16sp"
+            android:textSize="20dp"
             android:padding="6dp"
             android:layout_below="@+id/textViewUpdateProductId"
             android:background="@drawable/border"/>
@@ -75,7 +96,7 @@
             android:text="Product Name*"
             android:textColor="#555555"
             android:padding="6dp"
-            android:textSize="16dp"
+            android:textSize="20dp"
             android:layout_marginTop="10dp"/>
 
         <TextView
@@ -84,7 +105,7 @@
             android:id="@+id/textViewProductNameValue"
             android:hint="Update Product Name"
             android:inputType="text"
-            android:textSize="16sp"
+            android:textSize="20dp"
             android:padding="6dp"
             android:layout_below="@+id/textViewUpdateProductName"
             android:background="@drawable/border"/>
@@ -97,7 +118,7 @@
             android:text="Supplier Name*"
             android:textColor="#555555"
             android:padding="6dp"
-            android:textSize="16dp"
+            android:textSize="20dp"
             android:layout_marginTop="10dp"/>
 
         <EditText
@@ -106,7 +127,7 @@
             android:id="@+id/editTextUpdateSuppName"
             android:hint="Update Supplier Name"
             android:inputType="textPersonName"
-            android:textSize="16sp"
+            android:textSize="20dp"
             android:padding="6dp"
             android:layout_below="@+id/textViewUpdateSuppName"
             android:background="@drawable/border"/>
@@ -119,7 +140,7 @@
             android:text="Category*"
             android:textColor="#555555"
             android:padding="6dp"
-            android:textSize="16dp"
+            android:textSize="20dp"
             android:layout_marginTop="10dp"/>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -130,8 +151,10 @@
 
             <Spinner
                 android:id="@+id/spinnerUpdateCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="10dp"
                 android:hint="Update a Category" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -144,7 +167,7 @@
             android:text="Description*"
             android:textColor="#555555"
             android:padding="6dp"
-            android:textSize="16dp"
+            android:textSize="20dp"
             android:layout_marginTop="10dp"/>
 
         <EditText
@@ -153,7 +176,7 @@
             android:id="@+id/editTextUpdateProductDesc"
             android:hint="Update Product Description"
             android:inputType="text"
-            android:textSize="16sp"
+            android:textSize="20dp"
             android:padding="6dp"
             android:layout_below="@+id/textViewUpdateProductDesc"
             android:background="@drawable/border"/>
@@ -166,7 +189,7 @@
             android:text="Quantity*"
             android:textColor="#555555"
             android:padding="6dp"
-            android:textSize="16dp"
+            android:textSize="20dp"
             android:layout_marginTop="10dp"/>
 
         <EditText
@@ -175,7 +198,7 @@
             android:id="@+id/editTextUpdateQuantity"
             android:hint="Update Quantity"
             android:inputType="number"
-            android:textSize="16sp"
+            android:textSize="20dp"
             android:padding="6dp"
             android:layout_below="@+id/textViewUpdateQuantity"
             android:background="@drawable/border"/>
@@ -188,7 +211,7 @@
             android:text="Price*"
             android:textColor="#555555"
             android:padding="6dp"
-            android:textSize="16dp"
+            android:textSize="20dp"
             android:layout_marginTop="10dp"/>
 
         <EditText
@@ -197,19 +220,24 @@
             android:id="@+id/editTextUpdatePrice"
             android:hint="Update Price"
             android:inputType="numberDecimal"
-            android:textSize="16sp"
+            android:textSize="20dp"
             android:padding="6dp"
             android:layout_below="@+id/textViewUpdatePrice"
             android:background="@drawable/border"/>
 
+        </RelativeLayout>
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:layout_marginRight="70dp"
-            android:layout_below="@+id/editTextUpdatePrice"
+            android:layout_marginLeft="320dp"
+            android:layout_marginRight="320dp"
+            android:layout_below="@+id/relativeLayoutUpdateProductImage"
             android:layout_marginTop="50dp"
+            android:textSize="25dp"
             android:text="Update"
+            android:backgroundTint="@color/orange_main"
+            android:layout_toRightOf="@id/relativeLayoutUpdateProduct"
             android:id="@+id/buttonUpdateProduct"/>
 
         <ProgressBar

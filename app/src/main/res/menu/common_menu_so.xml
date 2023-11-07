@@ -12,6 +12,9 @@
     <item android:title="Home"
         android:id="@+id/menuHomeSO"/>
 
+    <item android:title="Set Store Time"
+        android:id="@+id/menuSetStoreTime"/>
+
     <item android:title="Update Profile"
         android:id="@+id/menuUpdateProfileSO"/>
 
@@ -19,7 +22,8 @@
         android:id="@+id/menuUpdateEmailSO"/>
 
     <item android:title="Settings"
-        android:id="@+id/menuSettingsSO"/>
+        android:id="@+id/menuSettingsSO"
+        android:visible="false"/>
 
     <item android:title="Change Password"
         android:id="@+id/menuChangePasswordSO"/>

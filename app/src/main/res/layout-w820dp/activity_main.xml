@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.inventory.idealist.MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_margin="15dp"
+        android:background="@color/light_gray">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppinsbold"
+            android:text="Login"
+            android:gravity="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="30dp"/>
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewCustomerSearch"
+            android:layout_width="1000dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:hint="Search"
+            android:layout_below="@id/textView"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="8dp"
+            android:textSize="25dp"
+            android:completionThreshold="1"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border" />
+
+        <RelativeLayout
+            android:layout_width="1000dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/relativeLayoutMain"
+            android:layout_below="@id/autoCompleteTextViewCustomerSearch"
+            android:background="@drawable/gray_border_bg"
+            android:padding="5dp"
+            android:layout_centerHorizontal="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/storeRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

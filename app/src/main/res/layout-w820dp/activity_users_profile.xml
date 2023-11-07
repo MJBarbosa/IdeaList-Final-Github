@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/swipeContainerUpload">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.inventory.idealist.UsersProfileActivity"
+        android:background="#CAC9CC">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:background="#416788">
+
+                <ImageView
+                    android:id="@+id/imageViewProfileDp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/ic_dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewShowWelcome"
+                    android:layout_below="@id/imageViewProfileDp"
+                    android:hint="Loading..."
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                    android:textColor="@color/white"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="800dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="15dp"
+                android:layout_margin="15dp"
+                android:background="@color/white">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/icProfileF"
+                    android:background="@drawable/ic_profile"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewShowFirstName"
+                    android:layout_alignStart="@id/icProfileF"
+                    android:hint="Loading..."
+                    android:layout_marginStart="50dp"
+                    android:textSize="18sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/textViewShowFirstName"
+                    android:background="@android:color/darker_gray"
+                    android:id="@+id/dividerFirstName"/>
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/icProfileL"
+                    android:background="@drawable/ic_profile"
+                    android:layout_below="@id/dividerFirstName"
+                    android:layout_marginTop="20dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewShowLastName"
+                    android:layout_alignStart="@id/icProfileL"
+                    android:hint="Loading..."
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/dividerFirstName"
+                    android:textSize="18sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/textViewShowLastName"
+                    android:background="@android:color/darker_gray"
+                    android:id="@+id/dividerLastName"/>
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/icAddress"
+                    android:background="@drawable/ic_storelocation"
+                    android:layout_below="@id/dividerLastName"
+                    android:layout_marginTop="20dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewShowAddress"
+                    android:layout_alignStart="@id/icEmail"
+                    android:hint="Loading..."
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/dividerLastName"
+                    android:textSize="18sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/textViewShowAddress"
+                    android:background="@android:color/darker_gray"
+                    android:id="@+id/dividerAddress"/>
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/icEmail"
+                    android:background="@drawable/ic_email"
+                    android:layout_below="@id/dividerAddress"
+                    android:layout_marginTop="20dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewShowEmail"
+                    android:layout_alignStart="@id/icEmail"
+                    android:hint="Loading..."
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/dividerAddress"
+                    android:textSize="18sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/textViewShowEmail"
+                    android:background="@android:color/darker_gray"
+                    android:id="@+id/dividerEmail"/>
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/icDob"
+                    android:background="@drawable/ic_birthday"
+                    android:layout_below="@id/dividerEmail"
+                    android:layout_marginTop="20dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewShowDoB"
+                    android:layout_alignStart="@id/icDob"
+                    android:hint="Loading..."
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/dividerEmail"
+                    android:textSize="18sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/textViewShowDoB"
+                    android:background="@android:color/darker_gray"
+                    android:id="@+id/dividerDob"/>
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/icGender"
+                    android:background="@drawable/ic_gender"
+                    android:layout_below="@id/dividerDob"
+                    android:layout_marginTop="20dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewShowGender"
+                    android:layout_alignStart="@id/icGender"
+                    android:hint="Loading..."
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/dividerDob"
+                    android:textSize="18sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/textViewShowGender"
+                    android:background="@android:color/darker_gray"
+                    android:id="@+id/dividerGender"/>
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/icMobile"
+                    android:background="@drawable/ic_contact"
+                    android:layout_below="@id/dividerGender"
+                    android:layout_marginTop="20dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewShowMobile"
+                    android:layout_alignStart="@id/icMobile"
+                    android:hint="Loading..."
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/dividerGender"
+                    android:textSize="18sp"/>
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBarShow"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:elevation="10dp"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

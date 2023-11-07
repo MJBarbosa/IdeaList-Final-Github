@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PointOfSaleActivity">
+    tools:context="com.inventory.idealist.PointOfSaleActivity">
 
     <!-- FrameLayout to contain the existing content -->
     <FrameLayout
@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/scrollView"
-            android:backgroundTint="@color/blue_main"
+            android:backgroundTint="@color/light_gray"
             android:background="@drawable/ic_white_bg_logo">
 
             <!-- RelativeLayout for product content -->
@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:padding="15dp"
                 android:layout_margin="15dp"
-                android:background="@color/light_gray">
+                android:background="@color/white">
 
                 <!-- AutoCompleteTextView for search -->
                 <AutoCompleteTextView
@@ -38,13 +38,13 @@
                     android:layout_centerHorizontal="true"
                     android:layout_height="wrap_content"
                     android:hint="Search"
-                    android:layout_marginTop="100dp"
+                    android:layout_marginTop="50dp"
                     android:drawableStart="@drawable/ic_search"
-                    android:drawablePadding="8dp"
+                    android:drawablePadding="10dp"
                     android:completionThreshold="1"
-                    android:textSize="30dp"
+                    android:textSize="30sp"
                     android:layout_marginBottom="16dp"
-                    android:background="@drawable/border" />
+                    android:background="@drawable/gray_border_bg" />
 
                 <!-- Button for search -->
                 <Button
@@ -54,21 +54,32 @@
                     android:layout_below="@+id/autoCompleteTextViewPOSSearch"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
-                    android:visibility="gone"
-                    android:text="Scan" />
+                    android:text="Scan"
+                    android:textSize="25sp"
+                    android:backgroundTint="@color/blue_main"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/relativeLayoutPOSImage"
+                    android:layout_below="@+id/buttonQRScanner"
+                    android:layout_toRightOf="@id/relativeLayoutPOS"
+                    android:background="@drawable/gray_border_bg"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp">
 
                 <ImageView
                     android:id="@+id/imageViewPOSProductImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:layout_below="@+id/buttonQRScanner"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="400dp"
-                    android:layout_marginRight="400dp"
+                    android:layout_width="600dp"
+                    android:layout_height="300dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_centerInParent="true"
                     android:scaleType="centerCrop"
                     android:text="Select Image"
                     android:background="@drawable/default_product_image"
                     android:contentDescription="Product Image" />
+
+                </RelativeLayout>
 
                 <!-- ProgressBar for loading -->
                 <ProgressBar
@@ -82,15 +93,22 @@
 
                 <!-- TextViews for displaying product details -->
 
+                <RelativeLayout
+                    android:layout_width="800dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/relativeLayoutPOS"
+                    android:layout_below="@+id/buttonQRScanner"
+                    android:layout_marginTop="20dp"
+                    android:padding="30dp"
+                    android:background="@drawable/gray_border_bg">
+
                 <TextView
                     android:id="@+id/textViewPOSProductName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageViewPOSProductImage"
                     android:layout_marginTop="8dp"
                     android:text="Product Name: "
-                    android:layout_marginLeft="400dp"
-                    android:textSize="30sp"
+                    android:textSize="25sp"
                     android:textStyle="bold"/>
 
                 <TextView
@@ -100,8 +118,7 @@
                     android:layout_below="@+id/textViewPOSProductName"
                     android:layout_marginTop="8dp"
                     android:text="Product Description: "
-                    android:layout_marginLeft="400dp"
-                    android:textSize="30sp" />
+                    android:textSize="25sp" />
 
                 <TextView
                     android:id="@+id/textViewPOSCategory"
@@ -110,8 +127,7 @@
                     android:layout_below="@+id/textViewPOSProductDescription"
                     android:layout_marginTop="8dp"
                     android:text="Category: "
-                    android:layout_marginLeft="400dp"
-                    android:textSize="30sp" />
+                    android:textSize="25sp" />
 
                 <TextView
                     android:id="@+id/textViewPOSPrice"
@@ -120,8 +136,7 @@
                     android:layout_below="@+id/textViewPOSCategory"
                     android:layout_marginTop="8dp"
                     android:text="Price: "
-                    android:layout_marginLeft="400dp"
-                    android:textSize="30sp" />
+                    android:textSize="25sp" />
 
                 <!-- Quantity TextView and Buttons -->
                 <TextView
@@ -135,28 +150,30 @@
                     android:layout_toLeftOf="@id/buttonIncreaseQuantity"
                     android:layout_toRightOf="@id/buttonDecreaseQuantity"
                     android:layout_marginLeft="5dp"
-                    android:textSize="30sp"
+                    android:textSize="25sp"
                     android:layout_centerHorizontal="true" />
 
                 <Button
                     android:id="@+id/buttonDecreaseQuantity"
-                    android:layout_width="70dp"
-                    android:layout_height="50dp"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp"
                     android:layout_below="@+id/textViewPOSPrice"
                     android:layout_marginTop="8dp"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="500dp"
-                    android:background="@drawable/ic_decrease"/>
+                    android:background="@drawable/ic_decrease"
+                    android:layout_marginLeft="200dp"/>
 
                 <Button
                     android:id="@+id/buttonIncreaseQuantity"
-                    android:layout_width="70dp"
-                    android:layout_height="50dp"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp"
                     android:layout_below="@+id/textViewPOSPrice"
                     android:layout_marginTop="8dp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="500dp"
-                    android:background="@drawable/ic_increase"/>
+                    android:background="@drawable/ic_increase"
+                    android:layout_marginRight="200dp"/>
+
+                </RelativeLayout>
 
 
                 <!-- Button for generating QR -->
@@ -164,10 +181,10 @@
                     android:id="@+id/buttonAddToCart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/buttonIncreaseQuantity"
+                    android:layout_below="@+id/relativeLayoutPOSImage"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
-                    android:textSize="30dp"
+                    android:textSize="25sp"
                     android:text="Add To Cart"
                     android:layout_alignParentRight="true"
                     android:backgroundTint="@color/orange_main"
@@ -177,10 +194,10 @@
                     android:id="@+id/buttonClearFields"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/buttonDecreaseQuantity"
+                    android:layout_below="@+id/relativeLayoutPOSImage"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="16dp"
-                    android:textSize="30dp"
+                    android:textSize="25sp"
                     android:text="Clear"
                     android:backgroundTint="@color/orange_main"
                     android:layout_alignParentLeft="true"
@@ -205,7 +222,6 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/orange_main"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

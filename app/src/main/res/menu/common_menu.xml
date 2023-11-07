@@ -17,7 +17,8 @@
         android:id="@+id/menuUpdateEmail"/>
 
     <item android:title="Settings"
-        android:id="@+id/menuSettings"/>
+        android:id="@+id/menuSettings"
+        android:visible="false"/>
 
     <item android:title="Change Password"
         android:id="@+id/menuChangePassword"/>

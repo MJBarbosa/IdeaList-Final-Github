@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.inventory.idealist.CustomerStoreProductActivity">
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/blue_main"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ScrollView for the entire content -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- A vertical LinearLayout to hold the RecyclerView and other content -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- AutoCompleteTextView for search -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/relativeLayoutCusStoreProduct">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewCusShowStoreTime"
+                    android:text="Loading..."
+                    android:textColor="@color/black"
+                    android:padding="6dp"
+                    android:background="@drawable/gray_border_bg"
+                    android:textAlignment="center"
+                    android:textSize="25sp"
+                    android:layout_marginRight="300dp"
+                    android:layout_marginLeft="300dp"
+                    android:layout_marginTop="20dp"/>
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextViewCustomerSearch"
+                android:layout_width="1000dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Search"
+                android:layout_below="@id/textViewCusShowStoreTime"
+                android:drawableStart="@drawable/ic_search"
+                android:drawablePadding="8dp"
+                android:textSize="25dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/border"
+                android:layout_marginBottom="16dp"
+                android:completionThreshold="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="1500dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/relativeLayoutCusStoreProductRecyclerView"
+                android:layout_below="@+id/relativeLayoutCusStoreProduct"
+                android:layout_centerInParent="true"
+                android:background="@drawable/gray_border_bg"
+                android:padding="50dp">
+
+            <!-- RecyclerView for displaying the list of products -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/productRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tabel_border"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
