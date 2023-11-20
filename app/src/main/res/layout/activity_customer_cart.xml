@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context="com.inventory.idealist.CustomerCartActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/blue_main"
+            android:theme="?attr/actionBarTheme"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewCartCus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/textViewTotalCus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/recyclerViewCartCus"
+            android:layout_marginTop="16dp"
+            android:text="Total: ₱0.00"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/buttonClearCartCus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewTotalCus"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="70dp"
+            android:text="Clear"
+            android:backgroundTint="@color/orange_main"/>
+
+        <Button
+            android:id="@+id/buttonPurchaseCus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewTotalCus"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="70dp"
+            android:text="Purchase"
+            android:backgroundTint="@color/orange_main"/>
+
+    </RelativeLayout>
+</ScrollView>

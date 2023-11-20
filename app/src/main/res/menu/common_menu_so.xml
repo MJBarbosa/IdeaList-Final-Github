@@ -15,6 +15,9 @@
     <item android:title="Set Store Time"
         android:id="@+id/menuSetStoreTime"/>
 
+    <item android:title="Set Transaction Key"
+        android:id="@+id/menuSetTransactionKey"/>
+
     <item android:title="Update Profile"
         android:id="@+id/menuUpdateProfileSO"/>
 

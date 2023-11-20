@@ -100,7 +100,7 @@ public class MainSOActivity extends AppCompatActivity {
             }
         });
 
-        // Initialize Firebase database reference
+        // Initialize Firebase database reference with userUid as a child node
         salesDataRef = FirebaseDatabase.getInstance().getReference().child("Sales");
 
         authProfileSO = FirebaseAuth.getInstance();
@@ -147,12 +147,6 @@ public class MainSOActivity extends AppCompatActivity {
         // Initialize the graph
         initializeGraph();
 
-        // Inside the onCreate method, modify the loop for loading data:
-        for (int month = 1; month <= 12; month++) {
-            dataPoints.clear(); // Clear the dataPoints list for each month
-            loadSalesDataForYearAndMonth(currentYear, month);
-        }
-
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.menu_home_so);
@@ -169,7 +163,7 @@ public class MainSOActivity extends AppCompatActivity {
                 finish();
             } else if (itemId == R.id.menu_pos) {
                 // Handle the Profile menu item click here
-                Intent intent = new Intent(MainSOActivity.this, PointOfSaleActivity.class);
+                Intent intent = new Intent(MainSOActivity.this, POSActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
@@ -195,7 +189,13 @@ public class MainSOActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            textViewSO.setText(firebaseUserSO.getEmail());
+            textViewSO.setText(firebaseUserSO.getDisplayName());
+
+            // Inside the onCreate method, modify the loop for loading data:
+            for (int month = 1; month <= 12; month++) {
+                dataPoints.clear(); // Clear the dataPoints list for each month
+                loadSalesDataForYearAndMonth(currentYear, month);
+            }
         }
     }
 
@@ -267,26 +267,29 @@ public class MainSOActivity extends AppCompatActivity {
 
         Log.d(TAG, "Database for sale: " + salesDataRef);
 
-        Query query = salesDataRef
-                .orderByChild("timestamp");
+        // Fetch sales data for the specified user UID
+        fetchSalesData(firebaseUserSO.getUid(), startTimestamp, endTimestamp);
+    }
+
+    // Add this method to fetch sales data based on user UID and timestamp range
+    private void fetchSalesData(String userUid, long startTimestamp, long endTimestamp) {
+        DatabaseReference salesRef = FirebaseDatabase.getInstance().getReference().child("Sales").child(userUid);
+
+        Query query = salesRef.orderByChild("timestamp");
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d(TAG, "Number of children in dataSnapshot: " + dataSnapshot.getChildrenCount());
 
-                Log.d(TAG, "Fetching data for year: " + year + ", month: " + month);
-
                 List<DataPoint> dataPointsForMonth = new ArrayList<>(); // Create a list to store data points for the current month
-
-                String currentUserUid = firebaseUserSO.getUid(); // Get the current user's UID
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String saleUserUid = snapshot.child("userUid").getValue(String.class);
-                    Double saleAmount = snapshot.child("price").getValue(Double.class);
+                    Double saleAmount = snapshot.child("quantity").getValue(Double.class);
                     String saleTimestampStr = snapshot.child("timestamp").getValue(String.class);
 
-                    if (saleUserUid != null && saleUserUid.equals(currentUserUid)) {
+                    if (saleUserUid != null && saleUserUid.equals(userUid)) {
                         if (saleAmount != null && saleTimestampStr != null && !saleTimestampStr.isEmpty()) {
                             long saleTimestamp = parseTimestamp(saleTimestampStr);
                             if (saleTimestamp >= startTimestamp && saleTimestamp <= endTimestamp) {
@@ -304,7 +307,6 @@ public class MainSOActivity extends AppCompatActivity {
                 // Add data points for the current month to the series
                 series.resetData(dataPoints.toArray(new DataPoint[0]));
 
-
                 // Update the maximum sales value if necessary
                 maxSalesValue = Math.max(maxSalesValue, calculateMaxSalesValue());
 
@@ -318,8 +320,10 @@ public class MainSOActivity extends AppCompatActivity {
                 Log.e(TAG, "Database error: " + databaseError.getMessage());
             }
         });
-        Log.d(TAG, "End of loadSalesDataForYearAndMonth");
+
+        Log.d(TAG, "End of fetchSalesData");
     }
+
 
     private String formatXLabel(long timestamp) {
         // Convert the timestamp to a readable date format with month names
@@ -384,7 +388,6 @@ public class MainSOActivity extends AppCompatActivity {
         }
         return 0; // Return 0 if parsing fails
     }
-
 
     private void swipeToRefresh() {
         swipeContainer = findViewById(R.id.swipeContainer);

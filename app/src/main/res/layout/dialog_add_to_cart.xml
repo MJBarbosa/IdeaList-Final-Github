@@ -1,0 +1,100 @@
+<!-- res/layout/dialog_add_to_cart.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/black_border"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_margin="15dp"
+        android:background="@color/light_gray">
+
+        <ImageView
+            android:id="@+id/itemDefaultImageView"
+            android:layout_width="110dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/default_product_image"
+            android:contentDescription="Product Image"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/itemNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Product Name"
+            android:layout_toRightOf="@id/itemDefaultImageView"
+            android:layout_marginLeft="15dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/itemDescriptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Product Description"
+            android:layout_toRightOf="@id/itemDefaultImageView"
+            android:layout_below="@id/itemNameTextView"
+            android:layout_marginLeft="15dp"/>
+
+        <TextView
+            android:id="@+id/itemCategoryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category"
+            android:layout_toRightOf="@id/itemDefaultImageView"
+            android:layout_below="@id/itemDescriptionTextView"
+            android:layout_marginLeft="15dp"/>
+
+        <TextView
+            android:id="@+id/itemQuantityTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quantity"
+            android:layout_toRightOf="@id/itemDefaultImageView"
+            android:layout_below="@id/itemCategoryTextView"
+            android:layout_marginLeft="15dp"/>
+
+        <TextView
+            android:id="@+id/itemPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price"
+            android:layout_toRightOf="@id/itemDefaultImageView"
+            android:layout_below="@id/itemQuantityTextView"
+            android:layout_marginLeft="15dp"/>
+
+        <TextView
+            android:id="@+id/itemTotalTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total: ₱0.00"
+            android:layout_below="@id/itemPriceTextView"
+            android:gravity="right"
+            android:paddingRight="20dp"
+            android:background="@color/orange_main"
+            android:textColor="@color/black"
+            android:layout_marginTop="8dp" />
+
+    </RelativeLayout>
+
+    <!-- Add any other product details TextViews here -->
+
+    <Button
+        android:id="@+id/addToCartButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add to Cart"
+        android:backgroundTint="@color/orange_main"/>
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:backgroundTint="@color/blue_main"/>
+</LinearLayout>

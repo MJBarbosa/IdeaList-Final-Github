@@ -490,7 +490,7 @@ public class ViewProductActivity extends AppCompatActivity {
                     }
                 } else {
                     // User role data does not exist, handle it as needed
-                    Toast.makeText(ViewProductActivity.this, "User role not found.", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(ViewProductActivity.this, "User role not found.", Toast.LENGTH_LONG).show();
                 }
             }
 

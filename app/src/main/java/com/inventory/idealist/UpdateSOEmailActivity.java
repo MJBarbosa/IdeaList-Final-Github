@@ -208,6 +208,10 @@ public class UpdateSOEmailActivity extends AppCompatActivity {
             Intent intent = new Intent(UpdateSOEmailActivity.this, SetStoreTimeActivity.class);
             startActivity(intent);
             finish();
+        } else if (id == R.id.menuSetTransactionKey) {
+            Intent intent = new Intent(UpdateSOEmailActivity.this, SetTransactionKeyActivity.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.menuChangePasswordSO) {
             Intent intent = new Intent(UpdateSOEmailActivity.this, ChangeSOPasswordActivity.class);
             startActivity(intent);

@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppinsbold"
             android:text="Login"
@@ -23,12 +23,21 @@
             android:textColor="@color/colorAccent"
             android:textSize="20dp"/>
 
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/buttonCustomerCart"
+            android:layout_alignParentRight="true"
+            android:text="Cart"
+            android:background="@drawable/baseline_shopping_basket_24"
+            android:textSize="20sp"/>
+
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTextViewCustomerSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Search"
-            android:layout_below="@id/textView"
+            android:layout_below="@id/buttonCustomerCart"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="8dp"
             android:completionThreshold="1"

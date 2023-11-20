@@ -92,7 +92,7 @@ public class QrGeneratorActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (itemId == R.id.menu_pos) {
-                Intent intent = new Intent(QrGeneratorActivity.this, PointOfSaleActivity.class);
+                Intent intent = new Intent(QrGeneratorActivity.this, POSActivity.class);
                 startActivity(intent);
                 finish();
                 return true;

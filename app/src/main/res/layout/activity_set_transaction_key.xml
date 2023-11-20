@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SetTransactionKeyActivity"
+    android:background="@color/light_gray">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_margin="20dp"
+        android:padding="10dp"
+        android:id="@+id/relativeLayoutAuthenticateFirst">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set Transaction Key"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:id="@+id/setTransactionKeyHeader"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Password*"
+            android:id="@+id/passwordTextViewAuthentication"
+            android:layout_below="@id/setTransactionKeyHeader"
+            android:layout_marginTop="40dp"
+            android:textSize="20sp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/passwordTextViewAuthentication"
+            android:id="@+id/passwordEditViewAuthentication"
+            android:background="@drawable/border"
+            android:hint="Enter Password"
+            android:inputType="textPassword"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Authenticate"
+            android:id="@+id/buttonTransactionKeyAuthentication"
+            android:layout_below="@id/passwordEditViewAuthentication"
+            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:backgroundTint="@color/blue_main"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBarSetTransactionKey"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="10dp"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_margin="20dp"
+        android:layout_below="@id/relativeLayoutAuthenticateFirst"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Transaction Key:"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/transactionKeyTextView"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/currentTransactionKey"
+            android:text="Current Transaction Key..."
+            android:layout_below="@id/transactionKeyTextView"
+            android:textSize="18sp"
+            android:textColor="@color/light_gray"
+            android:background="@drawable/border"
+            android:padding="5dp"
+            android:layout_marginEnd="30dp"/>
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="34dp"
+            android:id="@+id/imageViewShowHidePwd"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/transactionKeyTextView"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set New Transaction Key:"
+            android:textSize="20sp"
+            android:id="@+id/setNewTransactionKeyTextView"
+            android:textColor="@color/black"
+            android:layout_below="@id/currentTransactionKey"
+            android:layout_marginTop="15dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/setNewTransactionKeyTextView"
+            android:id="@+id/setNewTransactionKeyEditText"
+            android:background="@drawable/border"
+            android:hint="Enter New Transaction Key"
+            android:inputType="textPassword"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:id="@+id/buttonSetNewTransactionKey"
+            android:layout_below="@id/setNewTransactionKeyEditText"
+            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:backgroundTint="@color/orange_main"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

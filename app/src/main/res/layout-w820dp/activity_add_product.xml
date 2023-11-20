@@ -48,7 +48,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="700dp"
+            android:layout_width="600dp"
             android:layout_height="wrap_content"
             android:id="@+id/relativeLayoutAddProduct"
             android:layout_below="@id/textViewAddInventoryHead"

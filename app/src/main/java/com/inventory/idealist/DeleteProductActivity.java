@@ -368,7 +368,7 @@ public class DeleteProductActivity extends AppCompatActivity {
                     }
                 } else {
                     // User role data does not exist, handle it as needed
-                    Toast.makeText(DeleteProductActivity.this, "User role not found.", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(DeleteProductActivity.this, "User role not found.", Toast.LENGTH_LONG).show();
                 }
             }
 

@@ -301,6 +301,10 @@ public class UpdateSOProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(UpdateSOProfileActivity.this, SetStoreTimeActivity.class);
             startActivity(intent);
             finish();
+        } else if (id == R.id.menuSetTransactionKey) {
+            Intent intent = new Intent(UpdateSOProfileActivity.this, SetTransactionKeyActivity.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.menuChangePasswordSO) {
             Intent intent = new Intent(UpdateSOProfileActivity.this, ChangeSOPasswordActivity.class);
             startActivity(intent);

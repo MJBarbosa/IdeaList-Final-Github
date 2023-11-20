@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".POSActivity">
+
+    <FrameLayout
+        android:id="@+id/frameLayoutContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_alignParentTop="true">
+
+        <!-- ScrollView for existing content -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- RelativeLayout for product content -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="@color/light_gray"
+                android:padding="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:id="@+id/relativeLayoutPOSScannerQR"
+                    android:background="@drawable/black_border"
+                    android:layout_marginTop="5dp">
+
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/recyclerViewProducts"
+                    android:layout_below="@id/relativeLayoutPOSScannerQR"
+                    android:layout_marginTop="15dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray"
+                    android:id="@+id/divider"
+                    android:layout_below="@id/recyclerViewProducts"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/divider"
+                    android:id="@+id/totalPriceTextView"
+                    android:text="Total: "
+                    android:textSize="20sp"
+                    android:gravity="right"
+                    android:textColor="@color/dark_green"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/totalPriceTextView"
+                    android:layout_marginTop="10dp"
+                    android:text="Purchase"
+                    android:layout_centerHorizontal="true"
+                    android:backgroundTint="@color/orange_main"
+                    android:id="@+id/purchaseButtonPOS"/>
+            </RelativeLayout>
+        </ScrollView>
+    </FrameLayout>
+
+    <!-- Bottom Navigation View -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        app:menu="@menu/bottom_nav_store_owner" />
+
+</RelativeLayout>

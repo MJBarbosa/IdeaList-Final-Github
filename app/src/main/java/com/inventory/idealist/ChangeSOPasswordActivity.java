@@ -213,6 +213,10 @@ public class ChangeSOPasswordActivity extends AppCompatActivity {
             Intent intent = new Intent(ChangeSOPasswordActivity.this, SetStoreTimeActivity.class);
             startActivity(intent);
             finish();
+        } else if (id == R.id.menuSetTransactionKey) {
+            Intent intent = new Intent(ChangeSOPasswordActivity.this, SetTransactionKeyActivity.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.menuChangePasswordSO) {
             Intent intent = new Intent(ChangeSOPasswordActivity.this, ChangeSOPasswordActivity.class);
             startActivity(intent);

@@ -62,7 +62,7 @@ public class SalesReportActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (itemId == R.id.menu_pos) {
-                Intent intent = new Intent(SalesReportActivity.this, PointOfSaleActivity.class);
+                Intent intent = new Intent(SalesReportActivity.this, POSActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
@@ -140,12 +140,10 @@ public class SalesReportActivity extends AppCompatActivity {
 
             // Check if the provided userUid matches the current user's UID
             if (userUid.equals(currentUid)) {
-                DatabaseReference salesRef = FirebaseDatabase.getInstance().getReference("Sales");
+                DatabaseReference salesRef = FirebaseDatabase.getInstance().getReference().child("Sales").child(userUid);
 
-                // Add a query to filter the sales data by the user's UID
-                Query userSalesQuery = salesRef.orderByChild("userUid").equalTo(userUid);
-
-                userSalesQuery.addValueEventListener(new ValueEventListener() {
+                // No need for a query as we are directly accessing the user's sales data
+                salesRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Clear the existing data in the HashMap
@@ -153,9 +151,7 @@ public class SalesReportActivity extends AppCompatActivity {
 
                         for (DataSnapshot saleSnapshot : dataSnapshot.getChildren()) {
                             String saleId = saleSnapshot.getKey();
-                            String productNameFull = saleSnapshot.child("productName").getValue(String.class);
-                            // Extract the actual product name without "Product Name:"
-                            String productName = productNameFull.replace("Product Name: ", "");
+                            String productName = saleSnapshot.child("productName").getValue(String.class);
                             double price = saleSnapshot.child("price").getValue(Double.class);
                             int quantity = saleSnapshot.child("quantity").getValue(Integer.class);
                             String timestamp = saleSnapshot.child("timestamp").getValue(String.class);
@@ -192,6 +188,7 @@ public class SalesReportActivity extends AppCompatActivity {
             Log.e(TAG, "No user is currently logged in.");
         }
     }
+
 
 
     // Helper function to display sales data

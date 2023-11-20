@@ -1,0 +1,77 @@
+<!-- item_product.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:id="@+id/divider"/>
+
+    <TextView
+        android:id="@+id/productNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginTop="2dp"
+        android:layout_below="@id/divider"
+        android:layout_alignParentLeft="true"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/productDescriptionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:layout_below="@id/productNameTextView"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/categoryTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:layout_below="@id/productDescriptionTextView"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/quantityTextView"
+        android:textSize="14sp"
+        android:layout_below="@id/categoryTextView"
+        android:textColor="@color/black"
+        android:layout_marginTop="4dp"/>
+
+        <ImageButton
+            android:id="@+id/removeItemButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_reject"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/categoryTextView"/>
+
+    <TextView
+        android:id="@+id/priceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_green_dark"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/divider"
+        android:layout_alignParentRight="true"
+        android:gravity="right"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

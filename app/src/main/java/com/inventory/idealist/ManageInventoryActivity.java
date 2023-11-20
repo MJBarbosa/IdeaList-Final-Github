@@ -38,7 +38,7 @@ public class ManageInventoryActivity extends AppCompatActivity {
                 return true;
             } else if (itemId == R.id.menu_pos) {
                 // Handle the Profile menu item click here
-                Intent intent = new Intent(ManageInventoryActivity.this, PointOfSaleActivity.class);
+                Intent intent = new Intent(ManageInventoryActivity.this, POSActivity.class);
                 startActivity(intent);
                 finish();
                 return true;

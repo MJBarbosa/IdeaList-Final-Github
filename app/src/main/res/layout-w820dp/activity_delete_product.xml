@@ -60,7 +60,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="700dp"
+            android:layout_width="600dp"
             android:layout_height="wrap_content"
             android:id="@+id/relativeLayoutDeleteProduct"
             android:layout_below="@id/autoCompleteTextViewDeleteSearch"
@@ -225,8 +225,6 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="320dp"
-            android:layout_marginRight="320dp"
             android:layout_below="@+id/relativeLayoutDeleteProductImage"
             android:layout_marginTop="50dp"
             android:text="Delete"

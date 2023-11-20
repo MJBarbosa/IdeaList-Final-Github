@@ -48,6 +48,10 @@ public class CustomerStoreProductActivity extends AppCompatActivity {
         String storeName = getIntent().getStringExtra("storeName");
         String storeLocation = getIntent().getStringExtra("storeLocation");
 
+        TextView mobileTextView = findViewById(R.id.textViewCusShowContact);
+        String mobile = getIntent().getStringExtra("mobile");
+        mobileTextView.setText("Contact No.: " + mobile);
+
         getSupportActionBar().setTitle(storeName + ": " + storeLocation);
 
         productsRecyclerView = findViewById(R.id.productRecyclerView);
@@ -246,6 +250,7 @@ public class CustomerStoreProductActivity extends AppCompatActivity {
                     quantity.setTextColor(Color.RED);
                 } else {
                     quantity.setText(product.getQuantity());
+                    quantity.setTextColor(Color.BLACK);
                 }
                 price.setText(product.getPrice());
 

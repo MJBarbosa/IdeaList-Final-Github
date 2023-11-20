@@ -69,9 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/relativeLayoutDeleteProfile"
-                android:layout_marginStart="500dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginEnd="500dp"
                 android:backgroundTint="@color/blue_main"
                 android:textSize="20sp"
                 android:text="Authenticate" />
@@ -127,8 +125,6 @@
                 android:text="Delete User"
                 android:textSize="20sp"
                 android:layout_marginTop="20dp"
-                android:layout_marginEnd="500dp"
-                android:layout_marginStart="500dp"
                 android:backgroundTint="@color/orange_main"/>
 
         </RelativeLayout>

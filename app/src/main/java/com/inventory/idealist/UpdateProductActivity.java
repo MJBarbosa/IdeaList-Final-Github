@@ -228,7 +228,7 @@ public class UpdateProductActivity extends AppCompatActivity {
                     }
                 } else {
                     // User role data does not exist, handle it as needed
-                    Toast.makeText(UpdateProductActivity.this, "User role not found.", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(UpdateProductActivity.this, "User role not found.", Toast.LENGTH_LONG).show();
                 }
             }
 

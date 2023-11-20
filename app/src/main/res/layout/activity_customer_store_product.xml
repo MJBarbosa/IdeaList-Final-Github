@@ -11,7 +11,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@color/blue_main"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintTop_toTopOf="parent"
@@ -46,6 +46,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewCusShowContact"
+                android:text="Loading..."
+                android:textColor="@color/black"
+                android:padding="6dp"
+                android:background="@drawable/gray_border_bg"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textSize="20sp"/>
 
             <!-- AutoCompleteTextView for search -->
             <AutoCompleteTextView

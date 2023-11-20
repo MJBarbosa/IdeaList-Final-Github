@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private AutoCompleteTextView autoCompleteTextView;
     private Map<String, StoreAdapter.Store> storeMap = new HashMap<>();
     private String currentStoreLocation;
+    private String currentMobile;
 
 
     @Override
@@ -76,9 +79,19 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            textView.setText(firebaseUser.getEmail());
+            textView.setText(firebaseUser.getDisplayName());
             fetchStoreOwnerData();
         }
+
+        ImageButton buttonCustomerCart = findViewById(R.id.buttonCustomerCart);
+        buttonCustomerCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CustomerCartActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         // Initialize the AutoCompleteTextView
         autoCompleteTextView = findViewById(R.id.autoCompleteTextViewCustomerSearch);
@@ -171,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
                                     if (storeName != null) {
                                         storeMap.put(storeName, userUid);
                                         currentStoreLocation = storeLocation;
+                                        currentMobile = mobile;
                                     }
                                 }
 
@@ -221,6 +235,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Navigate User UID: " + userUid);
         intent.putExtra("storeLocation", currentStoreLocation);
         Log.d(TAG, "Navigate Store Location: " + currentStoreLocation);
+        intent.putExtra("mobile", currentMobile);
+        Log.d(TAG, "Navigate Store Location: " + currentMobile);
         startActivity(intent);
     }
 

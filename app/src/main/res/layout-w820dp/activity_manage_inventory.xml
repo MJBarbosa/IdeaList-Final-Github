@@ -36,8 +36,7 @@
                     android:layout_height="220dp"
                     app:cardCornerRadius="16dp"
                     android:layout_marginLeft="50dp"
-                    android:layout_marginTop="150dp"
-                    android:layout_marginBottom="150dp"
+                    android:layout_marginTop="20dp"
                     android:id="@+id/cardViewAddProduct">
 
                     <ImageButton
@@ -53,9 +52,9 @@
                     android:layout_width="300dp"
                     android:layout_height="220dp"
                     app:cardCornerRadius="16dp"
-                    android:layout_toRightOf="@id/cardViewAddProduct"
                     android:layout_marginLeft="50dp"
-                    android:layout_marginTop="150dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/cardViewAddProduct"
                     android:layout_marginBottom="150dp"
                     android:id="@+id/cardViewUpdateProduct">
 
@@ -74,8 +73,7 @@
                     app:cardCornerRadius="16dp"
                     android:layout_toRightOf="@id/cardViewUpdateProduct"
                     android:layout_marginLeft="50dp"
-                    android:layout_marginTop="150dp"
-                    android:layout_marginBottom="150dp"
+                    android:layout_marginTop="20dp"
                     android:id="@+id/cardViewDeleteProduct">
 
                     <ImageButton
@@ -91,9 +89,10 @@
                     android:layout_width="300dp"
                     android:layout_height="220dp"
                     app:cardCornerRadius="16dp"
-                    android:layout_toRightOf="@id/cardViewDeleteProduct"
+                    android:layout_toRightOf="@id/cardViewUpdateProduct"
                     android:layout_marginLeft="50dp"
-                    android:layout_marginTop="150dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@id/cardViewDeleteProduct"
                     android:layout_marginBottom="150dp"
                     android:id="@+id/cardViewViewProduct">
 
@@ -105,8 +104,6 @@
                         android:contentDescription="View Product Button"
                         android:id="@+id/imageButtonViewProduct"/>
                 </androidx.cardview.widget.CardView>
-
-
 
             <ProgressBar
                 android:layout_width="wrap_content"

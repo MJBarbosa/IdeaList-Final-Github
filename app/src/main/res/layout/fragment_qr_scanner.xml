@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayoutFindProduct"
+        android:background="@color/light_gray">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Product ID"
+        android:padding="6dp"
+        android:id="@+id/editTextProductId"
+        android:textSize="16sp"
+        android:inputType="number"
+        android:background="@drawable/border"
+        android:layout_marginEnd="62dp"/>
+
+    <ImageButton
+        android:id="@+id/imageButtonSearch"
+        android:layout_width="60dp"
+        android:layout_height="35dp"
+        android:background="@drawable/ic_enter_2"
+        android:backgroundTint="@color/blue_main"
+        android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <com.journeyapps.barcodescanner.CompoundBarcodeView
+        android:id="@+id/barcodeScannerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/relativeLayoutFindProduct"
+        android:background="@color/light_gray"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewScannedProducts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/barcodeScannerView" />
+
+</RelativeLayout>
