@@ -121,17 +121,34 @@ public class QRScannerFragment extends Fragment {
                     String category = productSnapshot.child("category").getValue(String.class);
                     double price = Double.parseDouble(productSnapshot.child("price").getValue(String.class));
 
-                    // Set quantity to 1 directly
-                    int quantity = 1;
-
-                    // Create a Product object
-                    Product foundProduct = new Product(productId, productName, productDescription, price, category, quantity);
+                    // Check if the product is already in the list
+                    boolean isProductInList = false;
 
                     // Notify the activity that a product is scanned
-                    onProductScannedListener.onProductScanned(foundProduct);
+                    if (getActivity() instanceof POSActivity) {
+                        POSActivity posActivity = (POSActivity) getActivity();
 
-                    // Optionally, clear the input field after adding the product
-                    editTextProductId.setText("");
+                        for (Product existingProduct : posActivity.getProductList()) {
+                            if (existingProduct.getProductId().equals(productId)) {
+                                // Product is already in the list, update the quantity
+                                existingProduct.setQuantity(existingProduct.getQuantity() + 1);
+                                isProductInList = true;
+                                break;
+                            }
+                        }
+
+                        if (!isProductInList) {
+                            // Product is not in the list, add it with default quantity
+                            Product foundProduct = new Product(productId, productName, productDescription, price, category, 1);
+                            posActivity.onProductScanned(foundProduct);
+                        }
+
+                        // Notify the adapter about the data change
+                        posActivity.getProductAdapter().notifyDataSetChanged();
+
+                        // Optionally, clear the input field after adding the product
+                        editTextProductId.setText("");
+                    }
                 } else {
                     // Product not found, show a Toast or error message
                     Toast.makeText(requireContext(), "Product not found", Toast.LENGTH_SHORT).show();
