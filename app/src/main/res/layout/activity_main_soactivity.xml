@@ -8,71 +8,76 @@
     android:id="@+id/drawer_layout"
     tools:context="com.inventory.idealist.MainSOActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Wrap the FrameLayout with SwipeRefreshLayout -->
+        <!-- Wrap the FrameLayout with SwipeRefreshLayout and ScrollView -->
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeContainer"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <FrameLayout
-                android:id="@+id/frameLayout"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/textViewSO"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="104dp"
-                    android:fontFamily="@font/poppinsbold"
-                    android:gravity="center"
-                    android:text="@string/login"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="30dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <!-- Wrap the GraphView with a HorizontalScrollView for horizontal scrolling -->
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_marginTop="300dp">
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/bottom_navigation">
 
-                    <com.jjoe64.graphview.GraphView
-                        android:id="@+id/salesGraph"
-                        android:layout_width="wrap_content"
-                        android:layout_height="300dp"
-                        android:layout_marginLeft="10dp"/>
+                    <FrameLayout
+                        android:id="@+id/frameLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true">
+
+                        <TextView
+                            android:id="@+id/textViewSO"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="50dp"
+                            android:fontFamily="@font/poppinsbold"
+                            android:gravity="center"
+                            android:text="@string/login"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="30dp"/>
+
+                        <com.jjoe64.graphview.GraphView
+                            android:id="@+id/salesGraph"
+                            android:layout_width="wrap_content"
+                            android:layout_height="250dp"
+                            android:layout_marginTop="100dp"
+                            android:layout_marginLeft="10dp"/>
+
+                        <!-- Remove SwipeRefreshLayout and RelativeLayout, use LineChartView directly -->
+                        <lecho.lib.hellocharts.view.LineChartView
+                            android:id="@+id/chart"
+                            android:layout_width="match_parent"
+                            android:layout_height="250dp"
+                            android:layout_marginTop="400dp"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginRight="15dp"/>
+                    </FrameLayout>
+
+                    <!-- Other UI elements -->
+
                 </RelativeLayout>
-
-            </FrameLayout>
-
+            </ScrollView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_alignParentBottom="true"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            app:layout_anchor="@id/swipeContainer"
+            app:layout_anchorGravity="bottom"
             app:menu="@menu/bottom_nav_store_owner"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"

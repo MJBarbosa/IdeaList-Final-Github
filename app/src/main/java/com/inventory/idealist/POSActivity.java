@@ -63,6 +63,8 @@ public class POSActivity extends AppCompatActivity implements QRScannerFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posactivity);
 
+        getSupportActionBar().setTitle("Point Of Sales");
+
         // Initialize productList
         productList = new ArrayList<>();
 

@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -41,9 +42,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
+import lecho.lib.hellocharts.model.Line;
+import lecho.lib.hellocharts.model.LineChartData;
+import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.view.LineChartView;
 
 public class MainSOActivity extends AppCompatActivity {
 
@@ -196,8 +208,133 @@ public class MainSOActivity extends AppCompatActivity {
                 dataPoints.clear(); // Clear the dataPoints list for each month
                 loadSalesDataForYearAndMonth(currentYear, month);
             }
+
+            if (firebaseUserSO != null) {
+                displaySalesDataOnChart();
+            }
         }
     }
+
+    private void displaySalesDataOnChart() {
+        DatabaseReference salesRef = FirebaseDatabase.getInstance().getReference().child("Sales").child(firebaseUserSO.getUid());
+
+        salesRef.orderByChild("timestamp").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                HashMap<String, Float> totalQuantityMap = new HashMap<>();
+
+                // Sum up quantities for each month
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String saleTimestampStr = snapshot.child("timestamp").getValue(String.class);
+                    Float saleQuantity = snapshot.child("quantity").getValue(Float.class);
+
+                    if (saleTimestampStr != null && saleQuantity != null) {
+                        long monthTimestamp = parseDateToMonth(saleTimestampStr);
+
+                        // Sum up quantities for each month, replacing the previous value
+                        totalQuantityMap.put(String.valueOf(monthTimestamp), totalQuantityMap.getOrDefault(String.valueOf(monthTimestamp), 0f) + saleQuantity);
+                    }
+                }
+
+                Log.d(TAG, "Total Quantity Map Size: " + totalQuantityMap.size());
+
+                List<PointValue> dataPoints = new ArrayList<>();
+
+                for (Map.Entry<String, Float> entry : totalQuantityMap.entrySet()) {
+                    dataPoints.add(new PointValue(Long.parseLong(entry.getKey()), entry.getValue()));
+                }
+
+                // Log the dataPoints
+                for (PointValue point : dataPoints) {
+                    Log.d(TAG, "Data Point: X = " + point.getX() + ", Y = " + point.getY());
+                }
+
+                Collections.sort(dataPoints, new Comparator<PointValue>() {
+                    @Override
+                    public int compare(PointValue point1, PointValue point2) {
+                        return Float.compare(point1.getX(), point2.getX());
+                    }
+                });
+
+                Line line = new Line(dataPoints);
+                List<Line> lines = new ArrayList<>();
+                lines.add(line);
+
+                LineChartData lineChartData = new LineChartData();
+                lineChartData.setLines(lines);
+
+                LineChartView lineChartView = findViewById(R.id.chart);
+
+                List<AxisValue> axisValuesX = new ArrayList<>();
+                int labelCounter = 0;
+                for (PointValue point : dataPoints) {
+                    // Display only every 2nd label to fit at least 6 months
+                    if (labelCounter % 2 == 0) {
+                        axisValuesX.add(new AxisValue(point.getX()).setLabel(formatDate(point.getX())));
+                    }
+                    labelCounter++;
+                }
+                Axis axisX = new Axis(axisValuesX);
+                axisX.setTextColor(Color.BLACK);
+                axisX.setTextSize(10); // Adjust the text size as needed
+                axisX.setHasTiltedLabels(false); // Set to true to enable label tilting
+                lineChartData.setAxisXBottom(axisX);
+
+                Axis axisY = new Axis().setHasLines(true);
+                axisY.setTextColor(Color.BLACK);
+                lineChartData.setAxisYLeft(axisY);
+
+                lineChartView.setLineChartData(lineChartData);
+
+                // Use HelloCharts Viewport instead of GraphView
+                lecho.lib.hellocharts.model.Viewport viewport = new lecho.lib.hellocharts.model.Viewport(lineChartView.getMaximumViewport());
+                viewport.bottom = 0;
+                viewport.top = Collections.max(dataPoints, Comparator.comparing(PointValue::getY)).getY() + 1;
+                viewport.left = dataPoints.get(0).getX();
+                viewport.right = dataPoints.get(dataPoints.size() - 1).getX() + 1;
+                lineChartView.setCurrentViewport(viewport);
+
+                line.setColor(Color.parseColor("#FFA726"));
+                line.setHasPoints(true);
+                line.setPointRadius(6);
+
+                lineChartView.startDataAnimation();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e(TAG, "Database error: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    // Modify parseDate to extract month and year
+    private long parseDateToMonth(String dateStr) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        try {
+            Date date = format.parse(dateStr);
+            if (date != null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                // Set the day and time to 0 to represent the beginning of the month
+                calendar.set(Calendar.DAY_OF_MONTH, 2);
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                return calendar.getTimeInMillis();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    // Modify formatDate to display month and year
+    private String formatDate(float timestamp) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.US);
+        return dateFormat.format(new Date((long) timestamp));
+    }
+
 
     private void initializeGraph() {
         Viewport viewport = salesGraph.getViewport();
